@@ -1,0 +1,19 @@
+name: A skill broke or did the wrong thing
+description: A step failed, a capability or field was wrong, or the agent did something the skill should have prevented.
+labels: [bug]
+body:
+  - type: input
+    id: skill
+    attributes: {label: Skill, placeholder: cold-email-pipeline}
+    validations: {required: true}
+  - type: input
+    id: agent
+    attributes: {label: Agent and version, placeholder: Claude Code 2.x, Codex, Cursor...}
+    validations: {required: true}
+  - type: textarea
+    id: step
+    attributes: {label: Which step, and what happened, description: The step number or heading, what the agent ran, what came back. Paste run IDs (routergrowth runs prints them), never keys or personal data from results.}
+    validations: {required: true}
+  - type: textarea
+    id: expected
+    attributes: {label: What should have happened}

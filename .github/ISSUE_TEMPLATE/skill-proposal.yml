@@ -1,0 +1,18 @@
+name: Propose a skill
+description: A GTM job an agent could finish end to end on RouterGrowth capabilities.
+labels: [proposal]
+body:
+  - type: input
+    id: job
+    attributes: {label: The job, in one sentence, placeholder: Turn a list of competitor customers into a verified contact list}
+    validations: {required: true}
+  - type: textarea
+    id: steps
+    attributes: {label: The steps and the capabilities each one calls, description: Check each capability exists with routergrowth discover or on https://www.routergrowth.com/catalog.}
+    validations: {required: true}
+  - type: textarea
+    id: gates
+    attributes: {label: Where a human approves, description: Anything that leaves the workspace (an email, an invite, a purchase) needs a gate.}
+  - type: dropdown
+    id: build
+    attributes: {label: Will you build it?, options: ["Yes, I will open the PR", "No, proposing only"]}

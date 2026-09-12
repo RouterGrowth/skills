@@ -1,5 +1,7 @@
 # RouterGrowth skills
 
+[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 10](https://img.shields.io/badge/skills-10-0c7c59.svg)](#the-skills) [![routergrowth.com/skills](https://img.shields.io/badge/site-routergrowth.com%2Fskills-0c7c59.svg)](https://www.routergrowth.com/skills)
+
 Open-source GTM workflows for agents. Each skill is a `SKILL.md` an agent reads and runs: build a lead list from hiring signals, run a cold email pipeline with human gates, work a LinkedIn outbound loop, audit what ChatGPT and Perplexity say about a brand, map the Reddit threads that own a category, batch ad creative.
 
 Every step that touches data calls a [RouterGrowth](https://www.routergrowth.com) capability: one key, pay per call, one balance, a price quoted before every billable run. The steps that reason (grading, writing, triage) run on the agent. Nothing here posts, comments or automates engagement on a platform.
