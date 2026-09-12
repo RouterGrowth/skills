@@ -66,6 +66,8 @@ routergrowth run -c creative.video -i '{"prompt":"slow push in, steam rising, so
 
 Video takes one to four minutes: submit, then poll with `routergrowth runs get -r <run_id> --wait 60 -o video.json`. One video per set unless the user asks for more; quote each one.
 
+Prices when this was written, per result: image $0.0045, edit $0.0585, cutout $0.027, upscale $0.18, video $0.0675. The upscale is the surprise line; quote it explicitly. If the CLI drops its connection while waiting on a slow run, the run keeps going on the router: `routergrowth runs` shows it and `runs get` fetches the result. Do not resubmit before checking.
+
 ## Rules
 
 - Quote the set before step 1 and every video before it runs. `max_cost` on every run.

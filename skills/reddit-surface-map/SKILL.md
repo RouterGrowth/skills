@@ -41,7 +41,7 @@ Run each query, with and without the word "reddit". Keep every reddit.com result
 routergrowth run -c social.search -i '{"platform":"reddit","query":"crm for small agencies","limit":50}' --max-cost 0.10 --wait 60
 ```
 
-Adds the threads that are active but do not rank yet. Record score, comment count and date. Merge with step 2 on URL.
+Priced per result at about $0.012 a post when this was written: a limit of 10 quotes around $0.12 (set `max_cost` 0.15), a limit of 50 around $0.60, so quote it and say so before running. Rows carry `community`, `url`, `author`, `text` or `body`, `engagement` and `created_at`; there is no separate title field, the first line of `text` is the title. Adds the threads that are active but do not rank yet. Merge with step 2 on URL.
 
 ### 4. Read the hubs
 
@@ -51,11 +51,11 @@ For the top 10 to 15 threads:
 routergrowth run -c social.comments -i '{"url":"https://www.reddit.com/r/.../comments/...","limit":100}' --max-cost 0.10 --wait 60
 ```
 
-Note which products are recommended and how often, the objections, the questions nobody answered, and whether your brand or competitors are mentioned. Quote verbatim, with the comment URL.
+Comments are priced per result too, about $0.01 each when this was written: 15 comments cost about $0.16 (set `max_cost` 0.20), 100 comments about $1, which crosses the ask-first line, so read the top 15 to 30 of a thread unless the user wants more. Note which products are recommended and how often, the objections, the questions nobody answered, and whether your brand or competitors are mentioned. Quote verbatim, with the comment URL.
 
 ### 5. The subreddit roster
 
-For each subreddit that appears twice or more, fetch its rules and sidebar (`web.scrape` on `https://www.reddit.com/r/<name>/about/rules/`, or your own fetch when you have one). Record: subscriber count, vendor tolerance (self-promotion rule, flair requirements, vendor flair), posting norms, moderation tone. Classify the risk: open, conditional (flair, disclosure), closed.
+For each subreddit that appears twice or more, read its rules. Reddit blocks generic scrapers on the rules pages (`web.scrape` returns a login page or a no-match for `/about/rules/`, `old.reddit.com` and `rules.json` alike), so use your own web fetch tool on `https://www.reddit.com/r/<name>/about/rules.json` when you have one, and otherwise ask the user to paste the rules or open the page. Record: subscriber count, vendor tolerance (self-promotion rule, flair requirements, vendor flair), posting norms, moderation tone. Classify the risk: open, conditional (flair, disclosure), closed.
 
 ## Rules
 

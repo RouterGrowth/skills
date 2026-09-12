@@ -30,7 +30,7 @@ Search postings by title and location, not by company. The account list is the s
 routergrowth run -c company.jobs -i '{"query":"lifecycle marketing manager","location":"United States","posted_within":"30d","limit":50}' --max-cost 0.30 --wait 60 -o jobs.json
 ```
 
-Keep company, domain, title, location and posted date. Dedupe on domain. Sort by date: newest posting first is the queue.
+Keep company, the LinkedIn company URL (`company_url`), title, location and posted date. Postings carry no web domain; step 2 takes the LinkedIn URL directly, and step 2b resolves the domain the email lookup needs. Dedupe on company URL. Sort by date: newest posting first is the queue.
 
 Optional stacking signals, only when the user wants a tighter list: `company.funding` (a round inside 90 days is budget that must be spent) and `company.technologies` (running the tool you replace, or the one you integrate with). Run them on the deduped domains and score: hiring plus funded plus running the tool is not a cold lead.
 
@@ -39,10 +39,20 @@ Optional stacking signals, only when the user wants a tighter list: `company.fun
 The hiring manager is rarely the buyer. Search by seniority and function inside each company:
 
 ```bash
-routergrowth run -c people.search -i '{"companies":["acme.com"],"titles":["VP Marketing","Head of Growth"],"seniority":["vp","head","director"],"limit":2}' --max-cost 0.10 --wait 60
+routergrowth run -c people.search -i '{"companies":["https://www.linkedin.com/company/acme"],"titles":["VP Marketing","Head of Growth"],"seniority":["vp","head","director"],"detail":"full","limit":4}' --max-cost 0.30 --wait 120
 ```
 
-Two people per account at most. Keep first name, last name, title, company domain and the LinkedIn URL when it comes back.
+`companies` takes company names or LinkedIn company URLs, so the postings feed it directly. The quote is a per-call base plus a per-result rate (about $0.15 plus $0.006 a profile at the time of writing), so `max_cost` has to cover the base: 0.10 is rejected, 0.30 covers a limit of 4 to 20. Two people per account at most. Keep first name, last name, headline and the LinkedIn URL. Drop any row whose last name is missing or reads `undefined`: LinkedIn truncates some names and the email lookup cannot use them. Small companies often return nobody; that is a miss, not an error.
+
+### 2b. The domain
+
+`contact.find` needs the company's web domain and neither step above returns one. Resolve it once per account:
+
+```bash
+routergrowth run -c company.search -i '{"query":"Acme","limit":2}' --max-cost 0.02 --wait 60
+```
+
+Pick the row whose `linkedin_url` matches the posting's company URL and take its `domain`. Under a cent per lookup.
 
 ### 3. Work email
 
@@ -73,6 +83,10 @@ Keep `valid`. Drop `invalid`. Hold `catch_all` and `unknown` in a separate colum
 ## Human gate
 
 Before handing off to any outreach: show the account count, the contact count by verification status, the total charged, and five sample rows. Wait.
+
+## What one real run looked like
+
+10 postings for "GTM engineer" in the United States ($0.015), 3 people at one of the two companies searched ($0.174), the domain from company.search ($0.0075), one email found ($0.0375) and one no-match released ($0), the found email verified valid ($0.009). About $0.24 for a verified contact, with the misses costing nothing.
 
 ## Output
 

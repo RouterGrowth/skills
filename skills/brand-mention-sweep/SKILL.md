@@ -42,15 +42,15 @@ routergrowth run -c news.search -i '{"query":"RouterGrowth","limit":50}' --max-c
 routergrowth run -c web.search -i '{"query":"\"RouterGrowth\" -site:routergrowth.com","limit":50}' --max-cost 0.05 --wait 30
 ```
 
-Web search catches the blog posts, comparison pages, directories and forum threads that social search misses. Drop the brand's own domains.
+Web search catches the blog posts, comparison pages, directories and forum threads that social search misses. Drop the brand's own domains. A news run can fail with a provider-side error and is released; retry it once. Ten X posts cost under a cent when this was written.
 
 ### 4. Reviews
 
 ```bash
-routergrowth run -c reviews.search -i '{"place":"<business name, city>","platform":"google","limit":50}' --max-cost 0.10 --wait 60
+routergrowth run -c reviews.search -i '{"place":"<business name, city>","platform":"google_maps","limit":50}' --max-cost 0.20 --wait 120
 ```
 
-For brands with a physical presence or a Google Business Profile. Skip otherwise.
+For brands with a physical presence or a Google Business Profile. Skip otherwise. The platform is `google_maps` or `yelp` (`google` is rejected), and the provider occasionally fails a run outright; a failed run is released, so retry it once before reporting a gap.
 
 ### 5. Classify
 

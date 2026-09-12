@@ -43,7 +43,7 @@ Optional: `aeo.keywords` with the panel's key phrases returns AI search volume, 
 routergrowth run -c aeo.answer -i '{"prompt":"best GTM data api for agents","assistant":"chatgpt","location":"United States"}' --max-cost 0.10 --wait 60
 ```
 
-Run every prompt across `chatgpt`, `claude`, `gemini` and `perplexity`. For each answer record: the assistant, the verbatim brand mentions (yours and competitors'), the position of the first mention, and every cited URL. Answers vary between runs; run the panel once for a baseline and note that a single run is a sample.
+Inspect shows the starting price; the quote for ChatGPT with web search was $0.06 a call when this was written, so keep `max_cost` at 0.10 and expect a 20-prompt panel across four assistants to cost a few dollars. The result carries `answer`, `sources` (cited URLs) and `source_domains`. Run every prompt across `chatgpt`, `claude`, `gemini` and `perplexity`. For each answer record: the assistant, the verbatim brand mentions (yours and competitors'), the position of the first mention, and every cited URL. Answers vary between runs; run the panel once for a baseline and note that a single run is a sample.
 
 ### 3. Where the domain already appears
 
@@ -51,7 +51,7 @@ Run every prompt across `chatgpt`, `claude`, `gemini` and `perplexity`. For each
 routergrowth run -c aeo.mentions -i '{"domain":"yourdomain.com","platform":"chatgpt","limit":50}' --max-cost 0.10 --wait 60
 ```
 
-Lists the prompts where the domain is cited today. The difference between this and the panel is the gap list.
+Lists the prompts where the domain is cited today. A `no_match` here is a real finding, not a failure: the domain is not cited anywhere yet, and the call is released, not billed. The difference between this and the panel is the gap list.
 
 ### 4. The citation graph
 

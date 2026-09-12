@@ -33,7 +33,7 @@ One day of a Sales Development loop. You do the mechanical work (read, classify,
 routergrowth run -c email.messages -i '{"inbox_id":"<id>","after":"<LAST_RUN>","limit":100}' --max-cost 0.05 --wait 30 -o out/inbox.json
 ```
 
-Read every message that is a reply to a campaign email (match on the sender and the thread). Classify:
+Each row carries `message_id`, `thread_id`, `from`, `to`, `subject`, `preview`, `labels` and `received_at`: the preview, not the full body. Classify from the subject and preview; when they are not enough to decide, mark the thread ambiguous and show the preview verbatim rather than guessing. Match replies to campaign emails on the sender and the thread. A read costs a fraction of a cent. Classify:
 
 | Class | Action |
 | --- | --- |

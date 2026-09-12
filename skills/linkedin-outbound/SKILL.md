@@ -27,10 +27,10 @@ One connected LinkedIn account, a target search, a daily budget of invites and m
 ### 1. Search
 
 ```bash
-routergrowth run -c linkedin.search -i '{"keywords":"head of growth fintech","location":"London","network_distance":[2,3],"account_id":"<id>","limit":25}' --max-cost 0.20 --wait 60 -o search.json
+routergrowth run -c linkedin.search -i '{"keywords":"head of growth fintech London","network_distance":[2,3],"account_id":"<id>","limit":25}' --max-cost 0.05 --wait 60 -o search.json
 ```
 
-Keep name, headline, profile URL, company. Before anything else run the free dedupe pass: `routergrowth history --file urls.txt` with the profile URLs says who this workspace already invited or messaged. Drop them.
+A search costs a fraction of a cent. Put the city in `keywords`: the `location` filter takes LinkedIn location ids and, when given a name, the lookup can fail the whole call with a provider 400. Expect noise (a "Head of People" for a growth search, an anonymous "LinkedIn Member" row): the profile read in step 2 is what qualifies a row, not the search. Keep name, headline, profile URL, company. Before anything else run the free dedupe pass: `routergrowth history --file urls.txt` with the profile URLs says who this workspace already invited or messaged. Drop them.
 
 ### 2. Read before writing
 
@@ -38,7 +38,7 @@ Keep name, headline, profile URL, company. Before anything else run the free ded
 routergrowth run -c linkedin.profile -i '{"profile_url":"https://www.linkedin.com/in/example","account_id":"<id>"}' --max-cost 0.10
 ```
 
-Pull the one detail the note will use: a recent role change, a post, a company event. A note without a real detail is a template; do not send templates.
+The profile read returns `provider_id`, which `linkedin.invite` and `linkedin.message` accept in place of the URL. Pull the one detail the note will use: a recent role change, a post, a company event. A note without a real detail is a template; do not send templates.
 
 ### 3. Draft the notes
 

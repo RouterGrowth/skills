@@ -81,7 +81,7 @@ Output: `out/campaign.csv` with `to, first_name, company, tier, stage, subject, 
 routergrowth run -c email.send -i '{"inbox_id":"<id>","to":"alex@example.com","subject":"...","text":"...","reply_to":"you@yourdomain.com","unsubscribe_url":"https://yourdomain.com/unsubscribe"}' --max-cost 0.01
 ```
 
-Ramp on a fresh domain: 5 to 10 a day for the first three days, 15 through day seven, then 25 to 30. Never burst: spread a day's sends across the day. Log every send to `out/sent-log.json` with the run ID, the stage and the timestamp; the `sdr-daily` skill reads it.
+`inbox_id` is the inbox address as `email.inboxes` lists it. A send cost $0.003 when this was written; send one to yourself first, then read it back with `email.messages` on the same inbox to prove both directions work. Ramp on a fresh domain: 5 to 10 a day for the first three days, 15 through day seven, then 25 to 30. Never burst: spread a day's sends across the day. Log every send to `out/sent-log.json` with the run ID, the stage and the timestamp; the `sdr-daily` skill reads it.
 
 ## Rules
 
