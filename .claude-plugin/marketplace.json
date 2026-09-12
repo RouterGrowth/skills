@@ -20,5 +20,8 @@
         "leads"
       ]
     }
-  ]
+  ],
+  "metadata": {
+    "description": "GTM workflows for agents, open source, running on RouterGrowth: one key, every growth data call, pay per call."
+  }
 }
