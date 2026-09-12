@@ -1,0 +1,6 @@
+{
+  "routergrowth": {
+    "type": "http",
+    "url": "https://api.routergrowth.com/mcp"
+  }
+}
