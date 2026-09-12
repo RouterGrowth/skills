@@ -1,6 +1,14 @@
 ---
 name: ad-creative-batch
-description: Produce a set of ad creatives from one brief with RouterGrowth, priced before anything is generated: image variants (creative.image), edits of the winner instead of regenerations (creative.image_edit), a product cutout reused across placements (creative.remove_background), upscales only for what ships (creative.upscale), and a short video from the winning still (creative.video). Use when the user wants ad creatives, image variants for a test, a batch of visuals for Meta or TikTok, a product shot on new backgrounds, or a short ad video.
+description: >-
+  Produce a set of ad creatives from one brief with RouterGrowth, priced before
+  anything is generated: image variants (creative.image), edits of the winner
+  instead of regenerations (creative.image_edit), a product cutout reused across
+  placements (creative.remove_background), upscales only for what ships
+  (creative.upscale), and a short video from the winning still (creative.video).
+  Use when the user wants ad creatives, image variants for a test, a batch of
+  visuals for Meta or TikTok, a product shot on new backgrounds, or a short ad
+  video.
 ---
 
 # Ad creative batch

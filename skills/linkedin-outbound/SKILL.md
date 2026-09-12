@@ -1,6 +1,14 @@
 ---
 name: linkedin-outbound
-description: Run a LinkedIn outbound loop with RouterGrowth on a LinkedIn account the user connected: search people (linkedin.search), read the profile before writing (linkedin.profile), send a connection request with a short note (linkedin.invite), message once accepted (linkedin.message), read and triage replies (linkedin.messages), inside daily caps. Use when the user wants LinkedIn outreach, connection requests at scale with a human gate, wants to message people who accepted, asks "who replied on LinkedIn", or wants to work a LinkedIn list.
+description: >-
+  Run a LinkedIn outbound loop with RouterGrowth on a LinkedIn account the user
+  connected: search people (linkedin.search), read the profile before writing
+  (linkedin.profile), send a connection request with a short note
+  (linkedin.invite), message once accepted (linkedin.message), read and triage
+  replies (linkedin.messages), inside daily caps. Use when the user wants
+  LinkedIn outreach, connection requests at scale with a human gate, wants to
+  message people who accepted, asks "who replied on LinkedIn", or wants to work
+  a LinkedIn list.
 ---
 
 # LinkedIn outbound

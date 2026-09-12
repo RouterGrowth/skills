@@ -1,6 +1,15 @@
 ---
 name: ai-visibility-audit
-description: Audit what AI assistants say about a brand and its category with RouterGrowth: a frozen panel of buyer questions run across ChatGPT, Claude, Gemini and Perplexity (aeo.answer), the sources they cite, where the domain already appears (aeo.mentions), the AI search volume behind each prompt (aeo.keywords), paired with the classic SERP (seo.serp). Share of voice against competitors, and the gaps as absent, wrong or fragile. Use when the user asks "what does ChatGPT say about us", wants an AI search or AEO or GEO audit, wants to track AI visibility monthly, or asks which sources the assistants cite for their category.
+description: >-
+  Audit what AI assistants say about a brand and its category with RouterGrowth:
+  a frozen panel of buyer questions run across ChatGPT, Claude, Gemini and
+  Perplexity (aeo.answer), the sources they cite, where the domain already
+  appears (aeo.mentions), the AI search volume behind each prompt
+  (aeo.keywords), paired with the classic SERP (seo.serp). Share of voice
+  against competitors, and the gaps as absent, wrong or fragile. Use when the
+  user asks "what does ChatGPT say about us", wants an AI search or AEO or GEO
+  audit, wants to track AI visibility monthly, or asks which sources the
+  assistants cite for their category.
 ---
 
 # AI visibility audit

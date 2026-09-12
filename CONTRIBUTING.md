@@ -5,7 +5,7 @@ A skill is a GTM job an agent can finish, written so any agent can run it. Good 
 ## Add one
 
 1. Copy `templates/SKILL.md` to `skills/<your-skill>/SKILL.md`. Folder name in kebab-case, same as the `name` in the frontmatter.
-2. Fill the frontmatter. The `description` is what makes an agent load the skill: say what the skill does and when to use it, in one paragraph, with the phrases a user would say.
+2. Fill the frontmatter. Write `description` as a YAML block scalar (`description: >-` then indented lines): a plain one-line value breaks as soon as it contains a colon. The description is what makes an agent load the skill: say what the skill does and when to use it, in one paragraph, with the phrases a user would say.
 3. Write the steps. Each step that touches data names the RouterGrowth capability and the input fields. Check the capability exists and is live: `routergrowth discover -q "..."` or https://www.routergrowth.com/catalog. Never invent a capability or a field.
 4. Keep the rules: quote before a billable run, `max_cost` on every call, `max_total_cost` on a batch, stop before a batch over about $1 unless the user asked for that volume, never fabricate, never automate posting or engagement on a platform.
 5. Put a human gate before anything that leaves the workspace: an email, an invite, a message, a purchase.

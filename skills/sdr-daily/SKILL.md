@@ -1,6 +1,14 @@
 ---
 name: sdr-daily
-description: Run one day of the SDR loop on a RouterGrowth cold email campaign: read the campaign inbox and triage replies (email.messages), keep the suppression list current, send the follow-ups that are due and drip the next first-touch emails from an approved queue (email.send) inside a daily cap, then write the morning briefing. Nothing new goes out without approval; the drip and the follow-ups come from copy approved at the cold-email-pipeline gates. Use when the user says "run the SDR", "daily briefing", "who replied", "send today's batch", "check the campaign", or wants to advance an outreach campaign by one day.
+description: >-
+  Run one day of the SDR loop on a RouterGrowth cold email campaign: read the
+  campaign inbox and triage replies (email.messages), keep the suppression list
+  current, send the follow-ups that are due and drip the next first-touch emails
+  from an approved queue (email.send) inside a daily cap, then write the morning
+  briefing. Nothing new goes out without approval; the drip and the follow-ups
+  come from copy approved at the cold-email-pipeline gates. Use when the user
+  says "run the SDR", "daily briefing", "who replied", "send today's batch",
+  "check the campaign", or wants to advance an outreach campaign by one day.
 ---
 
 # SDR daily

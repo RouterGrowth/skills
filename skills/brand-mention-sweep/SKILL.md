@@ -1,6 +1,14 @@
 ---
 name: brand-mention-sweep
-description: Sweep every public mention of a brand, product, founder and competitors from the last 90 days with RouterGrowth: social platforms (social.search across X, Reddit, LinkedIn, TikTok, YouTube, Instagram), news (news.search), the open web (web.search) and review sites (reviews.search). Records URL, date, platform, sentiment and whether a human reply would matter, and drafts the talking points. Use when the user asks "who is talking about us", wants brand monitoring, a mention report, competitor mention tracking, or wants to find threads where they should reply.
+description: >-
+  Sweep every public mention of a brand, product, founder and competitors from
+  the last 90 days with RouterGrowth: social platforms (social.search across X,
+  Reddit, LinkedIn, TikTok, YouTube, Instagram), news (news.search), the open
+  web (web.search) and review sites (reviews.search). Records URL, date,
+  platform, sentiment and whether a human reply would matter, and drafts the
+  talking points. Use when the user asks "who is talking about us", wants brand
+  monitoring, a mention report, competitor mention tracking, or wants to find
+  threads where they should reply.
 ---
 
 # Brand mention sweep

@@ -1,6 +1,14 @@
 ---
 name: reddit-surface-map
-description: Map the Reddit threads and subreddits that own a category with RouterGrowth: the money queries, the threads ranking for them in Google (seo.serp), what Reddit itself surfaces for the same phrases (social.search), what those threads say (social.comments), and each subreddit's rules on vendors (web.scrape). Delivers the map, never posts. Use when the user asks which subreddits matter for their product, wants the Reddit threads ranking for "best X" or "X alternatives", wants to know where buyers discuss the category, or asks about Reddit for SEO or AI visibility.
+description: >-
+  Map the Reddit threads and subreddits that own a category with RouterGrowth:
+  the money queries, the threads ranking for them in Google (seo.serp), what
+  Reddit itself surfaces for the same phrases (social.search), what those
+  threads say (social.comments), and each subreddit's rules on vendors
+  (web.scrape). Delivers the map, never posts. Use when the user asks which
+  subreddits matter for their product, wants the Reddit threads ranking for
+  "best X" or "X alternatives", wants to know where buyers discuss the category,
+  or asks about Reddit for SEO or AI visibility.
 ---
 
 # Reddit surface map

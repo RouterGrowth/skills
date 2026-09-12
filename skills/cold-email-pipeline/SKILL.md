@@ -1,6 +1,14 @@
 ---
 name: cold-email-pipeline
-description: Run a cold email campaign end to end on RouterGrowth from one targeting sentence: Research, List, Grade, Verify, Write, Send. Reads a directives folder (ICP, lead source filters, negative keywords, qualification rubric, copy rules) so "target independent mortgage brokers in Lyon" becomes a graded, verified, personalised campaign sent from an inbox the workspace owns, with two human gates. Use when the user wants to launch cold outreach, build and qualify a lead list, write cold email at scale, or run the prospecting pipeline. The daily loop after the first send is the sdr-daily skill.
+description: >-
+  Run a cold email campaign end to end on RouterGrowth from one targeting
+  sentence: Research, List, Grade, Verify, Write, Send. Reads a directives
+  folder (ICP, lead source filters, negative keywords, qualification rubric,
+  copy rules) so "target independent mortgage brokers in Lyon" becomes a graded,
+  verified, personalised campaign sent from an inbox the workspace owns, with
+  two human gates. Use when the user wants to launch cold outreach, build and
+  qualify a lead list, write cold email at scale, or run the prospecting
+  pipeline. The daily loop after the first send is the sdr-daily skill.
 ---
 
 # Cold email pipeline

@@ -1,6 +1,9 @@
 ---
 name: your-skill-name
-description: One paragraph. What the skill does, in what order, and the phrases a user would say that mean they want it ("build a list of", "audit our", "send the batch"). This is the trigger, so be concrete.
+description: >-
+  One paragraph. What the skill does, in what order, and the phrases a user
+  would say that mean they want it ("build a list of", "audit our", "send the
+  batch"). This is the trigger, so be concrete.
 ---
 
 # Your skill name

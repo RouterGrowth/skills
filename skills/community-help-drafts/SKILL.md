@@ -1,6 +1,14 @@
 ---
 name: community-help-drafts
-description: Find the Reddit and X conversations where the user can answer a real question in their field, and draft the reply for them to post, with RouterGrowth doing the search (social.search, social.comments, seo.serp) and the agent doing the reading and writing. Help first, product mention only when it materially improves the answer, affiliation always disclosed, nothing ever posted by the agent. Use when the user wants to build presence on Reddit or X without spamming, asks "where should I be answering questions", wants a daily list of threads to reply to, or wants community marketing drafts.
+description: >-
+  Find the Reddit and X conversations where the user can answer a real question
+  in their field, and draft the reply for them to post, with RouterGrowth doing
+  the search (social.search, social.comments, seo.serp) and the agent doing the
+  reading and writing. Help first, product mention only when it materially
+  improves the answer, affiliation always disclosed, nothing ever posted by the
+  agent. Use when the user wants to build presence on Reddit or X without
+  spamming, asks "where should I be answering questions", wants a daily list of
+  threads to reply to, or wants community marketing drafts.
 ---
 
 # Community help drafts

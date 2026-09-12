@@ -1,6 +1,13 @@
 ---
 name: hiring-signal-outbound
-description: Build a lead list from hiring signals with RouterGrowth. Find companies that just posted the role that implies the problem you solve (company.jobs), find the person who owns the budget at each (people.search), get a work email (contact.find) and verify it before it touches a sender (contact.verify). Use when the user wants a lead list, wants to know who is hiring for a role, wants to turn job postings into accounts, asks for high-intent leads, or says "companies hiring X", "build me a list", "who should we reach out to".
+description: >-
+  Build a lead list from hiring signals with RouterGrowth. Find companies that
+  just posted the role that implies the problem you solve (company.jobs), find
+  the person who owns the budget at each (people.search), get a work email
+  (contact.find) and verify it before it touches a sender (contact.verify). Use
+  when the user wants a lead list, wants to know who is hiring for a role, wants
+  to turn job postings into accounts, asks for high-intent leads, or says
+  "companies hiring X", "build me a list", "who should we reach out to".
 ---
 
 # Hiring-signal outbound
