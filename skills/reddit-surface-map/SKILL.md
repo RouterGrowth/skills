@@ -19,7 +19,7 @@ Reddit threads rank for the queries buyers type and get cited by AI assistants. 
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for: the product and category, three to five competitors, and the market (country, language).
-- Inspect `seo.serp`, `social.search`, `social.comments` and `web.scrape` once and show the prices. Quote the map: N queries x 1 SERP, N Reddit searches, M threads read.
+- Inspect `seo.serp`, `social.search` and `social.comments` once and show the prices: $0.003 a SERP, $0.03 plus $0.00855 a post for a Reddit search, $0.03 plus $0.00855 a comment for a thread read. Quote the map: N queries x 2 SERPs, N Reddit searches at a limit of 10 ($0.1155 each), M threads at a limit of 30 ($0.29 each). Reading 10 threads is about $2.90, above the core skill's ask-first line, so get a yes on the read pass before it starts.
 
 ## Steps
 
@@ -30,32 +30,32 @@ Reddit threads rank for the queries buyers type and get cited by AI assistants. 
 ### 2. The threads ranking in Google
 
 ```bash
-routergrowth run -c seo.serp -i '{"keyword":"best crm for small agencies reddit","location":"United States","engine":"google"}' --max-cost 0.02 --wait 30
+routergrowth run -c seo.serp -i '{"keyword":"best crm for small agencies reddit","location":"United States","engine":"google"}' --max-cost 0.02 --wait 60
 ```
 
-Run each query, with and without the word "reddit". Keep every reddit.com result: URL, subreddit, position, thread title, and the age if visible. A thread in the top ten for two or more queries is a hub.
+Run each query, with and without the word "reddit", one after another or through `batch_run`. Do not use a `site:reddit.com` operator: the results do not honour it and the provider bills it at five times the price. Rows carry `position`, `title`, `url`, `domain`, `snippet` and no date. Keep every reddit.com result: URL, subreddit, position, thread title. A thread in the top ten for two or more queries is a hub. A run that ends `interrupted` (the router restarted under it, for instance during a deploy) charged nothing: resubmit it.
 
 ### 3. What Reddit surfaces itself
 
 ```bash
-routergrowth run -c social.search -i '{"platform":"reddit","query":"crm for small agencies","limit":50}' --max-cost 0.10 --wait 60
+routergrowth run -c social.search -i '{"platform":"reddit","query":"crm for small agencies","limit":10}' --max-cost 0.15 --wait 120
 ```
 
-Priced per result at about $0.012 a post when this was written: a limit of 10 quotes around $0.12 (set `max_cost` 0.15), a limit of 50 around $0.60, so quote it and say so before running. Rows carry `community`, `url`, `author`, `text` or `body`, `engagement` and `created_at`; there is no separate title field, the first line of `text` is the title. Adds the threads that are active but do not rank yet. Merge with step 2 on URL.
+$0.03 a search plus $0.00855 a post: a limit of 10 quotes $0.1155 (set `max_cost` 0.15), a limit of 50 quotes $0.4575, and the quote is the floor even when fewer posts come back. Reddit searches often run past 60 seconds; poll a still-running receipt with `runs get -r <run_id> --wait 60 -o file`. The search matches post text (it is a Reddit search page, sorted by relevance) and returns post rows only: `url`, `text` (the title), `body`, `community`, `author`, `created_at` (ISO 8601, UTC). Engagement counts are null on these rows. Expect some off-topic rows. Adds the threads that are active but do not rank yet. Merge with step 2 on URL.
 
 ### 4. Read the hubs
 
 For the top 10 to 15 threads:
 
 ```bash
-routergrowth run -c social.comments -i '{"url":"https://www.reddit.com/r/.../comments/...","limit":100}' --max-cost 0.10 --wait 60
+routergrowth run -c social.comments -i '{"url":"https://www.reddit.com/r/.../comments/...","limit":30}' --max-cost 0.30 --wait 120
 ```
 
-Comments are priced per result too, about $0.01 each when this was written: 15 comments cost about $0.16 (set `max_cost` 0.20), 100 comments about $1, which crosses the ask-first line, so read the top 15 to 30 of a thread unless the user wants more. Note which products are recommended and how often, the objections, the questions nobody answered, and whether your brand or competitors are mentioned. Quote verbatim, with the comment URL.
+$0.03 a thread plus $0.00855 a comment: 15 comments quote $0.158 (set `max_cost` 0.20), 30 quote $0.29 (set 0.30), 100 quote $0.89, so read the top 15 to 30 of a thread unless the user wants more. The post itself is not returned, only comment rows: `text`, `author`, `likes` (upvotes, may be null), `replies`, `created_at`, `url`, with HTML entities already decoded. Note which products are recommended and how often, the objections, the questions nobody answered, and whether your brand or competitors are mentioned. Quote verbatim, with the comment URL.
 
 ### 5. The subreddit roster
 
-For each subreddit that appears twice or more, read its rules. Reddit blocks generic scrapers on the rules pages (`web.scrape` returns a login page or a no-match for `/about/rules/`, `old.reddit.com` and `rules.json` alike), so use your own web fetch tool on `https://www.reddit.com/r/<name>/about/rules.json` when you have one, and otherwise ask the user to paste the rules or open the page. Record: subscriber count, vendor tolerance (self-promotion rule, flair requirements, vendor flair), posting norms, moderation tone. Classify the risk: open, conditional (flair, disclosure), closed.
+For each subreddit that appears twice or more, the rules are a human step: Reddit blocks crawlers on its rules pages (`web.scrape` on `/about/rules/` comes back as a no-match, released, not billed; unauthenticated fetches of `rules.json` and `about.json` are refused; agent browsers are usually barred from reddit.com), so ask the user to open `https://www.reddit.com/r/<name>/about/rules/` and paste the rules and the member count. Record: subscriber count, vendor tolerance (self-promotion rule, flair requirements, vendor flair), posting norms, moderation tone. Classify the risk: open, conditional (flair, disclosure), closed, or unknown until the rules are on file.
 
 ## Rules
 
@@ -65,4 +65,4 @@ For each subreddit that appears twice or more, read its rules. Reddit blocks gen
 
 ## Output
 
-`reddit-map.md` with: the query list; the thread table (URL, subreddit, queries it ranks for and where, score, comments, age, brands mentioned); the subreddit roster (name, size, why it matters, rules risk, target threads); the recommendation table (product, how many threads recommend it, the typical reason); and the talking points for a human, per thread, with the disclosure line. Plus the raw JSON and the total charged.
+`reddit-map.md` with: the query list with run IDs; the thread table (URL, subreddit, queries it ranks for and where, post date when a search returned it, brands mentioned; there is no thread score or comment count in any of these calls, so leave those out rather than guess); the subreddit roster (name, size and rules when the user supplied them, why it matters, rules risk, target threads); the recommendation table (product, how many threads recommend it, the typical reason); and the talking points for a human, per thread, with the disclosure line. Plus the raw JSON and the total charged as the sum of every run's `billing.charged` (not a wallet difference: the balance is shared by every session on the key).

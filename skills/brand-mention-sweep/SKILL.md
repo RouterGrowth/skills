@@ -19,7 +19,7 @@ Twenty minutes of calls that replace a monitoring subscription for a brand that 
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for: the brand and product names (and the misspellings people use), the founder's name and handles, three to five competitors, the category phrase, and the window (default 90 days).
-- Inspect `social.search`, `news.search`, `web.search` and `reviews.search` once and show the prices. Quote the sweep: terms x platforms.
+- Inspect `social.search`, `news.search`, `web.search` and `reviews.search` once and show the prices. Social search is priced per platform: X $0.0006 a post, LinkedIn $0.00225, Reddit $0.03 a search plus $0.00855 a post, and the quote is the floor even when fewer posts come back. Quote the sweep: terms x platforms, with Reddit counted at $0.1155 a term at a limit of 10.
 
 ## Steps
 
@@ -30,10 +30,12 @@ Brand, product, founder, each competitor, the category phrase. For each, the exa
 ### 2. Social
 
 ```bash
-routergrowth run -c social.search -i '{"platform":"x","query":"\"RouterGrowth\"","limit":50}' --max-cost 0.10 --wait 60
+routergrowth run -c social.search -i '{"platform":"x","query":"RouterGrowth","limit":25}' --max-cost 0.02 --wait 60
+routergrowth run -c social.search -i '{"platform":"linkedin","query":"RouterGrowth","limit":10}' --max-cost 0.05 --wait 120
+routergrowth run -c social.search -i '{"platform":"reddit","query":"RouterGrowth","limit":10}' --max-cost 0.15 --wait 120
 ```
 
-Run each term on `x`, `reddit` and `linkedin` first; `tiktok`, `youtube` and `instagram` when the brand has a consumer side. Keep: URL, platform, date, author handle, the sentence with the mention, engagement counts.
+Run each term on `x`, `reddit` and `linkedin` first; `tiktok`, `youtube` and `instagram` when the brand has a consumer side. Reddit and LinkedIn runs often pass 60 seconds: poll a still-running receipt with `runs get -r <run_id> --wait 60 -o file`. Quotes in the query are not honoured, so search the bare term and match it in the text yourself. For a generic competitor name (Clay), search the domain or the name with the category word, or the results are pottery. No platform takes a date range: rows carry `created_at` as ISO 8601 UTC, filter on it after the call. Keep: URL, platform, date, `author` (a display name) and `author_handle` when the platform returns one, the sentence with the mention, engagement counts (null on Reddit rows). An empty search comes back as `no_match`, released, not billed.
 
 ### 3. News and web
 
@@ -42,19 +44,19 @@ routergrowth run -c news.search -i '{"query":"RouterGrowth","limit":50}' --max-c
 routergrowth run -c web.search -i '{"query":"\"RouterGrowth\" -site:routergrowth.com","limit":50}' --max-cost 0.05 --wait 30
 ```
 
-Web search catches the blog posts, comparison pages, directories and forum threads that social search misses. Drop the brand's own domains. A news run can fail with a provider-side error and is released; retry it once. Ten X posts cost under a cent when this was written.
+Web search catches the blog posts, comparison pages, directories and forum threads that social search misses. Search operators are not honoured by the results (`-site:` and quotes are ignored, and a `site:` operator is billed at five times the price), so search the bare term and drop the brand's own domains afterwards. Web rows carry no date; about half the snippets start with one (a date such as "Sep 3, 2026" followed by a dash), parse it when present. A news search with nothing behind it comes back as `no_match`, released, not billed; a `failed` run is a provider fault, retry it once. Ten X posts cost under a cent when this was written.
 
 ### 4. Reviews
 
 ```bash
-routergrowth run -c reviews.search -i '{"place":"<business name, city>","platform":"google_maps","limit":50}' --max-cost 0.20 --wait 120
+routergrowth run -c reviews.search -i '{"place":"<Google Maps URL or place ID (ChIJ...), or a Yelp business URL>","limit":50}' --max-cost 0.20 --wait 120
 ```
 
-For brands with a physical presence or a Google Business Profile. Skip otherwise. The platform is `google_maps` or `yelp` (`google` is rejected), and the provider occasionally fails a run outright; a failed run is released, so retry it once before reporting a gap.
+For brands with a physical presence or a Google Business Profile. Skip otherwise. `place` is a Google Maps URL, a place ID or a Yelp business URL, and the platform is inferred from it; a business name fails at the provider. The provider occasionally fails a run outright; a failed run is released, so retry it once before reporting a gap.
 
 ### 5. Classify
 
-For each mention: sentiment (positive, neutral, negative, question), type (recommendation, complaint, comparison, question, news), and whether a human reply would matter (a question with no answer, a wrong claim, a comparison where the brand is missing, a complaint). Filter the window to the last 90 days by the mention's own date, not the crawl date.
+First split own from third-party: posts and pages by the brand, its founder or its own domains are `own` and are counted separately, so the totals say how many other people talked. For each third-party mention: sentiment (positive, neutral, negative, question), type (recommendation, complaint, comparison, question, news), and whether a human reply would matter (a question with no answer, a wrong claim, a comparison where the brand is missing, a complaint). Filter the window to the last 90 days by the mention's own date, not the crawl date.
 
 ### 6. Talking points
 
@@ -69,4 +71,4 @@ For every thread flagged as reply-worthy: what the thread says, what a truthful 
 
 ## Output
 
-`mentions.csv` (URL, platform, date, author, term matched, sentiment, type, reply-worthy, quote) and `mentions-report.md`: totals per term and platform, sentiment split, the competitor comparison, the reply-worthy threads with talking points, and the total charged. Save both dated, so next month's sweep diffs against them.
+`mentions-<date>.csv` (run ID, URL, platform, date, author, handle, term matched, own or third-party, sentiment, type, reply-worthy, quote) and `mentions-report-<date>.md`: totals per term and platform with own posts separated, sentiment split, the competitor comparison, the reply-worthy threads with talking points, and the total charged as the sum of every run's `billing.charged` (not a wallet difference: the balance is shared by every session on the key). Date the file names, so next month's sweep diffs against them.

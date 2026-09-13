@@ -19,12 +19,12 @@ A daily list of conversations where an honest, expert answer from the user would
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for, once, and keep in `community/config.md`: the user's field of expertise in one line, the product (if any) and the one-sentence disclosure they will use ("I work on X"), the three question groups to search (see below), and the platforms (Reddit, X, or both).
-- Keep a local log at `community/log.csv`: permalink, date found, classification, status (drafted, posted by user, skipped, closed), and the draft. Every run reads it first.
-- Inspect `social.search`, `social.comments` and `seo.serp` once and show the prices. A daily cycle is small: quote it once and reuse the quote until prices change.
+- Keep a local log at `community/log.csv`: permalink, date found, classification, status (drafted, posted by user, skipped, closed), and the draft. Every run reads it first. Both paths are relative to the folder the user names for this work; ask once and record it in the config.
+- Inspect `social.search`, `social.comments` and `seo.serp` once and show the prices. X is cents (a 25-post search is $0.015); Reddit is not: $0.03 a search plus $0.00855 a post, and $0.03 a thread plus $0.00855 a comment, so ten threads read at a limit of 30 are about $2.90. The quote is the floor: a limit of 10 bills 10 even when 3 come back. Quote the cycle once and reuse the quote until prices change.
 
 ## Daily caps
 
-Per cycle, across both platforms: inspect at most 20 new search results, read at most 10 threads in full, keep at most 5 qualified opportunities, prepare at most 2 drafts, of which at most 1 mentions the product. Stop searching once 2 strong drafts exist. Zero drafts is a valid outcome when nothing fits; say so rather than lowering the bar.
+Per cycle, across both platforms: at most 6 searches at a limit of 10 (X can take 25), read at most 10 threads at a limit of 30, keep at most 5 qualified opportunities, prepare at most 2 drafts, of which at most 1 mentions the product. Stop searching once 2 strong drafts exist. Zero drafts is a valid outcome when nothing fits; say so rather than lowering the bar. When the strict recency window empties the list, widen it to 7 days once, say so in the briefing, and stop there.
 
 Over any rolling 10 posted contributions, at least 7 should be help-only and at most 3 may mention the product. A community's own rules override that ratio and may require zero mentions.
 
@@ -35,10 +35,10 @@ Over any rolling 10 posted contributions, at least 7 should be help-only and at 
 Before any new search, revisit every thread in the log the user posted in during the last 7 days:
 
 ```bash
-routergrowth run -c social.comments -i '{"url":"<permalink>","limit":100}' --max-cost 0.05 --wait 60
+routergrowth run -c social.comments -i '{"url":"<permalink>","limit":30}' --max-cost 0.30 --wait 120
 ```
 
-Detect new replies to the user, follow-up questions, moderation, deletion or locking. Draft a response only when someone replied to the user directly, asked a relevant follow-up, a material misunderstanding needs correcting, or a new development makes a short answer useful. Never draft to keep a thread alive. Close a thread after 7 days without activity. If a thread cannot be checked, mark it unknown and say so; unknown is not "no change".
+Reddit threads only: `social.comments` does not serve X, and an X URL is refused. For X threads the user posted in, ask them what came back, or read their own handle with `social.posts`. Reddit returns the comments (text, author, upvotes, reply count, time), not the post itself. Detect new replies to the user, follow-up questions, moderation, deletion or locking. Draft a response only when someone replied to the user directly, asked a relevant follow-up, a material misunderstanding needs correcting, or a new development makes a short answer useful. Never draft to keep a thread alive. Close a thread after 7 days without activity. If a thread cannot be checked, mark it unknown and say so; unknown is not "no change".
 
 ### 2. Search the three question groups
 
@@ -49,15 +49,15 @@ Only high-intent conversations, phrased as questions or problems:
 3. Builders implementing something in the field and asking a concrete implementation question.
 
 ```bash
-routergrowth run -c social.search -i '{"platform":"reddit","query":"alternatives to clay for enrichment","limit":25}' --max-cost 0.10 --wait 60
-routergrowth run -c social.search -i '{"platform":"x","query":"anyone built an AI SDR agent","limit":25}' --max-cost 0.10 --wait 60
+routergrowth run -c social.search -i '{"platform":"reddit","query":"alternatives to clay for enrichment","limit":10}' --max-cost 0.15 --wait 120
+routergrowth run -c social.search -i '{"platform":"x","query":"anyone built an AI SDR agent","limit":25}' --max-cost 0.02 --wait 60
 ```
 
-Recency: X posts from the last 24 hours; Reddit from the last 48 hours, up to 7 days when the thread is still active. Reject generic news, broad commentary, promotional threads, and questions already answered well.
+Reddit searches often run past 60 seconds: use `--wait 120`, and when the receipt says the run is still running, poll it with `runs get -r <run_id> --wait 60 -o file`. Reddit search matches post text and returns `url`, `text` (the title), `body`, `community`, `author`, `created_at`; expect off-topic rows and a job ad repeated across subreddits, and skip them. Engagement counts are null on Reddit search rows, so activity is judged by reading the thread, not from the row. There is no date parameter on any platform: filter on `created_at` (ISO 8601, UTC) after the call. Recency: X posts from the last 24 hours; Reddit from the last 48 hours, up to 7 days when the thread is still active. Reject generic news, broad commentary, promotional threads, and questions already answered well. Optional: `seo.serp` on a money query with the word "reddit" appended finds the threads that rank (a `site:` operator is not honoured by the results and is billed at five times the price, so do not use one).
 
 ### 3. Qualify
 
-For each candidate, record: platform, permalink, date, the exact excerpt with the question, the community, its visible rules (Reddit: `web.scrape` on the subreddit rules page or your own fetch), whether self-promotion is allowed, and why a reply would add something the thread does not have. Check the log for the same permalink, the same author, or similar wording already used.
+For each candidate, record: platform, permalink, date, the exact excerpt with the question, the community, its rules, whether self-promotion is allowed, and why a reply would add something the thread does not have. Reddit blocks crawlers on its rules pages: `web.scrape` comes back as a no-match (released, not billed) and an unauthenticated fetch of `about/rules.json` is refused, so ask the user to paste each subreddit's rules once into `community/config.md` and read them from there. Until the rules of a community are on file, its outcome is `unknown` and a draft for it is help-only with no product mention. Check the log for the same permalink, the same author, or similar wording already used, and run the free `routergrowth history <permalink>` to see whether this workspace already touched the thread.
 
 Classify: `help_only` (answer, no product), `soft_mention` (answer first, then one disclosed sentence on the product), `direct_fit` (the person asked for exactly what the product does), `reject`.
 
@@ -73,9 +73,9 @@ Do not open with "great question", "I totally agree", "thanks for sharing". Do n
 
 - The agent never publishes anything, anywhere, on any account. The user posts.
 - Never hide affiliation, never pose as a customer, never claim the product was found independently, never invent results or testimonials, never attack a competitor, never reuse the same wording across threads.
-- Re-read the community's rules before every draft, including follow-ups.
+- Re-read the community's rules (from `community/config.md`) before every draft, including follow-ups. Unknown rules mean no product mention.
 - A moderation warning or a removal is a negative outcome even when the post got traffic. Log it and tighten.
 
 ## Output
 
-The daily briefing: threads monitored and what changed, response drafts due, new opportunities kept and rejected with reasons, the 1 or 2 drafts with permalink, classification and the rules note, and the total charged. End with: drafts ready, nothing posted.
+The daily briefing: threads monitored and what changed, response drafts due, new opportunities kept and rejected with reasons, the 1 or 2 drafts with permalink, classification and the rules note, and the total charged as the sum of every run's `billing.charged` (not a wallet difference: the balance is shared by every session on the key). End with: drafts ready, nothing posted.
