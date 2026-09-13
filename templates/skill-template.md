@@ -1,4 +1,6 @@
 ---
+# Copy this file to skills/<your-skill-name>/SKILL.md and replace every line.
+# It is not a skill itself: installers scan for SKILL.md files, which is why it does not carry that name here.
 name: your-skill-name
 description: >-
   One paragraph. What the skill does, in what order, and the phrases a user

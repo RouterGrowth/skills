@@ -33,7 +33,7 @@ npx skills add RouterGrowth/skills
 | --- | --- | --- |
 | [routergrowth](skills/routergrowth) | The core skill: CLI, HTTP and MCP contract, spending rules, when not to use RouterGrowth | all |
 | [hiring-signal-outbound](skills/hiring-signal-outbound) | Companies hiring for the role you sell to, the buyer at each, a verified email | company.jobs, people.search, contact.find, contact.verify |
-| [social-lead-discovery](skills/social-lead-discovery) | Leads from Instagram, TikTok and YouTube: who posts about the topic, who asks under a competitor's post, the bio link and email on each profile, a verified address | social.search, social.comments, social.profile, contact.find, contact.verify |
+| [social-lead-discovery](skills/social-lead-discovery) | Leads from Instagram, TikTok and YouTube: who posts about the topic, who asks under a competitor's post, the bio link and email on each profile, a verified address, the Instagram DM from your own account behind a gate | social.search, social.comments, social.profile, instagram.profile, contact.find, contact.verify, instagram.message |
 | [cold-email-pipeline](skills/cold-email-pipeline) | Research, list, grade, verify, write, send. Two human gates. Directives folder holds the ICP and the copy rules | people.search, contact.find, contact.verify, web.scrape, email.inboxes, email.send |
 | [sdr-daily](skills/sdr-daily) | One day of the loop: drip, follow-ups due, reply triage, suppression, briefing | email.messages, email.send, history |
 | [linkedin-outbound](skills/linkedin-outbound) | Search, read the profile, invite with a note, message after accept, read replies. Daily caps | linkedin.search, linkedin.profile, linkedin.invite, linkedin.message, linkedin.messages |
