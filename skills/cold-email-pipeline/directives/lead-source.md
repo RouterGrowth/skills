@@ -5,11 +5,11 @@ How a targeting sentence becomes `people.search` (or `company.search`) filters.
 ## Default filters
 
 - titles: (the titles that map to "roles to reach" in icp.md)
-- seniority: (owner, founder, c-level, vp, head, director, manager)
+- seniority: (from `entry`, `senior`, `manager`, `director`, `vp`, `cxo`, `partner`, `owner`; other words are refused)
 - industries: (the industry labels that match the firm type)
-- company_headcount: (bands, e.g. "2-10", "11-50")
+- company_headcount: (bands from `1-10`, `11-50`, `51-200`, `201-500`, `501-1000`, `1001-5000`, `5001-10000`, `10001+`)
 - locations: (city and country, e.g. "Lyon, France")
-- limit: 100 for a first run, then what the user asks for
+- limit: 25 for a first run ($0.30 in full mode), then what the user asks for
 
 ## Mapping rules
 
@@ -20,5 +20,5 @@ How a targeting sentence becomes `people.search` (or `company.search`) filters.
 
 ## Other sources
 
-- Accounts first: run the `hiring-signal-outbound` skill or `company.search` (query, location) and search people inside those companies with `companies: [...]`.
+- Accounts first: run the `hiring-signal-outbound` skill or `company.search` (query, location) and search people inside those companies with `companies: [...]` (up to six LinkedIn company URLs in one call). `company.search` is also where the web domain and the headcount come from; `people.search` rows have neither.
 - Public registers: for regulated professions with a public register, the register is often a better and free source. Say which register and how to read it here, then use `contact.find` to add the email.

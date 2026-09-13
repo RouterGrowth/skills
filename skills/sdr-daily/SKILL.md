@@ -13,12 +13,13 @@ description: >-
 
 # SDR daily
 
-One day of a Sales Development loop. You do the mechanical work (read, classify, send what was already approved), surface the few human decisions, and hand back a short briefing. You run from the campaign folder the `cold-email-pipeline` skill produced: `out/campaign.csv`, `out/sent-log.json`, `out/replied.json`.
+One day of a Sales Development loop. You do the mechanical work (read, classify, send what was already approved), surface the few human decisions, and hand back a short briefing. You run from the campaign folder the `cold-email-pipeline` skill produced: `out/campaign.csv`, `out/sent-log.json` (one object per send: `run_id`, `message_id`, `to`, `subject`, `stage`, `sent_at`), `out/replied.json` (one object per suppressed address: `email`, `reason`, `date`, `note`). The briefing goes to `out/briefing-<date>.md`.
 
 ## Before you start
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
-- Establish, once per campaign and reuse after: `CAMPAIGN_CSV` (the approved rows with a `stage` column: J+0, J+4, J+10), `INBOX_ID` (from the free `email.inboxes`), `DAILY_CAP` (default 30, all stages together), `LAST_RUN` (the timestamp of the previous run, from the sent log).
+- Establish, once per campaign and reuse after: `CAMPAIGN_CSV` (the approved rows with a `stage` column: J+0, J+4, J+10), `INBOX_ID` (the `From` address in `directives/email-copy.md`, confirmed against the free `email.inboxes`), `DAILY_CAP` (default 30, all stages together), `LAST_RUN` (the newest `sent_at` in the sent log; on the first run there is none, so read the inbox without `after`).
+- Check that Gate 2 of the pipeline happened: the sent log carries the test send to the user's own address. If it does not, the drip does not start; send the test, ask the user to confirm it landed, and stop there for today.
 - If `out/replied.json` does not exist, create it as `[]`.
 
 ## The one rule
@@ -30,10 +31,10 @@ One day of a Sales Development loop. You do the mechanical work (read, classify,
 ### 1. Triage replies
 
 ```bash
-routergrowth run -c email.messages -i '{"inbox_id":"<id>","after":"<LAST_RUN>","limit":100}' --max-cost 0.05 --wait 30 -o out/inbox.json
+routergrowth run -c email.messages -i '{"inbox_id":"<id>","labels":["received"],"after":"<LAST_RUN>","limit":100}' --max-cost 0.01 --wait 30 -o out/inbox.json
 ```
 
-Each row carries `message_id`, `thread_id`, `from`, `to`, `subject`, `preview`, `labels` and `received_at`: the preview, not the full body. Classify from the subject and preview; when they are not enough to decide, mark the thread ambiguous and show the preview verbatim rather than guessing. Match replies to campaign emails on the sender and the thread. A read costs a fraction of a cent. Classify:
+The inbox holds the campaign's own sent mail too (label `sent`); `labels: ["received"]` keeps the read to what came in. Each row carries `message_id`, `thread_id`, `from` (a display string, `Name <address>`: parse the address), `to`, `subject`, `preview` (the first 200 characters, cut mid-word), `labels`, `received_at`, `direction` and `bounced`. A read costs $0.002. Match a reply to a campaign email on `thread_id` (the send and its replies share one) or on the sender's address against the sent log. When the preview is not enough to classify, fetch that one message in full with `email.messages` and `message_id` (returns `text`), and only mark the thread ambiguous when the full text still does not decide it. Classify:
 
 | Class | Action |
 | --- | --- |
@@ -44,27 +45,27 @@ Each row carries `message_id`, `thread_id`, `from`, `to`, `subject`, `preview`, 
 | Unsubscribe request | Add to `replied.json` immediately. Never contact again. |
 | Ambiguous | Show verbatim. Do not guess. |
 
-Also read bounce notices in the inbox: a hard bounce goes to `replied.json` with `reason: bounce`.
+Bounces are not notices: a hard bounce shows as the label `bounced` (and `bounced: true`) on the campaign's own sent row, so read the `sent` rows since `LAST_RUN` once with `labels: ["sent"]` and put every bounced `to` in `replied.json` with `reason: bounce`. Out-of-office replies arrive from `mailer-daemon@amazonses.com` with the original subject after "Re:" and the auto-reply text in the preview: they are auto-replies, never bounces, do not suppress them.
 
 ### 2. Hygiene
 
-Count bounces since `LAST_RUN`. Any spam complaint, or bounces above 5% of sends, is the kill switch: recommend pausing the drip until the list and copy are reviewed, and do not drip today.
+Count bounces since `LAST_RUN` against sends since `LAST_RUN` (the whole campaign on the first run). Any spam complaint, or bounces above 5% of those sends, is the kill switch: recommend pausing the drip until the list and copy are reviewed, and do not drip today.
 
 ### 3. Follow-ups due
 
 From `out/sent-log.json`, a J+0 sent 4 or more days ago with no reply and no J+4 is due for J+4; a J+4 sent 6 or more days ago with no reply is due for J+10. Skip anyone in `replied.json`. Send the due rows, oldest first, threaded on the original:
 
 ```bash
-routergrowth run -c email.send -i '{"inbox_id":"<id>","to":"alex@example.com","subject":"Re: <original subject>","text":"<approved J+4 body>","in_reply_to":"<message id of the J+0>","reply_to":"you@yourdomain.com","unsubscribe_url":"..."}' --max-cost 0.01
+routergrowth run -c email.send -i '{"inbox_id":"<id>","to":["alex@example.com"],"subject":"Re: <original subject>","text":"<approved J+4 body>","in_reply_to":"<message_id of the J+0 from the sent log>","reply_to":"you@yourdomain.com"}' --max-cost 0.01 --wait 30
 ```
 
-Count them as F. Follow-ups are time-sensitive and take the first claim on the cap.
+`in_reply_to` takes the `message_id` the J+0 send returned (that is why the sent log keeps it); `unsubscribe_url` is optional, the opt-out sentence in the body is the floor. Count them as F. Follow-ups are time-sensitive and take the first claim on the cap.
 
 ### 4. First-touch drip
 
 Budget: `DRIP = DAILY_CAP - F`. If positive, send the next `DRIP` J+0 rows that are not in the sent log and not in `replied.json`. Before the send, the free `routergrowth history --file today.txt` on today's addresses confirms nobody was contacted from another campaign in this workspace.
 
-Spread the sends across the day rather than in one burst. On a fresh domain, ramp the cap: 5 to 10 a day for days one to three, 15 through day seven, then 25 to 30. Log every send with its run ID, stage and timestamp.
+Spread the sends across the day rather than in one burst: on a scheduled run, send the batch due for this hour; on a manual run, space the sends with a pause between them and say what was sent when. On a fresh domain, ramp the cap: 5 to 10 a day for days one to three, 15 through day seven, then 25 to 30; the domain's age is not in any run output, so count from the first `sent` row in the inbox or ask. Log every send with its run ID, `message_id`, `to`, `subject`, stage and timestamp.
 
 When the queue is empty, say so and suggest running `cold-email-pipeline` for the next batch.
 
@@ -86,7 +87,7 @@ Your decisions today
   1. Approve or edit <n> reply drafts (below)
   2. <replenish the queue, pause, anything else human>
 
-Charged today: $<total> across <n> runs
+Charged today: $<total> across <n> runs (the sum of each run's billing.charged)
 ```
 
 Then the reply drafts, one per interested thread.
@@ -97,7 +98,7 @@ Then the reply drafts, one per interested thread.
 - Suppression is sacred: anyone who replied (other than an auto-reply) is never contacted again by this campaign.
 - Reply responses are drafted, never auto-sent, even on a scheduled run.
 - Honesty on signal: zero replies in week one is normal; a booking that predates the campaign is not a result.
-- `max_cost` on every run. Every send logged with its run ID.
+- `max_cost` on every run, `--wait 30` on every send and read. Every send logged with its run ID and `message_id`.
 
 ## Scheduling
 
