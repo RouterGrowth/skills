@@ -51,7 +51,7 @@ Set `max_cost` from the assistant you call: 0.11 covers all four (claude quotes 
 routergrowth run -c aeo.mentions -i '{"domain":"yourdomain.com","platform":"chatgpt","limit":10}' --max-cost 0.20 --wait 60
 ```
 
-Lists the prompts where the domain is cited today, on `chatgpt` or on `google` (AI Mode); run both. $0.15 a search plus $0.002 a row: $0.17 at a limit of 10, $0.25 at 50, so `max_cost` 0.20 covers the default and a cap below the quote is refused with a 402 that names it. A `no_match` here is a real finding, not a failure: the domain is not cited anywhere yet, the call is released, not billed, and `result` is null rather than an empty list. The difference between this and the panel is the gap list.
+Lists the prompts where the domain is cited today, on `chatgpt` or on `google` (AI Mode); run both. $0.15 a search plus $0.0015 a row: $0.165 at a limit of 10, $0.225 at 50, so `max_cost` 0.20 covers the default and a cap below the quote is refused with a 402 that names it. A `no_match` here is a real finding, not a failure: the domain is not cited anywhere yet, the call is released, not billed, and `result` is null rather than an empty list. The difference between this and the panel is the gap list.
 
 ### 4. The citation graph
 
