@@ -20,7 +20,7 @@ A daily list of conversations where an honest, expert answer from the user would
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for, once, and keep in `community/config.md`: the user's field of expertise in one line, the product (if any) and the one-sentence disclosure they will use ("I work on X"), the three question groups to search (see below), and the platforms (Reddit, X, or both).
 - Keep a local log at `community/log.csv`: permalink, date found, classification, status (drafted, posted by user, skipped, closed), and the draft. Every run reads it first. Both paths are relative to the folder the user names for this work; ask once and record it in the config.
-- Inspect `social.search`, `social.comments` and `seo.serp` once and show the prices. X is cents (a 25-post search is $0.015); Reddit is not: $0.03 a search plus $0.00855 a post, and $0.03 a thread plus $0.00855 a comment, so ten threads read at a limit of 30 are about $2.90. The quote is the floor: a limit of 10 bills 10 even when 3 come back. Quote the cycle once and reuse the quote until prices change.
+- Inspect `social.search`, `social.comments` and `seo.serp` once and show the prices. X is cents (a 25-post search is $0.015); Reddit threads are not: a search is $0.0021 a post, but a thread read is $0.06 plus $0.0057 a comment, so ten threads read at a limit of 30 are about $2.31. The hold covers the limit; the charge covers the rows returned, so a limit of 10 that returns 3 bills 3. Quote the cycle once and reuse the quote until prices change.
 
 ## Daily caps
 

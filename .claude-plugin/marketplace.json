@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "routergrowth",
-      "description": "Eleven GTM workflows (lead lists from hiring signals, social lead discovery and Instagram DMs on Instagram, TikTok and YouTube, cold email pipeline, daily SDR loop, LinkedIn outbound, AI visibility audit, Reddit surface map, brand mention sweep, community help drafts, ad creative batch) plus the core RouterGrowth skill and the MCP connection.",
+      "description": "Eleven GTM workflows (lead lists from hiring signals, social lead discovery on X, Instagram, TikTok and YouTube with Instagram DMs, cold email pipeline, daily SDR loop, LinkedIn outbound, AI visibility audit, Reddit surface map, brand mention sweep, community help drafts, ad creative batch) plus the core RouterGrowth skill and the MCP connection.",
       "source": "./",
       "category": "productivity",
       "homepage": "https://www.routergrowth.com/skills",

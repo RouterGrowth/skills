@@ -52,6 +52,14 @@ One per person, under 300 characters (LinkedIn's cap; shorter reads better), no 
 routergrowth run -c linkedin.invite -i '{"profile_url":"https://www.linkedin.com/in/example","message":"<approved note>","account_id":"<id>"}' --max-cost 0.05 --wait 60
 ```
 
+Before the batch, run the free headroom check:
+
+```bash
+routergrowth run -c linkedin.invitations_sent -i '{"account_id":"<id>"}' --wait 60
+```
+
+It counts the account's pending invitations over the last 24 hours and 7 days and returns `remaining_today`, the most to send now (LinkedIn allows roughly 100 a day and 200 a week). Send no more than the lower of `remaining_today` and the daily invite cap; when it is 0, send nothing and say so. The counts are a floor (accepted and withdrawn invitations leave the pending list), so the user's own cap still rules. Stop the batch at the first `provider_rate_limited`; it bills nothing and is never retried.
+
 Up to the daily invite cap. Log each one: profile URL, date, run ID, note.
 
 ### 5. Message after accept

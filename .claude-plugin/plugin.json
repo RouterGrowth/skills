@@ -1,7 +1,7 @@
 {
   "name": "routergrowth",
   "version": "0.1.0",
-  "description": "Open-source GTM workflows for agents: lead lists, social lead discovery on Instagram, TikTok and YouTube, cold email, LinkedIn outbound, AI search visibility, Reddit and brand monitoring, ad creative. Every workflow runs on RouterGrowth capabilities, pay per call, one balance.",
+  "description": "Open-source GTM workflows for agents: lead lists, social lead discovery on X, Instagram, TikTok and YouTube, cold email, LinkedIn outbound, AI search visibility, Reddit and brand monitoring, ad creative. Every workflow runs on RouterGrowth capabilities, pay per call, one balance.",
   "author": {
     "name": "RouterGrowth",
     "email": "hello@routergrowth.com",
@@ -10,5 +10,5 @@
   "homepage": "https://www.routergrowth.com/skills",
   "repository": "https://github.com/RouterGrowth/skills",
   "license": "MIT",
-  "keywords": ["gtm", "growth", "outbound", "cold-email", "linkedin", "instagram", "tiktok", "youtube", "creators", "seo", "aeo", "leads", "enrichment", "routergrowth"]
+  "keywords": ["gtm", "growth", "outbound", "cold-email", "linkedin", "x", "twitter", "instagram", "tiktok", "youtube", "creators", "seo", "aeo", "leads", "enrichment", "routergrowth"]
 }
