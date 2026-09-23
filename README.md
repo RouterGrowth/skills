@@ -1,8 +1,8 @@
 # RouterGrowth skills
 
-[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 11](https://img.shields.io/badge/skills-11-0c7c59.svg)](#the-skills) [![routergrowth.com/skills](https://img.shields.io/badge/site-routergrowth.com%2Fskills-0c7c59.svg)](https://www.routergrowth.com/skills)
+[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 12](https://img.shields.io/badge/skills-12-0c7c59.svg)](#the-skills) [![routergrowth.com/skills](https://img.shields.io/badge/site-routergrowth.com%2Fskills-0c7c59.svg)](https://www.routergrowth.com/skills)
 
-Open-source GTM workflows for agents. Each skill is a `SKILL.md` an agent reads and runs: build a lead list from hiring signals, run a cold email pipeline with human gates, work a LinkedIn outbound loop, audit what ChatGPT and Perplexity say about a brand, map the Reddit threads that own a category, batch ad creative.
+Open-source GTM workflows for agents. Each skill is a `SKILL.md` an agent reads and runs: build a lead list from hiring signals, run a cold email pipeline with human gates, work a LinkedIn outbound loop, follow up on email and WhatsApp when LinkedIn goes quiet, audit what ChatGPT and Perplexity say about a brand, map the Reddit threads that own a category, batch ad creative.
 
 Every step that touches data calls a [RouterGrowth](https://www.routergrowth.com) capability: one key, pay per call, one balance, a price quoted before every billable run. The steps that reason (grading, writing, triage) run on the agent. Nothing here posts, comments or automates engagement on a platform.
 
@@ -37,6 +37,7 @@ npx skills add RouterGrowth/skills
 | [cold-email-pipeline](skills/cold-email-pipeline) | Research, list, grade, verify, write, send. Two human gates. Directives folder holds the ICP and the copy rules | people.search, contact.find, contact.verify, web.scrape, email.inboxes, email.send |
 | [sdr-daily](skills/sdr-daily) | One day of the loop: drip, follow-ups due, reply triage, suppression, briefing | email.messages, email.send, history |
 | [linkedin-outbound](skills/linkedin-outbound) | Search, read the profile, invite with a note, message after accept, read replies. Daily caps | linkedin.search, linkedin.profile, linkedin.invitations_sent, linkedin.invite, linkedin.message, linkedin.messages |
+| [multichannel-intent-outbound](skills/multichannel-intent-outbound) | Five steps from signal to reply: high-intent leads, their LinkedIn, connect and message, enrich, then follow up by email and WhatsApp when nobody answers. Three gates, one sequence per person | people.search, social.search, linkedin.search, linkedin.profile, linkedin.invite, linkedin.message, contact.find, contact.verify, contact.phone, whatsapp.profile, gmail.send, whatsapp.message, and the three inboxes |
 | [ai-visibility-audit](skills/ai-visibility-audit) | A frozen prompt panel across ChatGPT, Claude, Gemini and Perplexity: mentions, citations, share of voice | aeo.answer, aeo.mentions, aeo.keywords, seo.serp |
 | [reddit-surface-map](skills/reddit-surface-map) | The threads ranking for your money queries, the subreddits behind them, their rules | seo.serp, social.search, social.comments, web.scrape |
 | [brand-mention-sweep](skills/brand-mention-sweep) | Every mention of the brand, founder and competitors in 90 days, with sentiment and the threads worth a human reply | social.search, news.search, web.search, reviews.search |
@@ -47,7 +48,7 @@ Prices come from `inspect` at run time, never from this repo. The catalog with l
 
 ## Long-running loops
 
-sdr-daily, linkedin-outbound and community-help-drafts run every day. They share one shape (monitor before you source, unknown is not "no reply", an approval covers one exact message, a reply stops the sequence), written up in [docs/daily-lifecycle.md](docs/daily-lifecycle.md).
+sdr-daily, linkedin-outbound, multichannel-intent-outbound and community-help-drafts run every day. They share one shape (monitor before you source, unknown is not "no reply", an approval covers one exact message, a reply stops the sequence), written up in [docs/daily-lifecycle.md](docs/daily-lifecycle.md).
 
 ## How a skill is built
 

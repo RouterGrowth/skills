@@ -1,6 +1,6 @@
 # The daily lifecycle pattern
 
-Several skills here (sdr-daily, linkedin-outbound, community-help-drafts) run as a daily loop rather than a one-off. The loop has a shape that keeps a scheduled agent safe. Copy it when you write one.
+Several skills here (sdr-daily, linkedin-outbound, multichannel-intent-outbound, community-help-drafts) run as a daily loop rather than a one-off. The loop has a shape that keeps a scheduled agent safe. Copy it when you write one.
 
 ## Monitor before you source
 
