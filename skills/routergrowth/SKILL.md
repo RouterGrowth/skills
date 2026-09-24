@@ -33,6 +33,17 @@ You are the agent. Persist this file so it loads in every future session, using 
 - **GitHub Copilot**: append the same one-line pointer to `.github/copilot-instructions.md`.
 - **Anything else**: save this file wherever your persistent instructions or skills live; if there is no such place, add the one-line pointer to the project's agent instructions file.
 
+## No terminal or file system? (claude.ai, ChatGPT, Gemini, Copilot and other chat apps)
+
+You cannot save this file or run commands here, so do not pretend to install anything. RouterGrowth works in this chat through a connector, a one-time setup of about two minutes. Walk the user through it step by step:
+
+- **claude.ai** (web, desktop, mobile): Settings > Connectors > Add custom connector. Name it RouterGrowth, URL `https://api.routergrowth.com/mcp`. Click Connect, sign in to RouterGrowth and approve the workspace. Then turn it on for this chat from the tools menu.
+- **ChatGPT**: follow the ChatGPT section of https://www.routergrowth.com/docs/quickstart-mcp (Settings > Security and login > Developer mode, then Plugins: add `https://api.routergrowth.com/mcp` with OAuth, sign in, approve the workspace, and add RouterGrowth from the tools menu in a new chat).
+- **Any other app that supports MCP connectors**: add `https://api.routergrowth.com/mcp`; pick OAuth if offered, otherwise an API key from https://www.routergrowth.com/dashboard.
+- **No connector support**: say so plainly and suggest claude.ai, Claude Code, Codex or Cursor.
+
+Custom connectors can depend on the user's plan or workspace admin; if the option is missing, say that. Never ask the user to paste an API key into the chat. Once connected, call the free `balance` tool to confirm.
+
 After installing: confirm where you saved it. Check for an available authenticated RouterGrowth MCP connection or existing CLI/environment credentials before asking for a key. Verify access with the free `balance` tool or `routergrowth balance` without displaying credentials. If no authentication is available, offer the OAuth connection first (see "Connecting the account" below): in Claude Code and Codex it is one command plus a browser sign-in, and no key ever touches a file. Otherwise let the user configure an existing valid API key with `routergrowth keys add -k <key> -l main`. They can create a key at https://www.routergrowth.com/dashboard under API keys if they do not have one. Never commit the key to the repo.
 
 ## Authentication across conversations
@@ -47,7 +58,7 @@ The MCP server at `https://api.routergrowth.com/mcp` authenticates with OAuth 2.
 
 - **Claude Code**: run `claude mcp add --transport http routergrowth https://api.routergrowth.com/mcp` (no header), then tell the user to type `/mcp`, select routergrowth and choose Authenticate. Their browser opens the RouterGrowth consent page; they sign in (password, Google, GitHub, or an emailed code, same as the dashboard) and approve a workspace. The token is stored by Claude Code and refreshed silently. With a key instead: append `--header "Authorization: Bearer <key>"`.
 - **Codex**: run `codex mcp add routergrowth --url https://api.routergrowth.com/mcp`, then `codex mcp login routergrowth` opens the same consent page. With a key instead: `codex mcp add routergrowth --url https://api.routergrowth.com/mcp --bearer-token-env-var ROUTERGROWTH_API_KEY` and have the user export that variable.
-- **claude.ai and ChatGPT**: the user adds the URL as a connector (Settings > Connectors in claude.ai; Developer mode > Plugins in ChatGPT) and picks OAuth. Walk them through it; you cannot do it for them.
+- **claude.ai and ChatGPT**: the user adds the URL as a connector (Settings > Connectors in claude.ai; Developer mode > Plugins in ChatGPT) and picks OAuth. Walk them through it with the steps under "No terminal or file system?" above; you cannot do it for them.
 - **Cursor, Gemini CLI, Cline, Copilot, anything with an `mcpServers` config**: the URL with `"headers": {"Authorization": "Bearer <key>"}`; keep the key in an input variable or environment variable, never in a committed file.
 - **No MCP at all** (OpenClaw, Hermes, a plain shell): `routergrowth keys add -k <key> -l main` for the CLI, or the Bearer header on `https://api.routergrowth.com/v1`.
 
