@@ -19,7 +19,7 @@ Reddit threads rank for the queries buyers type and get cited by AI assistants. 
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for: the product and category, three to five competitors, and the market (country, language).
-- Inspect `seo.serp`, `social.search` and `social.comments` once and show the prices: $0.003 a SERP, $0.0021 a post for a Reddit search, $0.06 plus $0.0057 a comment for a thread read. Quote the map: N queries x 2 SERPs, N Reddit searches at a limit of 10 ($0.021 each), M threads at a limit of 30 ($0.231 each). Reading 10 threads is about $2.31, above the core skill's ask-first line, so get a yes on the read pass before it starts.
+- Inspect `seo.serp`, `social.search` and `social.comments` once and show the prices: $0.0035 a SERP, $0.0024 a post for a Reddit search, $0.07 plus $0.00665 a comment for a thread read. Quote the map: N queries x 2 SERPs, N Reddit searches at a limit of 10 ($0.024 each), M threads at a limit of 30 ($0.2695 each). Reading 10 threads is about $2.70, above the core skill's ask-first line, so get a yes on the read pass before it starts.
 
 ## Steps
 
@@ -41,7 +41,7 @@ Run each query, with and without the word "reddit", one after another or through
 routergrowth run -c social.search -i '{"platform":"reddit","query":"crm for small agencies","limit":10}' --max-cost 0.15 --wait 120
 ```
 
-$0.0021 a post: a limit of 10 quotes $0.021 (set `max_cost` 0.03), a limit of 50 quotes $0.104, and fewer posts than the limit bill fewer. Reddit searches often run past 60 seconds; poll a still-running receipt with `runs get -r <run_id> --wait 60 -o file`. The search matches post text (it is a Reddit search page, sorted by relevance) and returns post rows only: `url`, `text` (the title), `body`, `community`, `author`, `created_at` (ISO 8601, UTC). Engagement counts are null on these rows. Expect some off-topic rows. Adds the threads that are active but do not rank yet. Merge with step 2 on URL.
+$0.0024 a post: a limit of 10 quotes $0.024 (set `max_cost` 0.03), a limit of 50 quotes $0.12, and fewer posts than the limit bill fewer. Reddit searches often run past 60 seconds; poll a still-running receipt with `runs get -r <run_id> --wait 60 -o file`. The search matches post text (it is a Reddit search page, sorted by relevance) and returns post rows only: `url`, `text` (the title), `body`, `community`, `author`, `created_at` (ISO 8601, UTC). Engagement counts are null on these rows. Expect some off-topic rows. Adds the threads that are active but do not rank yet. Merge with step 2 on URL.
 
 ### 4. Read the hubs
 
@@ -51,7 +51,7 @@ For the top 10 to 15 threads:
 routergrowth run -c social.comments -i '{"url":"https://www.reddit.com/r/.../comments/...","limit":30}' --max-cost 0.30 --wait 120
 ```
 
-$0.06 a thread plus $0.0057 a comment: 15 comments quote $0.1455 (set `max_cost` 0.20), 30 quote $0.231 (set 0.30), 100 quote $0.63, so read the top 15 to 30 of a thread unless the user wants more. The post itself is not returned, only comment rows: `text`, `author`, `likes` (upvotes, may be null), `replies`, `created_at`, `url`, with HTML entities already decoded. Note which products are recommended and how often, the objections, the questions nobody answered, and whether your brand or competitors are mentioned. Quote verbatim, with the comment URL.
+$0.07 a thread plus $0.00665 a comment: 15 comments quote $0.16975 (set `max_cost` 0.20), 30 quote $0.2695 (set 0.30), 100 quote $0.735, so read the top 15 to 30 of a thread unless the user wants more. The post itself is not returned, only comment rows: `text`, `author`, `likes` (upvotes, may be null), `replies`, `created_at`, `url`, with HTML entities already decoded. Note which products are recommended and how often, the objections, the questions nobody answered, and whether your brand or competitors are mentioned. Quote verbatim, with the comment URL.
 
 ### 5. The subreddit roster
 

@@ -19,7 +19,7 @@ Twenty minutes of calls that replace a monitoring subscription for a brand that 
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for: the brand and product names (and the misspellings people use), the founder's name and handles, three to five competitors, the category phrase, and the window (default 90 days).
-- Inspect `social.search`, `news.search`, `web.search` and `reviews.search` once and show the prices. Social search is priced per platform: X $0.0006 a post, LinkedIn $0.003, Reddit $0.0021; the hold covers the limit and the charge covers the posts returned. Quote the sweep: terms x platforms, with Reddit counted at $0.021 a term at a limit of 10.
+- Inspect `social.search`, `news.search`, `web.search` and `reviews.search` once and show the prices. Social search is priced per platform: X $0.0007 a post, LinkedIn $0.0035, Reddit $0.0024; the hold covers the limit and the charge covers the posts returned. Quote the sweep: terms x platforms, with Reddit counted at $0.024 a term at a limit of 10.
 
 ## Steps
 

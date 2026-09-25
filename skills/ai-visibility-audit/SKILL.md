@@ -20,7 +20,7 @@ Rank tracking asks where a page sits. This asks what the assistant says, whether
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Ask for: the brand and domain, the category in the buyer's words, three to five competitors, and the market (country, language).
-- Inspect `aeo.answer`, `aeo.mentions`, `aeo.keywords` and `seo.serp` once and show the prices. `aeo.answer` is priced per assistant (inspect lists them under pricing by platform): perplexity $0.015, chatgpt $0.06, gemini $0.0765, claude $0.1035 when this was written, so one prompt across the four is about $0.26 and a 20-prompt panel about $5.10 before the mentions and SERP passes. Quote that before running.
+- Inspect `aeo.answer`, `aeo.mentions`, `aeo.keywords` and `seo.serp` once and show the prices. `aeo.answer` is priced per assistant (inspect lists them under pricing by platform): perplexity $0.0175, chatgpt $0.07, gemini $0.08925, claude $0.12075 when this was written, so one prompt across the four is about $0.30 and a 20-prompt panel about $5.95 before the mentions and SERP passes. Quote that before running.
 
 ## Steps
 
@@ -43,7 +43,7 @@ Optional: `aeo.keywords` with the panel's key phrases returns AI search volume, 
 routergrowth run -c aeo.answer -i '{"prompt":"best GTM data api for agents","assistant":"chatgpt","location":"US"}' --max-cost 0.11 --wait 60
 ```
 
-Set `max_cost` from the assistant you call: 0.11 covers all four (claude quotes $0.1035; 0.10 rejects every claude call and silently drops one assistant from the audit). `location` is a country code or name and steers the web search on chatgpt, claude and perplexity; gemini's endpoint refuses it, so gemini answers without it. The result carries `answer`, `model` (the model that actually answered, gpt-4o-mini rather than a flagship: say so in the report), `sources` (cited URLs) and `source_domains`. Run every prompt across `chatgpt`, `claude`, `gemini` and `perplexity`, check every run's `status` before aggregating (a refused or failed run leaves a hole, not an answer), and record per answer: the assistant, the verbatim brand mentions (yours and competitors'), the position of the first mention as the sentence index in the answer, and every cited URL. Gemini's sources come back as Google grounding redirect URLs with no readable domain, so the citation graph and the single-source test cover the other three assistants; say so. Answers vary between runs; run the panel once for a baseline and note that a single run is a sample.
+Set `max_cost` from the assistant you call: 0.13 covers all four (claude quotes $0.12075; 0.12 rejects every claude call and silently drops one assistant from the audit). `location` is a country code or name and steers the web search on chatgpt, claude and perplexity; gemini's endpoint refuses it, so gemini answers without it. The result carries `answer`, `model` (the model that actually answered, gpt-4o-mini rather than a flagship: say so in the report), `sources` (cited URLs) and `source_domains`. Run every prompt across `chatgpt`, `claude`, `gemini` and `perplexity`, check every run's `status` before aggregating (a refused or failed run leaves a hole, not an answer), and record per answer: the assistant, the verbatim brand mentions (yours and competitors'), the position of the first mention as the sentence index in the answer, and every cited URL. Gemini's sources come back as Google grounding redirect URLs with no readable domain, so the citation graph and the single-source test cover the other three assistants; say so. Answers vary between runs; run the panel once for a baseline and note that a single run is a sample.
 
 ### 3. Where the domain already appears
 
@@ -51,7 +51,7 @@ Set `max_cost` from the assistant you call: 0.11 covers all four (claude quotes 
 routergrowth run -c aeo.mentions -i '{"domain":"yourdomain.com","platform":"chatgpt","limit":10}' --max-cost 0.20 --wait 60
 ```
 
-Lists the prompts where the domain is cited today, on `chatgpt` or on `google` (AI Mode); run both. $0.15 a search plus $0.0015 a row: $0.165 at a limit of 10, $0.225 at 50, so `max_cost` 0.20 covers the default and a cap below the quote is refused with a 402 that names it. A `no_match` here is a real finding, not a failure: the domain is not cited anywhere yet, the call is released, not billed, and `result` is null rather than an empty list. The difference between this and the panel is the gap list.
+Lists the prompts where the domain is cited today, on `chatgpt` or on `google` (AI Mode); run both. $0.175 a search plus $0.00175 a row: $0.1925 at a limit of 10, $0.2625 at 50, so `max_cost` 0.20 covers the default and a cap below the quote is refused with a 402 that names it. A `no_match` here is a real finding, not a failure: the domain is not cited anywhere yet, the call is released, not billed, and `result` is null rather than an empty list. The difference between this and the panel is the gap list.
 
 ### 4. The citation graph
 

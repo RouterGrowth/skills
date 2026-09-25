@@ -9,7 +9,7 @@ How a targeting sentence becomes `people.search` (or `company.search`) filters.
 - industries: (the industry labels that match the firm type)
 - company_headcount: (bands from `1-10`, `11-50`, `51-200`, `201-500`, `501-1000`, `1001-5000`, `5001-10000`, `10001+`)
 - locations: (city and country, e.g. "Lyon, France")
-- limit: 25 for a first run ($0.30 in full mode), then what the user asks for
+- limit: 25 for a first run ($0.35 in full mode), then what the user asks for
 
 ## Mapping rules
 
