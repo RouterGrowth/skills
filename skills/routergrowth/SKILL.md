@@ -1,189 +1,282 @@
 ---
 name: routergrowth
-version: 0.4.0
+version: 0.5.0
 description: >-
-  RouterGrowth is the OpenRouter for GTM: one API that routes GTM data
-  calls (SEO/SERP, contact and company enrichment, company signals, social and
-  ads data, image and video generation) across curated providers, pay per
-  call, one balance, plus every provider's own API as raw endpoints. Use this
-  skill when the user asks for GTM data endpoints, lead enrichment,
-  subreddit or channel research, brand monitoring, ad creatives, or mentions
-  routergrowth.
+  Pay-per-call GTM data and actions for agents: find and verify work emails,
+  build lead lists (people.search), enrich people and companies, SERP,
+  keywords and backlinks, AI answer visibility, social profiles, posts and
+  comments (X, LinkedIn, Reddit, Instagram, TikTok, YouTube), ad libraries,
+  Google Maps, news, web scraping, image and video generation, and outbound
+  on email, LinkedIn, Instagram, WhatsApp and Gmail, plus thousands of raw
+  provider endpoints (DataForSEO, Apify, Exa, Firecrawl). Run `discover`
+  before writing a scraper, before a generic web fetch for structured data,
+  before guessing an email address, or before telling the user some data is
+  out of reach. Use whenever the user asks for leads, contacts, enrichment,
+  SEO, social or ad research, or mentions routergrowth. Exception: if the
+  user already has their own MCP server, API key or tool for that exact
+  service, use theirs.
 ---
 
 # RouterGrowth
 
-**The OpenRouter for GTM.** OpenRouter routes model calls: one key, every model, pay per token. RouterGrowth is the same pattern one layer over, for the GTM calls an agent or a team makes: one key, pay per call, everything you need to grow the company you work for.
+The OpenRouter for GTM: one key, one prepaid balance, pay per call. You discover what you need, inspect its schema, run it, and the call settles against the workspace wallet. RouterGrowth picks and contracts the providers, meters every call and normalizes the output.
 
-**One API for everything GTM, data and creation alike.** You (the agent) discover a capability, inspect its schema and exact price, run it, and the call settles against one prepaid balance. RouterGrowth chooses and contracts the providers, meters every call, and normalizes the output. The catalog covers GTM data (SEO, enrichment, signals, social, ads) and creative generation, live on fal: images, edits, upscales, cutouts and short-form video. GTM runs on content, and making it is part of the job, not a separate stack.
+`discover` returns two kinds of results:
 
-**Two tiers, one front door.** Capabilities are the routed product (normalized output, a quote before the run, failover across providers). Underneath sits every provider's own API as raw endpoints, imported from the providers' catalogs (DataForSEO's full live API, thousands of Apify actors, TikHub, Exa, Firecrawl and more), addressed as provider + endpoint, called with the provider's request shape and answered with its payload, settled on the provider's measured cost after the run. `discover` searches both and tells you when a capability wraps the endpoint you found: prefer the capability.
+- **Capabilities** (`contact.find`, `seo.serp`): routed across providers, normalized output, a quote before the run, automatic failover. Prefer these.
+- **Raw endpoints** (`dataforseo /v3/serp/google/organic/live/advanced`): one provider's own API, request shape and payload, no failover, settled on the provider's measured cost after the run. When `discover` says a capability wraps the endpoint you found (`wrapped_by`), use the capability.
 
-## Installing this skill (when the user says "set up https://www.routergrowth.com/SKILL.md")
+## Start here: are you already connected?
 
-You are the agent. Persist this file so it loads in every future session, using whichever location matches your harness:
+1. **RouterGrowth MCP tools in your tool list** (`discover`, `inspect`, `run`, ...)? Use them and ignore the CLI. The free `balance` tool confirms the connection.
+2. **Otherwise, does `routergrowth --version` work?** Use the CLI (it needs 0.4.0 or later; if older, run `npm install -g routergrowth@latest`). `routergrowth balance` confirms the key.
+3. **Neither?** Follow [Setup](#setup-first-time-only) at the end of this file.
 
-- **Claude Code**: save this file to `~/.claude/skills/routergrowth/SKILL.md` (all projects) or `.claude/skills/routergrowth/SKILL.md` (this project only).
-- **Codex**: append to `AGENTS.md` (or `~/.codex/AGENTS.md` for all projects): `For GTM data tasks (SEO, enrichment, social, ads, leads), fetch and follow https://www.routergrowth.com/SKILL.md`
-- **OpenClaw**: save this file to `~/.openclaw/skills/routergrowth/SKILL.md`.
-- **Hermes**: save this file to `skills/routergrowth/SKILL.md` in the workspace.
-- **Cursor**: save this file to `.cursor/rules/routergrowth.mdc`.
-- **Gemini CLI**: append the same one-line pointer to `GEMINI.md`.
-- **Cline**: append the same one-line pointer to `.clinerules`.
-- **GitHub Copilot**: append the same one-line pointer to `.github/copilot-instructions.md`.
-- **Anything else**: save this file wherever your persistent instructions or skills live; if there is no such place, add the one-line pointer to the project's agent instructions file.
+A key that is missing from this environment is not an expired key. Check for an MCP connection, `ROUTERGROWTH_API_KEY` or a configured CLI before asking the user for anything.
 
-## No terminal or file system? (claude.ai, ChatGPT, Gemini, Copilot and other chat apps)
+## Whole jobs: load a workflow skill
 
-You cannot save this file or run commands here, so do not pretend to install anything. RouterGrowth works in this chat through a connector, a one-time setup of about two minutes. Walk the user through it step by step:
+When the request is a complete GTM job, a workflow skill already encodes the steps, the order and the checks. Load it and follow it; the rules in this file still apply. All open source at https://github.com/RouterGrowth/skills (Claude Code: `claude plugin marketplace add RouterGrowth/skills` then `claude plugin install routergrowth@routergrowth`; other agents: `npx skills add RouterGrowth/skills`).
 
-- **claude.ai** (web, desktop, mobile): Settings > Connectors > Add custom connector. Name it RouterGrowth, URL `https://api.routergrowth.com/mcp`. Click Connect, sign in to RouterGrowth and approve the workspace. Then turn it on for this chat from the tools menu.
-- **ChatGPT**: follow the ChatGPT section of https://www.routergrowth.com/docs/quickstart-mcp (Settings > Security and login > Developer mode, then Plugins: add `https://api.routergrowth.com/mcp` with OAuth, sign in, approve the workspace, and add RouterGrowth from the tools menu in a new chat).
-- **Any other app that supports MCP connectors**: add `https://api.routergrowth.com/mcp`; pick OAuth if offered, otherwise an API key from https://www.routergrowth.com/dashboard.
-- **No connector support**: say so plainly and suggest claude.ai, Claude Code, Codex or Cursor.
+| Skill | Use it when the user wants |
+|---|---|
+| `cold-email-pipeline` | a cold email campaign end to end from one targeting sentence |
+| `sdr-daily` | one day of a running campaign: replies, follow-ups, the next drip |
+| `hiring-signal-outbound` | leads from companies hiring for a role that implies the problem they solve |
+| `social-lead-discovery` | leads from posts, hashtags or a competitor's commenters, enriched to a verified email |
+| `linkedin-outbound` | LinkedIn invites and messages from their connected account |
+| `multichannel-intent-outbound` | high-intent leads worked on LinkedIn and email together |
+| `ai-visibility-audit` | what ChatGPT, Claude, Gemini and Perplexity say about a brand and its category |
+| `reddit-surface-map` | the subreddits and threads that own a category |
+| `brand-mention-sweep` | every mention of a brand, founder and competitors in the last 90 days |
+| `community-help-drafts` | threads where they can answer a real question, with replies drafted for a human to post |
+| `ad-creative-batch` | a set of ad creatives from one brief |
 
-Custom connectors can depend on the user's plan or workspace admin; if the option is missing, say that. Never ask the user to paste an API key into the chat. Once connected, call the free `balance` tool to confirm.
+## The loop
 
-After installing: confirm where you saved it. Check for an available authenticated RouterGrowth MCP connection or existing CLI/environment credentials before asking for a key. Verify access with the free `balance` tool or `routergrowth balance` without displaying credentials. If no authentication is available, offer the OAuth connection first (see "Connecting the account" below): in Claude Code and Codex it is one command plus a browser sign-in, and no key ever touches a file. Otherwise let the user configure an existing valid API key with `routergrowth keys add -k <key> -l main`. They can create a key at https://www.routergrowth.com/dashboard under API keys if they do not have one. Never commit the key to the repo.
+| Step | MCP tool | CLI | HTTP (`https://api.routergrowth.com/v1`) |
+|---|---|---|---|
+| Find | `discover` | `discover -q "verified work email"` (`--kind endpoint` for raw) | `POST /discover` |
+| Read the contract | `inspect` | `inspect -c contact.find` or `inspect -p PROVIDER -e ENDPOINT` | `POST /inspect` |
+| Run | `run` | `run -c CAP -i 'JSON' --max-cost X` | `POST /run` |
+| Many inputs | `batch_run` (1–200, `max_total_cost`) | one `run` per input | one `POST /run` per input |
+| Wait for a result | `get_run` | `runs get RUN_ID --wait 60 -o out.json` | `GET /runs/{id}?wait=60` |
+| Recent runs | `runs` | `runs` | `GET /runs` |
+| Already done to someone? | `history` | `history alex@example.com` or `history --file leads.txt` | `GET /history?q=...`, `POST /history` |
+| Ask the same thing later | `watch`, `watches` | (HTTP or MCP) | `POST /watch`, `POST /watch/{id}/refresh` |
+| Balance | `balance` | `balance` | `GET /wallet` |
 
-## Authentication across conversations
+HTTP auth is `Authorization: Bearer <key>`. `discover`, `inspect`, `history`, `runs` and `balance` are free.
 
-Installing this skill provides instructions; it does not authenticate the user's account. A key saved in a temporary or isolated chat environment may be unavailable in a new conversation or workspace. The key itself is not invalidated by starting a new chat. Do not ask for a "fresh" key merely because none is configured in the current environment, and do not claim credentials persist unless the host provides persistent storage.
+1. **Discover with short noun phrases** ("tiktok video comments", "company funding rounds"). Split a request that spans several sources into one discover per source.
+2. **Inspect before the first run** of any capability or endpoint. Its input schema is the source of truth: never guess field names or values (values outside an allowed list are refused before routing). Inspect once for a batch of the same call, not once per item.
+3. **Read the Hints block** that discover, inspect and run return. It names the capability that wraps an endpoint, what to try after a miss, and caveats. Prefer its suggestion over guessing.
+4. **Use health to break ties, never to filter.**
 
-Prefer an existing authorized MCP connection when available. For ChatGPT / Work, guide the user through the ChatGPT section of https://www.routergrowth.com/docs/quickstart-mcp: connect `https://api.routergrowth.com/mcp` using OAuth, sign in to RouterGrowth, and approve the intended workspace. That connection can be reused across chats, though it may need to be selected in a new chat or reauthorized if expired or revoked. Custom MCP availability depends on the account and workspace policy. If unavailable, use the user's existing valid key through the environment's supported credential configuration. Keep credentials out of skill files, shared documents, and chat memory.
+   | Health | Meaning |
+   |---|---|
+   | `healthy` | confirmed working in the last few minutes |
+   | `stable` | no very recent data, strong longer track record |
+   | `degraded` | unstable or trending that way; usually still works |
+   | `outage` | known not working |
+   | `unknown` | not enough traffic for a verdict; not a warning |
 
-## Connecting the account
-
-The MCP server at `https://api.routergrowth.com/mcp` authenticates with OAuth 2.1 (PKCE, dynamic client registration) or with an API key in the Authorization header. Both reach the same workspace and wallet. Offer OAuth first where the harness supports it; fall back to a key for headless runs, CI, or clients that cannot open a browser.
-
-- **Claude Code**: run `claude mcp add --transport http routergrowth https://api.routergrowth.com/mcp` (no header), then tell the user to type `/mcp`, select routergrowth and choose Authenticate. Their browser opens the RouterGrowth consent page; they sign in (password, Google, GitHub, or an emailed code, same as the dashboard) and approve a workspace. The token is stored by Claude Code and refreshed silently. With a key instead: append `--header "Authorization: Bearer <key>"`.
-- **Codex**: run `codex mcp add routergrowth --url https://api.routergrowth.com/mcp`, then `codex mcp login routergrowth` opens the same consent page. With a key instead: `codex mcp add routergrowth --url https://api.routergrowth.com/mcp --bearer-token-env-var ROUTERGROWTH_API_KEY` and have the user export that variable.
-- **claude.ai and ChatGPT**: the user adds the URL as a connector (Customize > Connectors in claude.ai; Developer mode > Plugins in ChatGPT) and picks OAuth. Walk them through it with the steps under "No terminal or file system?" above; you cannot do it for them.
-- **Cursor, Gemini CLI, Cline, Copilot, anything with an `mcpServers` config**: the URL with `"headers": {"Authorization": "Bearer <key>"}`; keep the key in an input variable or environment variable, never in a committed file.
-- **No MCP at all** (OpenClaw, Hermes, a plain shell): `routergrowth keys add -k <key> -l main` for the CLI, or the Bearer header on `https://api.routergrowth.com/v1`.
-
-What the OAuth flow looks like, so you can explain it: the client gets a 401 from `/mcp`, reads `/.well-known/oauth-protected-resource`, registers itself, and opens `/oauth/authorize` with a redirect back to itself (a localhost port for terminal clients). The consent page names that return host; the user should deny if it is not the app they are connecting. The token grants one scope, `mcp`, on one workspace: discover, inspect, run, runs, history and balance. It cannot mint keys or change billing. After connecting, confirm with the free `balance` tool. The user can revoke any connection from the dashboard or `DELETE /v1/connected-apps/{id}`.
-
-## Getting a key
-
-Self-serve. Sign up on https://www.routergrowth.com/dashboard or from the CLI (`routergrowth signup --email <email> --org "<org>"`): the workspace starts with $1 of credit and the first calls cost a fraction of a cent. `rg_live_` keys run on real providers; `rg_test_` keys run the same loop (quote, reserve, settle) in clearly labeled mock mode. Never present mock-mode data as real data. `/v1/discover` returns `status` per capability; a coming-soon capability answers from the sandbox only.
-
-## The CLI (preferred for agents)
+5. **Runs submit and return a run ID.** Poll with `runs get RUN_ID --wait 60` (or `get_run`) instead of blocking the conversation. Use `--wait` on the run only when blocking is fine: `social.*` and `people.search` often take over a minute, `creative.video` 1–4 minutes. Write large results to a file with `-o`.
 
 ```bash
-npm install -g routergrowth
-# EACCES from a global install? Use a per-user prefix instead:
-#   npm install --prefix ~/.local routergrowth
-#   ln -sf ~/.local/node_modules/.bin/routergrowth ~/.local/bin/routergrowth
-
-routergrowth setup --client "<your-agent-name>"
-routergrowth keys add -k <the user's key> -l main      # or: routergrowth signup --email <email> --org "<org>"
-routergrowth balance
-routergrowth discover -q "find a verified email for a person"          # capabilities and raw endpoints, ranked, with hints
+# One email
 routergrowth inspect -c contact.find
 routergrowth run -c contact.find -i '{"first_name":"Alex","last_name":"Rivera","company_domain":"example.com"}' --max-cost 0.10
-# run submits immediately; poll only when you need the result now:
-routergrowth runs get -r <run_id> --wait 60 -o result.json
-routergrowth discover -q "tiktok video comments" --kind endpoint       # the long tail: one provider's own endpoint
+
+# A raw endpoint: the provider's own request shape and payload
+routergrowth discover -q "google organic serp" --kind endpoint
 routergrowth inspect -p dataforseo -e /v3/serp/google/organic/live/advanced
 routergrowth run -p dataforseo -e /v3/serp/google/organic/live/advanced -i '{"keyword":"best crm"}' --max-cost 0.05 -o serp.json
-routergrowth endpoints -p dataforseo -q backlinks                      # everything one provider serves raw
-routergrowth runs                                   # recent runs; runs get <id> --wait 60 polls a slow one; runs stop <id> cancels a queued one
-routergrowth history alex.rivera@example.com        # everything already done to this subject (email, domain, LinkedIn URL, handle, name): touches, results to reuse. Free
-routergrowth history --file leads.txt               # one identifier per line: seen / contacted / reusable, the dedupe pass before a batch
-routergrowth guard --daily 25                       # daily spend cap; guard --per-run 1 blocks any single run holding more than $1
+
+# A slow run: submit, then poll
+routergrowth run -c social.search -i '{"platform":"x","query":"cold email agency","limit":10}' --max-cost 0.10
+routergrowth runs get -r <run_id> --wait 60 -o posts.json
+
+# Everything one provider serves raw
+routergrowth endpoints -p dataforseo -q backlinks
 ```
 
-The CLI prints plain text with no colors and never prompts interactively, so you can drive it directly. `run` submits immediately by default and returns a compact receipt; add `--wait` (or `--wait 60`; `--wait 120` for Apify-backed capabilities such as `social.*` and `people.search`, which often take over a minute) only when blocking is appropriate, then use `runs get -r <run_id> --wait 60 -o result.json` to poll without flooding the conversation. Always run `inspect` and show the user the price before a billable `run`; use `--max-cost` to cap any call; write large results to a file with `-o`.
+The CLI prints plain text without colors and never prompts, so you can drive it directly. `-j` gives JSON.
 
-The user can see the same state in a browser at https://www.routergrowth.com/dashboard (balance, keys, runs, usage, scoped to their key); still report prices and balances in the conversation yourself (`routergrowth balance`, `routergrowth runs`).
+## Money
 
-## The HTTP interface (same contract as the CLI)
+Every run spends the user's prepaid balance. The guardrails below are fixed. Talking about cost is your judgment.
 
-Base URL: `https://api.routergrowth.com/v1` · Auth: `Authorization: Bearer rg_live_...` (or `rg_test_...`)
+**Guardrails (always):**
 
-1. `POST /v1/discover` with `{"query": "find a verified email for a person"}`: returns candidate capabilities. Free, never executes a paid call.
-2. `POST /v1/inspect` with `{"capability": "contact.find"}`: returns the input schema, the providers behind it, the exact versioned price and the billing conditions. Free.
-3. `POST /v1/run` with the capability, your input, and `"routing": {"provider": "auto", "strategy": "best_value", "max_cost": "0.10"}`. Send an `Idempotency-Key` header. The maximum billable amount is reserved first, then settled to the actual charge; failures and no-matches release the hold. On auto routing the router waterfalls: if a provider errors, times out, or finds no match (on capabilities that don't bill unmatched calls), the next-best provider is tried automatically, up to 3 attempts: only the provider that delivers is charged, every attempt appears in the response's `attempts` array, and `max_cost` caps each attempt. Keep `provider: "auto"` unless the user deliberately requests a provider. Pinning any provider disables cross-provider fallback even with `allow_fallback: true`. Set `"allow_fallback": false` to disable fallback entirely.
-   Runs execute on the router's worker. The request waits up to `wait_seconds` (default 30, max 120) and answers 200 with the finished run, or 202 with a queued/running run: poll `GET /v1/runs/{run_id}?wait=60` until `done` is true. Send `"async": true` to get the 202 immediately. Slow capabilities (creative.video takes 1 to 4 minutes, people.search with a large limit) always need the poll. `POST /v1/runs/{run_id}/cancel` stops a run that is still queued (`stoppable` is true); a run already at the provider cannot be stopped and settles or releases on its own.
-4. `GET /v1/wallet` and `GET /v1/runs` for balance and history.
-5. Spend guard: `GET /v1/spend-guard` shows the organization's daily cap (UTC day), the optional per-run ceiling and today's spend; `POST /v1/spend-guard {"enabled": true, "daily_limit": "25", "per_run_limit": "1"}` sets them. When a control stops a run it ends as `status: blocked` (error `budget_exceeded` or `cost_limit_exceeded`, a `controls` list naming the control) and nothing is charged; tell the user, do not retry until they change the control or the day resets (`resets_at`).
-6. Watches, for anything you will ask again: `POST /v1/watch` with the same body as run plus a `name` saves the query and runs it once; `POST /v1/watch/{id}/refresh` reruns it (billed like a run) and answers with only the new and changed records plus the keys that disappeared. Records key on their own identity (a posting's URL, a LinkedIn URL, an award id, a USAJOBS control number); ranking fields do not count as changes. One watch per office, contractor, keyword or search, one refresh per week: the delta is free, the query costs what it costs. Full page: https://www.routergrowth.com/docs/api/watch.md
-7. Raw endpoints: `POST /v1/discover` returns them next to capabilities (`kind: "endpoint"`, with `provider`, `endpoint`, `cost`, `health`, `wrapped_by`); `POST /v1/inspect {"provider": ..., "endpoint": ...}` returns the provider's own input spec (`pathParams`, `queryParams`, `body`, `bodyType`), the cost model and a ready `run.cli`; `POST /v1/run {"provider": ..., "endpoint": ..., "input": {...}, "path": {...}, "query": {...}, "routing": {"max_cost": "0.05"}}` executes it. There is no quote: the wallet holds the rate-card estimate with headroom (or $1 when there is none, lowered by `max_cost`), then settles on the provider's measured cost, never above the hold. Provider errors release the hold. `result.data` is the provider's payload untouched. Full page: https://www.routergrowth.com/docs/api/endpoints.md
+- **Set `max_cost` on every run.** On a raw endpoint it is the only price control before the run.
+- **Start small on per-result providers** (limit 5–10 on a first call). Apify-style actors bill per item and `maxItems` often applies per query: 3 search terms with `maxItems: 10` can return 30 results. Pass one term, URL or handle per call unless the user asked for more.
+- **Stop and ask before a batch that would exceed about $1**, unless the user asked for that volume; then use `batch_run` with `max_total_cost`. "Do 50" authorizes 50 within the stated cap: do not ask again between items.
+- **Never raise a budget or `max_cost` past what the user authorized.**
+- **A `blocked` run is final.** A workspace control stopped it (the `controls` list names which) and nothing was charged. Tell the user; do not retry until they change the control or it resets (`resets_at`).
 
-### Prices and spending limits
+**Reporting cost (judgment):** the price is in `inspect` before a run and the actual charge is `billing.charged` after it. Report costs when they are relevant:
 
-Always show the user the `/v1/inspect` price before running anything billable. Inspect's headline is the starting price; per-result capabilities quote a base plus a per-result rate, and some platforms cost more than the headline. A `402 cost_limit_exceeded` names the actual quote: lower the limit or, within the user-authorized budget, raise `max_cost` to it and rerun, and treat the quote as the number to show the user. A per-result capability holds the requested limit and bills the results returned, so fewer results cost less; keep limits honest, since the hold must fit the balance and `max_cost`. Page-priced capabilities cost the same page for 3 results as for 25: `people.search` on the LinkedIn route is $0.175 a page of 25 plus $0.007 a requested full profile, plus a lookup allowance of up to $0.035087 per employer when company-constrained (25 full profiles at one employer quote $0.385087 at list price). Ask for 25 only when you will use them; use a small limit for a few leaders and narrow with `titles`, `company_domains` and necessary `locations`. Successful LinkedIn searches retain the requested-limit billing floor even after unsuitable rows are filtered; unresolved or empty attempts release the hold. For the leaders of a known company, pass the company with a small `limit` instead (`company_domains` is precise; a name in `companies` works when only one company carries it): $0.042 a person actually returned, with a work email when available.
+- the user has shown they care about cost (asked for prices, set a budget, mentioned their balance);
+- a job ran many calls: give the total as the sum of each run's `billing.charged` (the wallet is shared by every session on the key, so a balance difference is not a receipt);
+- you are about to cross the $1 stop above;
+- a charge would surprise them (a no-match that billed, a raw endpoint that settled near its cap).
 
-### Choosing a lookup
+Otherwise do not narrate cent-level charges; the user sees every run at https://www.routergrowth.com/dashboard. `rg_test_` keys return clearly labeled mock data: say so, and never present it as real.
 
-To locate a named person or their email, call `person.enrich` or `contact.find`, never `web.search` with the name: a search returns pages, not an email, and one run spent 115 searches that way. Government staff are findable: run `contact.find` with the domain of the office the person sits in (a member's own domain, the committee's, the agency's); a miss is free. Measured on real runs: House and Senate staff match 3 times in 4, better than company staff; agency staff a little under half. When it misses, take the point of contact printed on the notice or agency page and `contact.verify` it ($0.011); .mil coverage is thinner.
+**How prices work (read the numbers from `inspect`; they change):**
 
-### Fallback and retries
+- **Capabilities** hold the quote, then settle to the actual charge. Provider failures release the hold; so do no-matches on capabilities that do not bill them (inspect shows `bill_on_no_match`).
+- **Per-result capabilities** hold base + per result x limit and bill the results returned. Keep limits honest: the hold must fit both the balance and `max_cost`.
+- **Page-priced capabilities** cost the same page for 3 results as for 25. `people.search` on the LinkedIn route bills a page of 25, plus a rate per full profile, plus an employer lookup when company-constrained. Ask for 25 only when you will use them. For the leaders of a known company, pass `company_domains` with a small `limit` instead: billed per person returned, work email included when available.
+- **Raw endpoints** have no quote. The wallet holds the rate-card estimate with headroom (or $1 when there is none, lowered by `max_cost`) and settles on the provider's measured cost, never above the hold.
+- **`max_cost` also decides which fallback providers may run.** A failed run names the alternatives the cap excluded and the cap they need. Raise it once, within the authorized budget, instead of re-running the same call.
+- **Google operators** (`site:`, `inurl:`) bill at five times the price and are not reliably honored. Use plain phrases (append "reddit" rather than `site:reddit.com`).
+- **Spend guard:** `routergrowth guard --daily 25` caps a UTC day; `guard --per-run 1` blocks any single run holding more than $1 (`/v1/spend-guard` over HTTP).
 
-`max_cost` also decides which fallback providers the router may try: on an unbilled no-match or provider failure, the error names budget-excluded alternatives and their input-specific minimum cap when available. Retry with a higher cap only within the user-authorized budget. Pinning a provider disables fallback even with `allow_fallback: true`. The router already retries a rate-limited or 5xx provider once after a short wait; never resubmit a failed call within seconds. Values outside a field's allowed list (`inspect` prints them) are refused before routing. Google search operators (`site:`, `inurl:`) are billed at five times the price and not reliably honoured; use plain phrases.
+## Run statuses
 
-### Batch accounting and limits
+| Status | Meaning | `done` |
+|---|---|---|
+| `queued` | waiting for the worker; `stoppable` is true | no |
+| `running` | at the provider; cannot be stopped, settles or releases on its own | no |
+| `succeeded` | result in `result`; `billing.charged` is final | yes |
+| `no_match` | nobody had it; free on most capabilities | yes |
+| `failed` | every allowed provider failed; `attempts` lists each try | yes |
+| `timed_out` | the provider did not answer in time | yes |
+| `cancelled` | stopped while queued (`runs stop RUN_ID`, `POST /runs/{id}/cancel`) | yes |
+| `blocked` | a workspace control stopped it before it ran; nothing charged | yes |
 
-Total a job by summing each run's `billing.charged`; the wallet balance is shared by every session on the key and is not a receipt. If the CLI loses its connection while waiting, the run continues on the router; `routergrowth runs` lists it and `runs get` fetches it, so check before resubmitting; inspect once for a homogeneous batch, not once per item. Respect `max_cost` (on a raw endpoint it is the only price control before the run: set it every time), keep first-call limits small on per-result providers (Apify actors bill per item and `maxItems` often applies per query, not per call), and stop and ask when a batch would exceed about $1 unless the user explicitly requested that volume and you use `batch_run` with `max_total_cost`. A request such as “do 50” authorizes 50 items within the surfaced total cap; do not ask again between items. Read the `hints` block discover and inspect return: it says which capability wraps an endpoint, and what to try when nothing matched. Health (`healthy`, `stable`, `degraded`, `outage`, `unknown`) breaks ties between two options that both fit; never skip an option because it is `unknown`, that usually means low traffic.
+## When something goes wrong
 
-### Lead-list workflow
+| Error | What it means | What to do |
+|---|---|---|
+| `invalid_api_key` (401) | the key is wrong or revoked | check `routergrowth keys list`; the user mints a new key in the dashboard |
+| `insufficient_balance` (402) | available balance is below the hold | tell the user the balance and the amount required; they top up in the dashboard, or lower the limit |
+| `cost_limit_exceeded` (402) | the quote is above `max_cost` | the message names the quote: lower the limit, or raise `max_cost` to it within the budget |
+| `budget_exceeded` / `blocked` | the spend guard or another workspace control | tell the user; wait for the reset or their change |
+| `no_match` | the providers tried had nothing | change the input (spelling, domain, exact LinkedIn URL). An identical input that missed in the last 12 hours returns the earlier miss for free without calling providers; `routing.fresh: true` (CLI `--fresh`) buys a real retry |
+| `invalid_request` (400) | the input does not match the schema | re-inspect and fix the fields |
+| `provider_rate_limited`, `provider_error`, `provider_timeout` | provider trouble | the router already retried once and failed over within `max_cost`; read `attempts`; never resubmit within seconds |
+| connection lost while waiting | the run continues on the router | find it with `runs` or `get_run` before resubmitting |
 
-1. **Discover companies when needed.** If you have targeting criteria but no employer list, discover company domains first. Check each required criterion (industry, headcount, technology, geography) against supporting data. A generic company search is a candidate source, not proof of those criteria. Preserve the original requirements when changing sources; mark unsupported criteria as unknown instead of silently weakening them.
-2. **Choose the route.** Prefer `provider: "auto"`. Apollo needs known companies or preview `person_ids`; it cannot serve a broad title/industry-only people search. Broad people discovery can use another eligible route within budget. Raw endpoints require a provider and do not offer fallback.
-3. **Search roles.** Start `people.search` with the employer's `company_domains` and the `titles` you need. If you also supply `companies` (names or exact LinkedIn company URLs), pair the arrays in the same order; one company per request is easiest to review. Prefer `detail: "full"` for a usable role list. A company name alone can match several businesses. Include equivalent title spellings in the first query, such as "VP Engineering" and "Vice President of Engineering". Directors are a broader seniority choice, not a synonym for CTO. Keep the domain constraint when broadening titles; add a location only when it is a real requirement, because remote employees may live elsewhere.
+**Retrying without paying twice.** The CLI sends a new `Idempotency-Key` with every run. To retry the same request after a lost answer, send the same key again (`--idempotency-key K`, or the header over HTTP): you get the original run back (`Idempotent-Replay: true`) and pay nothing extra. Never reuse a key for a different request; it returns the old run.
 
-4. **Review the evidence.** The LinkedIn route resolves employer identity before searching, checks each profile's current employer ID or URL, and selects the requested-company role even when the person has other jobs. Review `current_positions`, `company_linkedin_url` and `quality_flags` (especially `retirement_mentioned` and `missing_current_title`); `result.quality` reports raw and excluded profile counts. These fields are route-specific and are not guaranteed on database-route results. Employer matching reflects the profile's evidence, not independent employment verification or buyer qualification. A no-match can mean insufficient employer evidence: check domain spelling, try the exact LinkedIn company URL, or relax titles/location without dropping the employer. Do not repeat the identical miss immediately.
+## Choosing the right call
 
-5. **Recover within budget.** Broaden equivalent titles once and remove only optional filters. Read the run's `hints`, error and `attempts`: a pinned provider never falls back; `auto` still needs a cap covering an alternative's complete quote. A $0.042 cap can allow a single database result but excludes a company-constrained LinkedIn full-profile search (one profile at one employer quotes $0.217087 at list price). Use inspect and the returned quote guidance; do not raise a user-set budget without authorization. A higher cap permits another attempt; it does not guarantee a match.
+- **A named person or their email:** `person.enrich` or `contact.find`, never `web.search` with the name. A search returns pages, not an email; one run spent 115 searches that way.
+- **Government staff are findable:** `contact.find` with the domain of the office the person sits in (a member's own domain, the committee's, the agency's). House and Senate staff match about 3 times in 4, agency staff a little under half, and a miss is free. When it misses, `contact.verify` the point of contact printed on the notice or agency page. `.mil` coverage is thinner.
+- **Found is not verified.** Before any `email.send` or `gmail.send`, send only to addresses whose `status` is `valid`. Run `contact.verify` on everything else (`risky`, `catch_all`, `unknown`) and on emails that came from a search row. Treat `invalid` as dead and `catch_all` as risky. Never send to an address no provider returned (`info@`, a guessed `first.last@`).
+- **Before enriching or messaging anyone, call `history`** with the identifier (email, domain, LinkedIn URL, handle, name). It shows what was already done through RouterGrowth and paid results to reuse instead of buying them again.
+- **Anything asked again** (postings, news, searches, awards): `watch` saves the query and runs it once; a refresh returns only new and changed records. One watch per office, keyword or search. See https://www.routergrowth.com/docs/api/watch.md
+- **Creative inputs** (`image_url`) must be a public absolute URL; RouterGrowth does not host files. A `creative.image` result URL works as the next step's input. For a local file, ask the user for a public URL.
+- **Sends** (`email.send`, `gmail.send`, `linkedin.invite`, `linkedin.message`, `instagram.message`, `whatsapp.message`) need the user's authorization and an `Idempotency-Key`. Run the channel's `.accounts` tool first and pass `account_id` when several accounts are connected.
 
-6. **Complete the contact.** The LinkedIn route does not enrich emails. Call `contact.find` only for selected profiles missing an email, using their real first/last names and the matched employer's domain; never guess surnames from initials. Database-route results may already include a work email, so skip the redundant lookup and use `contact.verify` on that address. LeadMagic enriches known people; it does not source an ICP list.
+## Building a lead list
 
-7. **Report coverage honestly.** Separate company candidates, qualified companies, matched people, found emails and verified emails. Never label a list verified because a search succeeded. Report each item's provider, result, charge, run ID and fallback attempts, plus the batch total. See [the worked people-search guide](https://www.routergrowth.com/docs/people-search.md).
+1. **Companies first when you only have criteria.** Discover company domains, then check each required criterion (industry, headcount, technology, geography) against supporting data. A generic company search is a candidate source, not proof. Mark unsupported criteria unknown instead of silently dropping them.
+2. **Route with `provider: "auto"`.** Apollo needs known companies or preview `person_ids`; it cannot serve a broad title-only search. Pinning a provider disables fallback.
+3. **Search roles.** Run `people.search` with the employer's `company_domains` and the `titles` you need, with `detail: "full"`. If you also pass `companies`, pair the arrays in the same order; one company per request is easiest to review. Include equivalent spellings in the first query ("VP Engineering", "Vice President of Engineering"). Directors are a broader seniority, not a synonym for CTO. Add `locations` only when it is a real requirement.
+4. **Review the evidence.** On the LinkedIn route, check `current_positions`, `company_linkedin_url` and `quality_flags` (especially `retirement_mentioned`, `missing_current_title`); `result.quality` counts raw and excluded profiles. A no-match can mean weak employer evidence: check the domain spelling or pass the exact LinkedIn company URL. Do not repeat an identical miss.
+5. **Recover within budget.** Broaden titles once, drop only optional filters, read `hints` and `attempts`. A higher cap allows another provider; it does not guarantee a match.
+6. **Complete the contact.** The LinkedIn route does not return emails: run `contact.find` (or `batch_run` it) only for the profiles you selected, with real first and last names and the matched employer's domain. Never guess a surname from an initial. Database-route rows may already carry a work email: `contact.verify` it instead of finding it again. LeadMagic enriches known people; it does not source lists.
+7. **Report coverage honestly.** Separate company candidates, qualified companies, matched people, found emails and verified emails. A successful search is not a verified list. Full guide: https://www.routergrowth.com/docs/people-search.md
 
-## When NOT to use RouterGrowth
+## What is live
 
-RouterGrowth fills the gaps in the user's stack; it does not replace tools they already have. Precedence: (1) an explicit instruction from the user for this task; (2) the user's own dedicated tools: an MCP server, a personal API key, a CLI or a workflow in their memory or config for that service (a personal SEO-tool key, a scraping MCP); (3) RouterGrowth for what those do not cover. Runs spend the user's RouterGrowth balance; never spend it on a request their own key already covers at no extra cost. When both could do the job and the user has not stated a preference, use their tool and mention RouterGrowth as an alternative only when it adds something (a second provider behind the same name, a quote, failover, a raw endpoint their tool lacks). Offer, don't override.
+`discover` and `inspect` are the source of truth: each capability carries a `status`, and a `coming_soon` one answers from the sandbox only (never present that as real data). Browse at https://www.routergrowth.com/catalog.
 
-Prefer MCP? Connect `https://api.routergrowth.com/mcp` (Streamable HTTP): `discover`, `inspect`, `run`, `batch_run`, `runs`, `get_run`, `history` and `balance` as native tools, same contract as above. `batch_run` submits 1–200 homogeneous inputs concurrently and returns individual receipts plus aggregate cost. Claude Code, Codex, claude.ai and ChatGPT connect with OAuth (add the URL with no key, sign in once in the browser); other clients, CI and headless agents send a key in the Authorization header. Commands per harness are in "Connecting the account" above.
+- **People and contacts:** `contact.find`, `contact.verify`, `contact.phone`, `person.enrich`, `people.search`.
+- **Companies:** `company.search`, `company.enrich`, `company.funding`, `company.technologies`, `company.jobs` (hiring signals).
+- **SEO and AI search:** `seo.serp` (Google, Bing), `seo.keywords`, `seo.backlinks`, `seo.domain_overview`, `seo.ranked_keywords`, `seo.competitors`, `seo.page_audit`, `aeo.answer` (ChatGPT, Claude, Gemini, Perplexity, with citations), `aeo.keywords` (AI search volume), `aeo.mentions` (where a domain appears in AI answers).
+- **Social:** `social.profile`, `social.posts`, `social.search`, `social.comments` on X, LinkedIn, Reddit, Instagram, TikTok and YouTube. A profile carries the bio link, the person's own domain (link hubs excluded) and a public email when exposed: that is how a creator or local-business handle becomes a `contact.find` input.
+- **Local, reviews, news, ads:** `local.places` (Google Maps), `reviews.search` (Google Maps, Yelp), `news.search` (Google News), `ads.search` (Meta Ad Library, Google).
+- **Web:** `web.search`, `web.scrape`, `web.extract` (one page in, dated records out against a template: leadership page, official bio, org chart, press release, job posting or your own schema; each record carries its supporting line, date and URL).
+- **Creative (fal):** `creative.image` (flux-schnell, flux-pro, flux-pro-ultra, nano-banana, recraft-v3), `creative.image_edit` (nano-banana-edit, flux-kontext), `creative.upscale`, `creative.remove_background`, `creative.video` (hailuo-02, kling-2.5, kling-2.1, wan-2.2, veo3-fast, veo3).
+- **Outbound email (Name.com, AgentMail):** `domain.search`, `domain.register`, `domain.dns`, `email.domain` (verify a domain you own for sending), `email.inbox`, `email.inboxes` (free: the domains and inboxes the workspace owns; run it before creating or sending), `email.send`, `email.messages`. Inboxes live only on a verified domain you own. To change the From name, rename the inbox (`email.inbox` with `inbox_id` and `display_name`, free); there is no per-email override.
+- **Connected accounts (Unipile, monthly seat per account):**
+  - LinkedIn: `linkedin.accounts` (free), `linkedin.account` (hosted sign-in; without a name it reports what is connected), `linkedin.search`, `linkedin.profile`, `linkedin.invite`, `linkedin.invitations_sent`, `linkedin.message`, `linkedin.messages`.
+  - Instagram: `instagram.accounts` (free), `instagram.account`, `instagram.profile` (bio, links, business email and phone when exposed, whether they follow you, the `messaging_id` a DM needs), `instagram.message`, `instagram.messages`. A first DM to a non-follower lands in their requests folder; about 100 actions a day per account. There is no `instagram.search`: discover people with `social.search` and `social.comments`.
+  - WhatsApp: `whatsapp.accounts`, `whatsapp.account` (QR pairing), `whatsapp.profile` (international number lookup), `whatsapp.message`, `whatsapp.messages`.
+  - Gmail: `gmail.accounts`, `gmail.account` (Google OAuth on an existing mailbox), `gmail.send` (returns a `tracking_id`, not a message ID), `gmail.messages`. Gmail does not create an AgentMail inbox.
+  - Setup, examples and limits: https://www.routergrowth.com/docs/connected-accounts.md
+- **Public federal data, free raw endpoints:** USAspending (awards, incumbents, contracting offices, agency spend) and USAJOBS (postings by agency, title, series and date). `discover` with the provider name.
+- **Coming soon (sandbox only):** `company.signals`, `ads.spend_estimate`.
 
-Full documentation, agent-readable: https://www.routergrowth.com/docs/llms.txt indexes every docs page (quickstarts, API and CLI reference) as raw markdown; append `.md` to any /docs URL for the raw page.
-Catalog (capabilities before vendors): https://www.routergrowth.com/catalog
-Live on real providers today: `contact.find`, `contact.verify`, `contact.phone`, `company.funding`, `seo.serp` (Google, Bing), `seo.keywords`, `seo.backlinks`, `seo.domain_overview`, `seo.ranked_keywords`, `seo.competitors`, `seo.page_audit`, `company.technologies`, `aeo.answer` (ChatGPT, Claude, Gemini, Perplexity with citations), `local.places` (Google Maps), `news.search` (Google News), `social.profile`, `social.posts`, `social.search`, `social.comments` (X, LinkedIn, Reddit, Instagram, TikTok, YouTube; a profile carries the bio link, the person's own domain with link hubs excluded, and a public email when the profile exposes one, which is how a creator or local-business handle becomes a `contact.find` input), `reviews.search` (Google Maps, Yelp), `ads.search` (Meta Ad Library, Google), `web.search`, `web.scrape`, `web.extract` (one page in, dated records out against a template: leadership page, official bio, org chart, press release, job posting, or your own schema; each record carries the page's supporting line, date and URL), `people.search` (build a people list from titles, seniority, headcount, location), `company.jobs` (hiring signals), `company.search`, `person.enrich`, `local.places`, `aeo.keywords` (AI search volume), `aeo.mentions` (where a domain appears in AI answers). Outbound email, live on Name.com and AgentMail: `domain.search`, `domain.register`, `domain.dns`, `email.domain` (verify a domain you own for sending), `email.inbox` (an inbox on that verified domain; no shared-domain inboxes; with inbox_id + display_name it renames an inbox you own, free, which is how you change the From name, there is no per-email override), `email.inboxes` (free: the domains and inboxes the workspace already owns, with inbox_id; run it before creating or sending), `email.send`, `email.messages`. LinkedIn, live on Unipile: `linkedin.accounts` (free: how many accounts the workspace has connected, which profile each one is, and the name to pass as account_id; run it before connecting or sending), `linkedin.account` (connect once on a hosted sign-in; without a name it reports what is already connected), `linkedin.search`, `linkedin.profile`, `linkedin.invite`, `linkedin.message`, `linkedin.messages`. Instagram, live on Unipile on the same hosted sign-in: `instagram.accounts` (free: what is connected and the name to pass as account_id), `instagram.account` (connect once; without a name it reports what is connected), `instagram.profile` (bio, links with the person's own domain resolved, business email and phone when exposed, whether they follow you, and the messaging_id a DM needs), `instagram.message` (a DM to a handle or a reply in a thread; a first message to a non-follower lands in their requests folder; about 100 actions a day per account), `instagram.messages` (read the inbox and threads). There is no instagram.search: discovery is `social.search` and `social.comments`. WhatsApp via Unipile: `whatsapp.accounts`, `whatsapp.account` (hosted QR/pairing connection), `whatsapp.profile` (international phone number lookup), `whatsapp.message` (text to a phone/provider_id or reply by chat_id), `whatsapp.messages` (conversations and threads). Gmail via Unipile: `gmail.accounts`, `gmail.account` (connect an existing Gmail or Google Workspace mailbox through Google OAuth), `gmail.send` (to/cc/bcc, text or html, in_reply_to from gmail.messages), `gmail.messages` (list/search/read emails). These connected accounts use the same monthly seat billing as LinkedIn/Instagram. Gmail does not create an AgentMail inbox: use email.inbox for that. Run the channel's .accounts first; pass account_id when multiple accounts exist. Sends need user authorization and an Idempotency-Key. Gmail sends return tracking_id, not an email message_id. See https://www.routergrowth.com/docs/connected-accounts.md for setup, examples, billing and limitations. Creative, live on fal: `creative.image` (flux-schnell, flux-pro, flux-pro-ultra, nano-banana, recraft-v3), `creative.image_edit` (nano-banana-edit, flux-kontext), `creative.upscale`, `creative.remove_background`, `creative.video` (hailuo-02, kling-2.5, kling-2.1, wan-2.2, veo3-fast, veo3). Public federal data, free on raw endpoints: USAspending (awards, incumbents, contracting offices, agency spend) and USAJOBS (open and closed federal postings by agency code, title, series and date, plus the agency code list): `discover` with the provider name. Coming soon (adapter or provider account pending; sandbox mock only): `company.signals`. `/v1/discover` returns `status` per capability; never present a coming-soon capability's sandbox output as real data.
+## When not to use RouterGrowth
 
-## Playbooks you can run today (no key needed)
+RouterGrowth fills the gaps in the user's stack; it does not replace tools they already have. Precedence:
 
-RouterGrowth's strategy playbooks, free, runnable with whatever data access you already have. Ground rules: never fabricate, every number needs a source URL or an explicit "estimate" label; these playbooks measure and map, they never post, comment or automate engagement anywhere (platforms ban it; if the user asks for automated posting, decline).
+1. an explicit instruction from the user for this task;
+2. the user's own dedicated tools for that service: an MCP server, a personal API key, a CLI or a workflow in their memory or config;
+3. RouterGrowth for what those do not cover.
 
-### 1 · AI visibility audit (about an hour)
+Never spend the RouterGrowth balance on a request their own key already covers. When both could do the job and the user has not said which, use theirs and mention RouterGrowth only when it adds something (another provider behind the same call, a quote, failover, an endpoint their tool lacks). Offer, don't override.
 
-1. Build a panel of 15–20 buyer questions in four groups (category, comparison, problem, brand-direct), phrased the way a buyer talks to an assistant. Freeze the panel and save it; the value is re-running the same questions monthly.
-2. Run the panel across the answer surfaces you can reach (your own web search, SERP checks). Also answer each question cold from your own knowledge and record that as a separate "model prior" column. Log verbatim brand mentions and every cited source.
-3. Map the sources: list cited domains by frequency and flag the specific Reddit threads and comparison pages carrying the category.
-4. Score competitors on the same panel. Share of voice = the brand's mentions divided by all brand mentions on the panel.
-5. Report gaps as absent, wrong, or fragile, each with a next action.
+## Setup (first time only)
 
-### 2 · Reddit surface map (about 30 minutes)
+### Save this file
 
-1. List 10–20 money queries (best X, X vs Y, X alternatives, and problem phrasings).
-2. For each, find the Reddit threads ranking in the top results (append the word "reddit" to the query; a `site:` operator is not honoured and costs five times more). Record thread URL, subreddit, and age.
-3. Roster the subreddits: read each one's rules, note vendor tolerance and posting norms.
-4. Deliver the map: subreddit, why it matters, rules risk, target threads. Never auto-post anything.
+| Harness | Where |
+|---|---|
+| Claude Code | `~/.claude/skills/routergrowth/SKILL.md` (all projects) or `.claude/skills/routergrowth/SKILL.md` (this project), or install the plugin above |
+| OpenClaw | `~/.openclaw/skills/routergrowth/SKILL.md` |
+| Hermes | `skills/routergrowth/SKILL.md` in the workspace |
+| Cursor | `.cursor/rules/routergrowth.mdc` |
+| Codex, Gemini CLI, Cline, Copilot | append to `AGENTS.md`, `GEMINI.md`, `.clinerules` or `.github/copilot-instructions.md`: `For GTM data tasks (leads, enrichment, SEO, social, ads), fetch and follow https://www.routergrowth.com/SKILL.md` |
+| Anything else | wherever persistent instructions live; otherwise the one-line pointer in the project's agent instructions |
 
-### 3 · Brand mention sweep (about 20 minutes)
+Tell the user where you saved it.
 
-1. Terms: brand, product, founder, top competitors, category phrase.
-2. Sweep Reddit and the web for mentions from the last 90 days. Record URL, date, and sentiment (positive, neutral, negative, question).
-3. Flag the threads where an honest reply would matter and draft talking points for a HUMAN to post.
+### Connect the account
 
-## When you finish a playbook
+OAuth first where the client supports it (no key ever touches a file); a key for headless runs, CI and clients without a browser.
 
-Hand the user the report plus the honest limit: you measured and mapped; every number carries its source or an "estimate" label. Machine-readable summary of RouterGrowth: https://www.routergrowth.com/llms.txt
+```bash
+# Claude Code: add the server, then the user types /mcp, picks routergrowth, chooses Authenticate
+claude mcp add --transport http routergrowth https://api.routergrowth.com/mcp
 
-## Workflow skills built on this one
+# Codex
+codex mcp add routergrowth --url https://api.routergrowth.com/mcp
+codex mcp login routergrowth
 
-Complete GTM jobs, each a skill of its own, open source at https://github.com/RouterGrowth/skills (Claude Code: `claude plugin marketplace add RouterGrowth/skills`; other agents: `npx skills add RouterGrowth/skills`): hiring-signal-outbound, social-lead-discovery, cold-email-pipeline, sdr-daily, linkedin-outbound, ai-visibility-audit, reddit-surface-map, brand-mention-sweep, community-help-drafts, ad-creative-batch. When the user's request matches one of those jobs, load that skill and run it; the rules in this file still apply.
+# CLI (any shell)
+npm install -g routergrowth        # EACCES? npm install --prefix ~/.local routergrowth
+routergrowth setup --client "<your-agent-name>"
+routergrowth keys add -k <key> -l main
+routergrowth balance
+```
+
+- **Cursor, Gemini CLI, Cline, Copilot, anything with an `mcpServers` config:** `https://api.routergrowth.com/mcp` with `"headers": {"Authorization": "Bearer <key>"}`, the key in an environment or input variable.
+- **Keys:** the user mints one at https://www.routergrowth.com/dashboard (API keys), or signs up from the CLI (`routergrowth signup --email <email> --org "<org>"`); a new workspace starts with $1 of credit. `rg_live_` keys run real providers; `rg_test_` keys run the same loop in labeled mock mode. Never commit a key, never write one into a skill file, and never ask the user to paste one into a chat.
+- **What OAuth grants:** one scope (`mcp`) on one workspace: discover, inspect, run, runs, history and balance. It cannot mint keys or change billing. The consent page names the app it returns to; the user should deny if that is not the app they are connecting. Connections are revoked from the dashboard.
+
+### Chat apps without a terminal (claude.ai, ChatGPT and others)
+
+You cannot save files or run commands there, so do not pretend to install anything. Walk the user through a connector (about two minutes):
+
+- **claude.ai** (web, desktop, mobile): Settings > Connectors > Add custom connector, name it RouterGrowth, URL `https://api.routergrowth.com/mcp`, Connect, sign in and approve the workspace, then enable it for the chat from the tools menu.
+- **ChatGPT:** the ChatGPT section of https://www.routergrowth.com/docs/quickstart-mcp (Developer mode, then add the URL with OAuth).
+- **Other MCP-capable apps:** add the URL; OAuth if offered, otherwise a dashboard key.
+- **No connector support:** say so plainly and suggest claude.ai, Claude Code, Codex or Cursor.
+
+Custom connectors can depend on the user's plan or workspace admin; if the option is missing, say that. Once connected, call the free `balance` tool.
+
+## Rules for agents
+
+1. Check the user's own tools first, then `discover` before building a scraper, guessing an email or declaring data out of reach.
+2. Load a workflow skill when the request is a whole GTM job.
+3. Inspect before the first run of a call; never guess inputs.
+4. Set `max_cost` on every run; start per-result limits small; stop and ask above about $1 unless the user asked for that volume.
+5. Report costs when they matter to the user or the job; sum `billing.charged` for totals.
+6. Prefer a capability over the raw endpoint it wraps; keep `provider: "auto"` unless the user chose a provider.
+7. Read the Hints block and act on it; use health to break ties, never to filter.
+8. Submit, then poll; save large results with `-o`.
+9. Check `history` before enriching or messaging a person, and verify every address before sending.
+10. A `blocked` run is final: tell the user which control stopped it.
+11. Never present `rg_test_` or `coming_soon` output as real data.
+12. Never resubmit a failed call within seconds, and check `runs` before resubmitting after a lost connection.
 
 ## Keeping current
 
-Re-fetch https://www.routergrowth.com/SKILL.md from time to time and compare the frontmatter version; newer wins.
+Re-fetch https://www.routergrowth.com/SKILL.md when the user asks, when a command or tool described here is refused as unknown, or when the CLI is below the version named above; the higher frontmatter `version` wins. Full docs as markdown: https://www.routergrowth.com/docs/llms.txt (append `.md` to any `/docs` URL).
