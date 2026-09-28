@@ -54,7 +54,7 @@ sdr-daily, linkedin-outbound, multichannel-intent-outbound and community-help-dr
 
 - Frontmatter with `name` and `description` (the description is the trigger: say when to use it).
 - The steps, in order, each naming the capability it calls and the input it passes.
-- The rules: inspect before any billable run, cap every call with `max_cost`, batch with `max_total_cost`, stop and ask before a batch over about $1 unless the user asked for that volume, never present sandbox output as real data, never fabricate.
+- The rules: inspect before the first run of a call, cap every call with `max_cost`, batch with `max_total_cost`, stop and ask before a batch over about $1 unless the user asked for that volume, never present sandbox output as real data, never fabricate.
 - The human gates: where the agent stops and shows its work before anything is sent.
 - The output: what the user gets at the end, in what shape.
 

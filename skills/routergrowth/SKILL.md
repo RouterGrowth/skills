@@ -200,7 +200,7 @@ Otherwise do not narrate cent-level charges; the user sees every run at https://
   - WhatsApp: `whatsapp.accounts`, `whatsapp.account` (QR pairing), `whatsapp.profile` (international number lookup), `whatsapp.message`, `whatsapp.messages`.
   - Gmail: `gmail.accounts`, `gmail.account` (Google OAuth on an existing mailbox), `gmail.send` (returns a `tracking_id`, not a message ID), `gmail.messages`. Gmail does not create an AgentMail inbox.
   - Setup, examples and limits: https://www.routergrowth.com/docs/connected-accounts.md
-- **Public federal data, free raw endpoints:** USAspending (awards, incumbents, contracting offices, agency spend) and USAJOBS (postings by agency, title, series and date). `discover` with the provider name.
+- **Public federal data, free raw endpoints:** USAspending (awards, incumbents, contracting offices, agency spend), USAJOBS (postings by agency, title, series and date), Grants.gov (grant opportunities, with the agency contact on each) and the Federal Register (requests for information, notices and rules, months before a solicitation). `discover` with the provider name.
 - **Coming soon (sandbox only):** `company.signals`, `ads.spend_estimate`.
 
 ## When not to use RouterGrowth
