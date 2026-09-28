@@ -18,9 +18,9 @@ One connected LinkedIn account, a target search, a daily budget of invites and m
 ## Before you start
 
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
-- Run the free `linkedin.accounts` first. It lists the accounts the workspace already connected, which profile each one is, and the `account_id` to pass; ignore rows whose status is `EXPIRED` or `PENDING` (a sign-in link that was never finished). If none is connected, run `linkedin.account` with a name: it returns a hosted sign-in link the user opens once. Never ask for the user's LinkedIn password.
+- Run the free `linkedin.accounts` first. It lists the accounts the workspace already connected, which profile each one is, and the `account_id` to pass; ignore rows whose status is `EXPIRED` or `PENDING` (a sign-in link that was never finished). If none is connected, run `linkedin.account` with a name: it returns a hosted sign-in link the user opens once. Connecting is free, but each connected account then rents a monthly seat charged to the wallet until it is disconnected (the `linkedin.account` catalog note has the amount): tell the user before sending the link. Never ask for the user's LinkedIn password.
 - Ask for the target (title, company type, location), the offer in one sentence, and the daily caps if the user has them. Default: 20 actions a day per account, invites and messages together, never both to the same person on the same day. Keep the log at `linkedin/log.csv` (columns: date, action, profile_url, provider_id, run_id, note_or_message, status) and the suppression list at `linkedin/suppressed.txt`, relative to the folder the user names; ask once.
-- Inspect `linkedin.search`, `linkedin.profile`, `linkedin.invite`, `linkedin.message` once and show the prices. Quote the day: N searches, N profiles, N invites, N messages.
+- Inspect `linkedin.search`, `linkedin.profile`, `linkedin.invite`, `linkedin.message` once, then quote the day: N searches, N profiles, N invites, N messages, plus the monthly seat if an account is being connected.
 
 ## Steps
 

@@ -29,7 +29,7 @@ Raw lead lists are 30 to 50% wrong-ICP. Grade and Verify exist so the campaign d
 - Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not loaded. Confirm access with the free `balance` tool or `routergrowth balance`.
 - Check `directives/` exists in the working project. If not, copy the `directives/` folder next to this file into the project and ask the user to fill `icp.md`, `lead-source.md` and `email-copy.md`. Those three are mandatory; the others have sensible defaults. When no human is in the loop (a scheduled or delegated run), fill them from the brief you were given, say so in the files, and treat the caller's budget as the approval at both gates.
 - Run the free `email.inboxes`. The campaign sends from an inbox the workspace owns on a verified domain. If there is none, stop and run the cold email infrastructure setup first (`domain.search`, `domain.register`, `email.domain`, `domain.dns`, `email.inbox`: the guide at https://www.routergrowth.com/use-cases/cold-email-infrastructure), each purchase behind its own confirmation.
-- Inspect `people.search`, `company.search`, `contact.find`, `contact.verify`, `web.scrape` and `email.send` once and show the prices (inspect lists every input field with its allowed values). Quote the campaign as a whole before stage 2. Over the CLI there is no `batch_run`: loop `run` with `max_cost` on each; `batch_run` with `max_total_cost` is the MCP form.
+- Inspect `people.search`, `company.search`, `contact.find`, `contact.verify`, `web.scrape` and `email.send` once (inspect lists every input field with its allowed values), then quote the campaign as a whole before stage 2. Over the CLI there is no `batch_run`: loop `run` with `max_cost` on each; `batch_run` with `max_total_cost` is the MCP form.
 
 ## Stages
 
@@ -86,7 +86,7 @@ routergrowth run -c email.send -i '{"inbox_id":"<id>","to":["alex@example.com"],
 ## Rules
 
 - Inspect once per capability, quote the whole campaign at stage 2 and the send at Gate 1. Stop before a batch over about $1 unless the user asked for that volume.
-- `max_cost` on every run, `max_total_cost` on every `batch_run` (MCP). Per-result capabilities bill the requested limit even when fewer rows come back.
+- `max_cost` on every run, `max_total_cost` on every `batch_run` (MCP). `people.search` on LinkedIn bills the requested limit even when fewer rows come back; the other per-result capabilities bill the rows returned.
 - Only email people the user is entitled to contact under the law that applies to them and to the recipient. B2B first-party outreach with an identifiable sender and a working opt-out is the floor; the user decides what their jurisdiction needs and the skill does not lower it.
 - Never send from a shared or unverified domain. Never send HTML, images or tracking pixels in a first touch.
 - Never fabricate a product fact, a number or a first line. If the research does not support a hook, use a plain one.

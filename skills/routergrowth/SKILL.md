@@ -160,6 +160,17 @@ Otherwise do not narrate cent-level charges; the user sees every run at https://
 | `provider_rate_limited`, `provider_error`, `provider_timeout` | provider trouble | the router already retried once and failed over within `max_cost`; read `attempts`; never resubmit within seconds |
 | connection lost while waiting | the run continues on the router | find it with `runs` or `get_run` before resubmitting |
 
+**Report what you hit.** When an error does not explain itself, a result is wrong (a namesake's email, a stale posting), or `discover` has nothing for the job, file one report and carry on. It is free, and an accepted report is fixed in a change a person reviews:
+
+```bash
+curl -s -X POST https://api.routergrowth.com/v1/feedback \
+  -H "Authorization: Bearer $ROUTERGROWTH_API_KEY" -H "Content-Type: application/json" \
+  -d '{"kind": "wrong_result", "summary": "contact.find returned the email of a namesake at another company",
+       "goal": "Email the VP Sales of acme.com", "run_id": "run_..."}'
+```
+
+`kind` is `bug`, `wrong_result`, `missing_feature`, `docs`, `pricing` or `other`. Say what you were trying to do in `goal`; pass `run_id` instead of pasting results. Over MCP, the `feedback` tool takes the same fields. `GET /v1/feedback/{feedback_id}` reads the status and the resolution note back. Not for `no_match`, `blocked` or `insufficient_balance`: those are answers.
+
 **Retrying without paying twice.** The CLI sends a new `Idempotency-Key` with every run. To retry the same request after a lost answer, send the same key again (`--idempotency-key K`, or the header over HTTP): you get the original run back (`Idempotent-Replay: true`) and pay nothing extra. Never reuse a key for a different request; it returns the old run.
 
 ## Choosing the right call
@@ -276,6 +287,7 @@ Custom connectors can depend on the user's plan or workspace admin; if the optio
 10. A `blocked` run is final: tell the user which control stopped it.
 11. Never present `rg_test_` or `coming_soon` output as real data.
 12. Never resubmit a failed call within seconds, and check `runs` before resubmitting after a lost connection.
+13. File one `feedback` report for a bug, a wrong result or a missing capability, with the goal and the `run_id`; never once per retry.
 
 ## Keeping current
 
