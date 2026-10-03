@@ -1,6 +1,6 @@
 ---
 name: routergrowth
-version: 0.5.3
+version: 0.5.4
 description: >-
   Pay-per-call GTM data and actions for agents: find and verify work emails,
   build lead lists (people.search), enrich people and companies, SERP,
@@ -29,7 +29,7 @@ The OpenRouter for GTM: one key, one prepaid balance, pay per call. You discover
 ## Start here: are you already connected?
 
 1. **RouterGrowth MCP tools in your tool list** (`discover`, `inspect`, `run`, ...)? Use them and ignore the CLI. The free `balance` tool confirms the connection.
-2. **Otherwise, does `routergrowth --version` work?** Use the CLI (it needs 0.4.0 or later; if older, run `npm install -g routergrowth@latest`). `routergrowth balance` confirms the key.
+2. **Otherwise, does `routergrowth --version` work?** Use the CLI (it needs 0.4.0 or later, 0.6.0 for `events`; if older, run `npm install -g routergrowth@latest`). `routergrowth balance` confirms the key.
 3. **Neither?** Follow [Setup](#setup-first-time-only) at the end of this file.
 
 A key that is missing from this environment is not an expired key. Check for an MCP connection, `ROUTERGROWTH_API_KEY` or a configured CLI before asking the user for anything.
@@ -64,7 +64,7 @@ When the request is a complete GTM job, a workflow skill already encodes the ste
 | Recent runs | `runs` | `runs` | `GET /runs` |
 | Already done to someone? | `history` | `history alex@example.com` or `history --file leads.txt` | `GET /history?q=...`, `POST /history` |
 | Ask the same thing later | `watch`, `watches` | (HTTP or MCP) | `POST /watch`, `POST /watch/{id}/refresh` |
-| Any replies or bounces? | `events` | (HTTP or MCP) | `GET /events?after=...` |
+| Any replies or bounces? | `events` | `events --cursor-file events-cursor.txt` (CLI 0.6.0 or later) | `GET /events?after=...` |
 | Balance | `balance` | `balance` | `GET /wallet` |
 
 HTTP auth is `Authorization: Bearer <key>`. `discover`, `inspect`, `history`, `runs`, `events` and `balance` are free.
@@ -212,7 +212,7 @@ curl -s -X POST https://api.routergrowth.com/feedback -H "Content-Type: applicat
   - WhatsApp: `whatsapp.accounts`, `whatsapp.account` (QR pairing), `whatsapp.profile` (international number lookup), `whatsapp.message`, `whatsapp.messages`.
   - Gmail: `gmail.accounts`, `gmail.account` (Google OAuth on an existing mailbox), `gmail.send` (returns a `tracking_id`, not a message ID), `gmail.messages`. Gmail does not create an AgentMail inbox.
   - Setup, examples and limits: https://www.routergrowth.com/docs/connected-accounts.md
-- **Replies, bounces and dropped sessions (`events`, free):** one call returns what came in across every inbox and connected account since your last read: `email.received`, `email.bounced`, `email.complained`, `email.delivered`, `gmail.received`, `linkedin.message_received`, `linkedin.new_connection` (usually an accepted invitation, up to 8 hours late), `instagram.message_received`, `whatsapp.message_received`, `account.disconnected`. Check it before reading each inbox with `email.messages` or `linkedin.messages`. Keep the answer's `next_after` and pass it as `after` next time to get only what is new; events are kept 30 days. Each event carries the ids a reply needs: `message_id` for `email.send` `in_reply_to`, `chat_id` for `linkedin.message`. Stop sending to an address that bounced or complained. A user with a server can receive the same events as signed webhooks (`POST /webhooks`, or the dashboard); tell them it exists, you cannot register one over MCP. Details: https://www.routergrowth.com/docs/api/webhooks.md
+- **Replies, bounces and dropped sessions (`events`, free):** one call returns what came in across every inbox and connected account since your last read: `email.received`, `email.bounced`, `email.complained`, `email.delivered`, `gmail.received`, `linkedin.message_received`, `linkedin.new_connection` (usually an accepted invitation, up to 8 hours late), `instagram.message_received`, `whatsapp.message_received`, `account.disconnected`. Check it before reading each inbox with `email.messages` or `linkedin.messages`. Keep the answer's `next_after` and pass it as `after` next time to get only what is new (the CLI does both with `--cursor-file`); events are kept 30 days. Each event carries the ids a reply needs: `message_id` for `email.send` `in_reply_to`, `chat_id` for `linkedin.message`. Stop sending to an address that bounced or complained. A user with a server can receive the same events as signed webhooks (`POST /webhooks`, or the dashboard); tell them it exists, you cannot register one over MCP. Details: https://www.routergrowth.com/docs/api/webhooks.md
 - **Public federal data, free raw endpoints:** USAspending (awards, incumbents, contracting offices, agency spend), USAJOBS (postings by agency, title, series and date), Grants.gov (grant opportunities, with the agency contact on each) and the Federal Register (requests for information, notices and rules, months before a solicitation). `discover` with the provider name.
 - **Coming soon (sandbox only):** `company.signals`, `ads.spend_estimate`.
 

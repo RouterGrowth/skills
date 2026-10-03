@@ -30,13 +30,13 @@ One day of a Sales Development loop. You do the mechanical work (read, classify,
 
 ### 1. Triage replies
 
-Start with the event stream: one free call returns every reply, bounce and spam complaint since the last run, across all the workspace's inboxes. Use the MCP `events` tool, or HTTP:
+Start with the event stream: one free call returns every reply, bounce and spam complaint since the last run, across all the workspace's inboxes. Use the CLI (0.6.0 or later; `npm install -g routergrowth@latest` if `events` is an unknown command):
 
 ```bash
-curl -s "https://api.routergrowth.com/v1/events?types=email.received,email.bounced,email.complained&after=<CURSOR>" -H "Authorization: Bearer $ROUTERGROWTH_API_KEY" -o out/events.json
+routergrowth events --types email.received,email.bounced,email.complained --cursor-file out/events-cursor.txt -o out/events.json
 ```
 
-`<CURSOR>` is the `next_after` of the previous run, kept in `out/events-cursor.txt`; write the new one there when the run ends. With no cursor yet, pass `since=<LAST_RUN>` instead of `after`, and page with `after` while `has_more` is true. Keep the events whose `data.inbox` is `INBOX_ID`:
+`--cursor-file` reads the id of the last event the previous run saw and writes the new one back, so each run returns only what is new. With no cursor file yet, add `--since <LAST_RUN>`. When it reports "more waiting", read `out/events.json`, then run it again for the next page. Over MCP, the `events` tool takes the same `types` and an `after` cursor (the previous answer's `next_after`, which you then keep in `out/events-cursor.txt` yourself). Keep the events whose `data.inbox` is `INBOX_ID`:
 
 - `email.received` carries `from`, `subject`, `preview`, the full `text`, `message_id` and `thread_id`: classify from it with the table below, with no second call to fetch the message.
 - `email.bounced` carries `recipients`, `type` and `sub_type`. `type: Permanent` is a hard bounce: put every recipient in `replied.json` with `reason: bounce`. A `Transient` bounce is not suppressed.
