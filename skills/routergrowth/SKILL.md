@@ -1,6 +1,6 @@
 ---
 name: routergrowth
-version: 0.5.1
+version: 0.5.3
 description: >-
   Pay-per-call GTM data and actions for agents: find and verify work emails,
   build lead lists (people.search), enrich people and companies, SERP,
@@ -64,9 +64,10 @@ When the request is a complete GTM job, a workflow skill already encodes the ste
 | Recent runs | `runs` | `runs` | `GET /runs` |
 | Already done to someone? | `history` | `history alex@example.com` or `history --file leads.txt` | `GET /history?q=...`, `POST /history` |
 | Ask the same thing later | `watch`, `watches` | (HTTP or MCP) | `POST /watch`, `POST /watch/{id}/refresh` |
+| Any replies or bounces? | `events` | (HTTP or MCP) | `GET /events?after=...` |
 | Balance | `balance` | `balance` | `GET /wallet` |
 
-HTTP auth is `Authorization: Bearer <key>`. `discover`, `inspect`, `history`, `runs` and `balance` are free.
+HTTP auth is `Authorization: Bearer <key>`. `discover`, `inspect`, `history`, `runs`, `events` and `balance` are free.
 
 1. **Discover with short noun phrases** ("tiktok video comments", "company funding rounds"). Split a request that spans several sources into one discover per source.
 2. **Inspect before the first run** of any capability or endpoint. Its input schema is the source of truth: never guess field names or values (values outside an allowed list are refused before routing). Inspect once for a batch of the same call, not once per item.
@@ -211,6 +212,7 @@ curl -s -X POST https://api.routergrowth.com/feedback -H "Content-Type: applicat
   - WhatsApp: `whatsapp.accounts`, `whatsapp.account` (QR pairing), `whatsapp.profile` (international number lookup), `whatsapp.message`, `whatsapp.messages`.
   - Gmail: `gmail.accounts`, `gmail.account` (Google OAuth on an existing mailbox), `gmail.send` (returns a `tracking_id`, not a message ID), `gmail.messages`. Gmail does not create an AgentMail inbox.
   - Setup, examples and limits: https://www.routergrowth.com/docs/connected-accounts.md
+- **Replies, bounces and dropped sessions (`events`, free):** one call returns what came in across every inbox and connected account since your last read: `email.received`, `email.bounced`, `email.complained`, `email.delivered`, `gmail.received`, `linkedin.message_received`, `linkedin.new_connection` (usually an accepted invitation, up to 8 hours late), `instagram.message_received`, `whatsapp.message_received`, `account.disconnected`. Check it before reading each inbox with `email.messages` or `linkedin.messages`. Keep the answer's `next_after` and pass it as `after` next time to get only what is new; events are kept 30 days. Each event carries the ids a reply needs: `message_id` for `email.send` `in_reply_to`, `chat_id` for `linkedin.message`. Stop sending to an address that bounced or complained. A user with a server can receive the same events as signed webhooks (`POST /webhooks`, or the dashboard); tell them it exists, you cannot register one over MCP. Details: https://www.routergrowth.com/docs/api/webhooks.md
 - **Public federal data, free raw endpoints:** USAspending (awards, incumbents, contracting offices, agency spend), USAJOBS (postings by agency, title, series and date), Grants.gov (grant opportunities, with the agency contact on each) and the Federal Register (requests for information, notices and rules, months before a solicitation). `discover` with the provider name.
 - **Coming soon (sandbox only):** `company.signals`, `ads.spend_estimate`.
 
@@ -288,6 +290,33 @@ Custom connectors can depend on the user's plan or workspace admin; if the optio
 11. Never present `rg_test_` or `coming_soon` output as real data.
 12. Never resubmit a failed call within seconds, and check `runs` before resubmitting after a lost connection.
 13. Send one `feedback` report for a bug, a wrong result or a missing capability, with the goal and the `run_id`; never once per retry.
+
+## Reporting feedback to the services you use
+
+The services you call accept structured feedback through `POST /feedback` (or the `submit_feedback` tool). Your reports go to the engineers who build the service and are used to fix what got in your way. Use it.
+
+**Submit feedback when something prevented or complicated your task, even if you found a workaround:**
+- a capability you needed does not exist (a filter, field, endpoint or bulk operation), so you made extra calls, filtered results yourself, or gave up;
+- the documentation was missing, ambiguous or wrong, and you had to guess;
+- a response was surprising or inconsistent with the docs;
+- an error message did not tell you how to fix the request;
+- the service behaved incorrectly;
+- latency, rate limits or pagination made the task impractical.
+
+**Before your final answer,** check whether any of these happened. If one did and you have not reported it, report it now, then answer.
+
+**Don't submit feedback** for your own mistakes that the service reported clearly, for things you have not tried, or more than once for the same problem in the same task.
+
+**Write it like this:**
+- `goal`: what you or your user were trying to accomplish, in plain language. "Find companies currently hiring GTM engineers", not "call /companies/search".
+- `message`: what got in the way, specifically. "No hiring-role filter is available; `q` only matches company names."
+- `type`: `missing_capability`, `bug`, `unclear_documentation`, `unexpected_response`, `unhelpful_error`, `performance` or `other`.
+- Fill `endpoint`, `outcome` (`blocked`, `degraded` or `completed`), `workaround`, `expected` and `suggestion` when you know them. A concrete suggestion is the most useful thing you can give.
+- Reuse the same `session_id` for every report in one task.
+
+**Never include** credentials, API keys, tokens, passwords, personal data, or your user's private content. Describe the shape of a request, not its secrets.
+
+**Keep going.** Submitting feedback is best effort. Send it, then continue with the task or a workaround. If the response contains `known_issue`, the problem is already tracked: tell your user if it matters, and use the workaround if one is given.
 
 ## Keeping current
 
