@@ -2,7 +2,7 @@
 name: sdr-daily
 description: >-
   Run one day of the SDR loop on a RouterGrowth cold email campaign: read the
-  campaign inbox and triage replies (email.messages), keep the suppression list
+  new replies and bounces (events, email.messages), triage them, keep the suppression list
   current, send the follow-ups that are due and drip the next first-touch emails
   from an approved queue (email.send) inside a daily cap, then write the morning
   briefing. Nothing new goes out without approval; the drip and the follow-ups
@@ -30,6 +30,20 @@ One day of a Sales Development loop. You do the mechanical work (read, classify,
 
 ### 1. Triage replies
 
+Start with the event stream: one free call returns every reply, bounce and spam complaint since the last run, across all the workspace's inboxes. Use the MCP `events` tool, or HTTP:
+
+```bash
+curl -s "https://api.routergrowth.com/v1/events?types=email.received,email.bounced,email.complained&after=<CURSOR>" -H "Authorization: Bearer $ROUTERGROWTH_API_KEY" -o out/events.json
+```
+
+`<CURSOR>` is the `next_after` of the previous run, kept in `out/events-cursor.txt`; write the new one there when the run ends. With no cursor yet, pass `since=<LAST_RUN>` instead of `after`, and page with `after` while `has_more` is true. Keep the events whose `data.inbox` is `INBOX_ID`:
+
+- `email.received` carries `from`, `subject`, `preview`, the full `text`, `message_id` and `thread_id`: classify from it with the table below, with no second call to fetch the message.
+- `email.bounced` carries `recipients`, `type` and `sub_type`. `type: Permanent` is a hard bounce: put every recipient in `replied.json` with `reason: bounce`. A `Transient` bounce is not suppressed.
+- `email.complained` is a spam complaint: suppress the recipients and count it in the hygiene step.
+
+Read the inbox itself, as below, when there is no cursor file yet (the first run that uses events: it confirms the two agree), when the events call fails, or when `LAST_RUN` is more than 30 days old (events are kept 30 days). On the other days the events are the read, and the inbox call is skipped.
+
 ```bash
 routergrowth run -c email.messages -i '{"inbox_id":"<id>","labels":["received"],"after":"<LAST_RUN>","limit":100}' --max-cost 0.01 --wait 30 -o out/inbox.json
 ```
@@ -45,11 +59,11 @@ The inbox holds the campaign's own sent mail too (label `sent`); `labels: ["rece
 | Unsubscribe request | Add to `replied.json` immediately. Never contact again. |
 | Ambiguous | Show verbatim. Do not guess. |
 
-Bounces are not notices: a hard bounce shows as the label `bounced` (and `bounced: true`) on the campaign's own sent row, so read the `sent` rows since `LAST_RUN` once with `labels: ["sent"]` and put every bounced `to` in `replied.json` with `reason: bounce`. Out-of-office replies arrive from `mailer-daemon@amazonses.com` with the original subject after "Re:" and the auto-reply text in the preview: they are auto-replies, never bounces, do not suppress them.
+Bounces are not notices in the inbox read: a hard bounce shows as the label `bounced` (and `bounced: true`) on the campaign's own sent row, so read the `sent` rows since `LAST_RUN` once with `labels: ["sent"]` and put every bounced `to` in `replied.json` with `reason: bounce`. Out-of-office replies arrive from `mailer-daemon@amazonses.com` with the original subject after "Re:" and the auto-reply text in the preview: they are auto-replies, never bounces, do not suppress them.
 
 ### 2. Hygiene
 
-Count bounces since `LAST_RUN` against sends since `LAST_RUN` (the whole campaign on the first run). Any spam complaint, or bounces above 5% of those sends, is the kill switch: recommend pausing the drip until the list and copy are reviewed, and do not drip today.
+Count bounces since `LAST_RUN` against sends since `LAST_RUN` (the whole campaign on the first run). Any spam complaint (an `email.complained` event), or bounces above 5% of those sends, is the kill switch: recommend pausing the drip until the list and copy are reviewed, and do not drip today.
 
 ### 3. Follow-ups due
 

@@ -5,7 +5,7 @@ description: >-
   connected: search people (linkedin.search), read the profile before writing
   (linkedin.profile), send a connection request with a short note
   (linkedin.invite), message once accepted (linkedin.message), read and triage
-  replies (linkedin.messages), inside daily caps. Use when the user wants
+  replies (events, linkedin.messages), inside daily caps. Use when the user wants
   LinkedIn outreach, connection requests at scale with a human gate, wants to
   message people who accepted, asks "who replied on LinkedIn", or wants to work
   a LinkedIn list.
@@ -64,7 +64,12 @@ Up to the daily invite cap. Log each one: profile URL, date, run ID, note.
 
 ### 5. Message after accept
 
-On the next run, `linkedin.messages` with `unread: true` and `after` set to the last run's timestamp lists the conversations with something new, each with the person's `name`, `profile_url`, `headline` and `degree`; an empty list means nobody wrote, and is a success, not an error. Acceptance is not in the inbox: `linkedin.profile` on each invited person shows `degree` 1 (`connected: true`) once they accepted. For accepted connections that have not replied, draft one message each: the offer in two sentences, one question, no attachment.
+On the next run, start with the free `events` call (the MCP `events` tool, or `GET /v1/events?types=linkedin.message_received,linkedin.new_connection&after=<cursor>`, the cursor being the `next_after` you logged last run; with none yet, `since=<last run's timestamp>`). One call covers every connected account:
+
+- `linkedin.message_received` is a reply: `sender_name`, `sender_profile_url`, the `text`, and the `chat_id` to answer in.
+- `linkedin.new_connection` is a new connection: `name`, `public_identifier`, `profile_url`. Match it against the invite log; a match is an acceptance. It can arrive up to 8 hours after the person accepted, so an invited person with no event yet is still pending, not declined.
+
+Log the answer's `next_after` with the run. When there is no cursor yet, or the call fails, read the inbox instead: `linkedin.messages` with `unread: true` and `after` set to the last run's timestamp lists the conversations with something new, each with the person's `name`, `profile_url`, `headline` and `degree`; an empty list means nobody wrote, and is a success, not an error. Acceptance is not in the inbox: `linkedin.profile` on each invited person shows `degree` 1 (`connected: true`) once they accepted, which is also the check for an invitation older than a day with no `linkedin.new_connection` event. For accepted connections that have not replied, draft one message each: the offer in two sentences, one question, no attachment.
 
 **Gate 2: show the messages and wait.** Then:
 

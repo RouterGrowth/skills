@@ -4,7 +4,7 @@ Several skills here (sdr-daily, linkedin-outbound, multichannel-intent-outbound,
 
 ## Monitor before you source
 
-Every run starts by inspecting everything the previous runs did that is not finished: invitations pending, emails sent without a reply, threads posted in. Reconcile what happened (accepted, replied, bounced, removed) before creating anything new. A run that only reports what it created today is incomplete.
+Every run starts by inspecting everything the previous runs did that is not finished: invitations pending, emails sent without a reply, threads posted in. Reconcile what happened (accepted, replied, bounced, removed) before creating anything new. On RouterGrowth the free `events` stream answers most of it in one call: replies, bounces, complaints, new LinkedIn connections and dropped sessions since your last cursor. A run that only reports what it created today is incomplete.
 
 ## Unknown is not "no reply"
 

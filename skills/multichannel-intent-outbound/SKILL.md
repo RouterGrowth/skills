@@ -83,7 +83,7 @@ Check headroom with the free `linkedin.invitations_sent` and send no more than t
 routergrowth run -c linkedin.invite -i '{"provider_id":"<id>","message":"<approved note>","account_id":"<id>"}' --max-cost 0.05 --wait 60
 ```
 
-Stop the batch at the first `provider_rate_limited`. Log every invite with its run ID. On later runs, `linkedin.profile` shows `degree` 1 once someone accepted: draft one message each (the offer in two sentences, one question, still anchored on the signal), **Gate 2**, then `linkedin.message` with the approved text. Details, caps and reply reading: `linkedin-outbound`.
+Stop the batch at the first `provider_rate_limited`. Log every invite with its run ID. On later runs, a `linkedin.new_connection` event (see step 5; it can lag by up to 8 hours) or `degree` 1 on `linkedin.profile` shows that someone accepted: draft one message each (the offer in two sentences, one question, still anchored on the signal), **Gate 2**, then `linkedin.message` with the approved text. Details, caps and reply reading: `linkedin-outbound`.
 
 ## 4. Enrich
 
@@ -122,7 +122,7 @@ routergrowth run -c email.warmup_status -i '{"inbox_id":"<id>"}'                
 
 ## 5. Follow up if no answer
 
-Every run starts by reading every inbox in use since the last run, before any new send: `linkedin.messages` with `unread: true` and `after`, `gmail.messages` with `after` (or `email.messages` for a RouterGrowth inbox), and `whatsapp.messages` with `unread: true` and `after` if WhatsApp is on. A reply on any channel ends every remaining step for that person on every channel. An inbox that cannot be read means unknown, not silence: hold that person's next step and say why.
+Every run starts by reading what came in since the last run, before any new send. One free `events` call covers every channel (the MCP `events` tool, or `GET /v1/events?after=<cursor>`, the cursor being the `next_after` logged by the previous run; with none yet, `since=<last run's timestamp>`): `linkedin.message_received`, `linkedin.new_connection`, `gmail.received`, `email.received`, `email.bounced`, `email.complained`, `whatsapp.message_received`, and `account.disconnected` when a session dropped and that channel cannot send until the user signs in again. Log the new `next_after`. When there is no cursor yet or the call fails, read each inbox in use instead: `linkedin.messages` with `unread: true` and `after`, `gmail.messages` with `after` (or `email.messages` for a RouterGrowth inbox), and `whatsapp.messages` with `unread: true` and `after` if WhatsApp is on. A reply on any channel ends every remaining step for that person on every channel. An inbox that cannot be read means unknown, not silence: hold that person's next step and say why.
 
 | Day | Channel | When | Capability |
 | --- | --- | --- | --- |
@@ -139,9 +139,9 @@ routergrowth run -c gmail.send -i '{"to":["alex.rivera@acme.com"],"subject":"<ap
 routergrowth run -c email.send -i '{"inbox_id":"<warmed inbox>","to":["alex.rivera@acme.com"],"subject":"<approved subject>","text":"<approved body>"}' --max-cost 0.02 --wait 60
 ```
 
-Reply in the same thread when one exists: `in_reply_to` with the `message_id` from `gmail.messages` or `email.messages`, `chat_id` from `linkedin.messages`.
+Reply in the same thread when one exists: `in_reply_to` with the `message_id` from the event (or from `gmail.messages` or `email.messages`), `chat_id` from the event or `linkedin.messages`.
 
-Triage every reply: interested, question, not now, wrong person, not interested, out of office. Draft a response for interested and question for the user to approve. Not interested, a bounce or a request to stop is suppressed (`routergrowth suppress add`, or `suppressed.txt` with tables off) and ends every channel for that person.
+Triage every reply: interested, question, not now, wrong person, not interested, out of office. Draft a response for interested and question for the user to approve. Not interested, a hard bounce (`email.bounced` with `type: Permanent`), a spam complaint or a request to stop is suppressed (`routergrowth suppress add`, or `suppressed.txt` with tables off) and ends every channel for that person.
 
 ## Optional: WhatsApp
 
