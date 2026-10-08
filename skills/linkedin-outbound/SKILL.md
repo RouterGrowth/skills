@@ -42,7 +42,7 @@ The profile read returns `provider_id`, which `linkedin.invite` and `linkedin.me
 
 ### 3. Draft the notes
 
-One per person, under 300 characters (LinkedIn's cap; shorter reads better), no link, no pitch, one reason the connection makes sense. The offer sentence belongs in the step 5 message, not in the note. Put them in a table: name, profile URL, the detail used, the note.
+One per person, under 200 characters (LinkedIn's cap without Premium, 300 with it; shorter reads better). An account without Premium gets about 5 invitations with a note a month (`linkedin.invitations_sent` says how many are left): past that, send without `message` rather than lose the invitation. Otherwise: no link, no pitch, one reason the connection makes sense. The offer sentence belongs in the step 5 message, not in the note. Put them in a table: name, profile URL, the detail used, the note.
 
 **Gate 1: show the table and wait.** The user edits or approves. Nothing is sent before this.
 
@@ -58,9 +58,9 @@ Before the batch, run the free headroom check:
 routergrowth run -c linkedin.invitations_sent -i '{"account_id":"<id>"}' --wait 60
 ```
 
-It counts the account's pending invitations over the last 24 hours and 7 days and returns `remaining_today`, the most to send now (LinkedIn allows roughly 100 a day and 200 a week). Send no more than the lower of `remaining_today` and the daily invite cap; when it is 0, send nothing and say so. The counts are a floor (accepted and withdrawn invitations leave the pending list), so the user's own cap still rules. Stop the batch at the first `provider_rate_limited`; it bills nothing and is never retried.
+It counts the account's pending invitations over the last 24 hours and 7 days and returns `remaining_today`, the most to send now (LinkedIn allows roughly 100 a day and 200 a week). Send no more than the lower of `remaining_today` and the daily invite cap; when it is 0, send nothing and say so. The counts are a floor (accepted and withdrawn invitations leave the pending list), so the user's own cap still rules. Stop the batch at the first `provider_rate_limited`; it bills nothing and is never retried. A `no_match` on an invite is about that one person (already connected, invited recently, cannot resend yet after a withdrawn invitation): skip them and go on with the next.
 
-Up to the daily invite cap. Log each one: profile URL, date, run ID, note.
+Up to the daily invite cap, one at a time and minutes apart, never as a parallel burst: LinkedIn pauses an account that fires a dozen in a few seconds (`provider_rate_limited`, "temporary provider limit"), and a freshly connected account sooner. On that error, stop for a few hours. RouterGrowth also paces sends itself: a second invite inside 60 s, or one past the account's daily cap (10 a day on an account connected under a week, 25 under a month, 80 after; 180 a week), is `blocked` with error `paced` and `details.retry_after`: wait that many seconds, never retry sooner. Log each one: profile URL, date, run ID, note.
 
 ### 5. Message after accept
 

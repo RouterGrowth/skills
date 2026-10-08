@@ -1,6 +1,6 @@
 ---
 name: routergrowth
-version: 0.5.4
+version: 0.5.6
 description: >-
   Pay-per-call GTM data and actions for agents: find and verify work emails,
   build lead lists (people.search), enrich people and companies, SERP,
@@ -142,7 +142,7 @@ Otherwise do not narrate cent-level charges; the user sees every run at https://
 | `queued` | waiting for the worker; `stoppable` is true | no |
 | `running` | at the provider; cannot be stopped, settles or releases on its own | no |
 | `succeeded` | result in `result`; `billing.charged` is final | yes |
-| `no_match` | nobody had it; free on most capabilities | yes |
+| `no_match` | nobody had it; free on most capabilities (inspect shows `bill_on_no_match`: `aeo.mentions` bills the search) | yes |
 | `failed` | every allowed provider failed; `attempts` lists each try | yes |
 | `timed_out` | the provider did not answer in time | yes |
 | `cancelled` | stopped while queued (`runs stop RUN_ID`, `POST /runs/{id}/cancel`) | yes |
@@ -158,6 +158,7 @@ Otherwise do not narrate cent-level charges; the user sees every run at https://
 | `budget_exceeded` / `blocked` | the spend guard or another workspace control | tell the user; wait for the reset or their change |
 | `no_match` | the providers tried had nothing | change the input (spelling, domain, exact LinkedIn URL). An identical input that missed in the last 12 hours returns the earlier miss for free without calling providers; `routing.fresh: true` (CLI `--fresh`) buys a real retry |
 | `invalid_request` (400) | the input does not match the schema | re-inspect and fix the fields |
+| `paced` (429) | a connected-account send inside its gap or over its daily cap | wait `details.retry_after` seconds, then send the next one; never a parallel burst |
 | `provider_rate_limited`, `provider_error`, `provider_timeout` | provider trouble | the router already retried once and failed over within `max_cost`; read `attempts`; never resubmit within seconds |
 | connection lost while waiting | the run continues on the router | find it with `runs` or `get_run` before resubmitting |
 
@@ -204,7 +205,7 @@ curl -s -X POST https://api.routergrowth.com/feedback -H "Content-Type: applicat
 - **Social:** `social.profile`, `social.posts`, `social.search`, `social.comments` on X, LinkedIn, Reddit, Instagram, TikTok and YouTube. A profile carries the bio link, the person's own domain (link hubs excluded) and a public email when exposed: that is how a creator or local-business handle becomes a `contact.find` input.
 - **Local, reviews, news, ads:** `local.places` (Google Maps), `reviews.search` (Google Maps, Yelp), `news.search` (Google News), `ads.search` (Meta Ad Library, Google).
 - **Web:** `web.search`, `web.scrape`, `web.extract` (one page in, dated records out against a template: leadership page, official bio, org chart, press release, job posting or your own schema; each record carries its supporting line, date and URL).
-- **Creative (fal):** `creative.image` (flux-schnell, flux-pro, flux-pro-ultra, nano-banana, recraft-v3), `creative.image_edit` (nano-banana-edit, flux-kontext), `creative.upscale`, `creative.remove_background`, `creative.video` (hailuo-02, kling-2.5, kling-2.1, wan-2.2, veo3-fast, veo3).
+- **Creative (fal):** `creative.image` (flux-schnell, flux-pro, flux-pro-ultra, nano-banana, recraft-v3), `creative.image_edit` (nano-banana-edit, flux-kontext), `creative.upscale`, `creative.remove_background`, `creative.video` (hailuo-02, kling-2.5, kling-2.1, wan-2.2, veo3-fast, veo3), `creative.speech` (a voiceover from a script on ElevenLabs voices: eleven-turbo, eleven-v3; `timestamps` returns per-word timings for captions).
 - **Outbound email (Name.com, AgentMail):** `domain.search`, `domain.register`, `domain.dns`, `email.domain` (verify a domain you own for sending), `email.inbox`, `email.inboxes` (free: the domains and inboxes the workspace owns; run it before creating or sending), `email.send`, `email.messages`. Inboxes live only on a verified domain you own. To change the From name, rename the inbox (`email.inbox` with `inbox_id` and `display_name`, free); there is no per-email override.
 - **Connected accounts (Unipile, monthly seat per account):**
   - LinkedIn: `linkedin.accounts` (free), `linkedin.account` (hosted sign-in; without a name it reports what is connected), `linkedin.search`, `linkedin.profile`, `linkedin.invite`, `linkedin.invitations_sent`, `linkedin.message`, `linkedin.messages`.

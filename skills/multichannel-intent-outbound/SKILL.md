@@ -73,7 +73,7 @@ Keep `provider_id` (the invite and message accept it), `degree` (1 means already
 
 ## 3. Connect and message
 
-Draft one note per person, under 300 characters: the signal in their words, one reason to connect, no link, no pitch. The offer waits for the message.
+Draft one note per person, under 200 characters (300 with LinkedIn Premium; a free account gets about 5 noted invitations a month, then invite without `message`): the signal in their words, one reason to connect, no link, no pitch. The offer waits for the message.
 
 **Gate 1: show the table (person, signal, detail, note) and wait.** Nothing is sent before the user approves it.
 
@@ -83,7 +83,7 @@ Check headroom with the free `linkedin.invitations_sent` and send no more than t
 routergrowth run -c linkedin.invite -i '{"provider_id":"<id>","message":"<approved note>","account_id":"<id>"}' --max-cost 0.05 --wait 60
 ```
 
-Stop the batch at the first `provider_rate_limited`. Log every invite with its run ID. On later runs, a `linkedin.new_connection` event (see step 5; it can lag by up to 8 hours) or `degree` 1 on `linkedin.profile` shows that someone accepted: draft one message each (the offer in two sentences, one question, still anchored on the signal), **Gate 2**, then `linkedin.message` with the approved text. Details, caps and reply reading: `linkedin-outbound`.
+Stop the batch at the first `provider_rate_limited`; a `no_match` on an invite is about that one person (already connected, invited recently, cannot resend yet), so skip them and continue. Log every invite with its run ID. On later runs, a `linkedin.new_connection` event (see step 5; it can lag by up to 8 hours) or `degree` 1 on `linkedin.profile` shows that someone accepted: draft one message each (the offer in two sentences, one question, still anchored on the signal), **Gate 2**, then `linkedin.message` with the approved text. Details, caps and reply reading: `linkedin-outbound`.
 
 ## 4. Enrich
 
@@ -163,7 +163,7 @@ routergrowth run -c whatsapp.message -i '{"phone":"+14155550123","text":"<approv
 - Nothing is sent without its gate. A scheduled run may search, read, enrich and draft on its own, and may send only copy the user approved for that exact person and step.
 - One active sequence per person, one message per channel per step, never two channels on the same day. Caps count new sends only; reading inboxes is always complete.
 - Never invent a last name, a LinkedIn match, an email or a number. Never email an unverified address. Never buy a phone number for someone who already replied.
-- Start slow on fresh accounts (5 to 10 LinkedIn actions a day for the first week), never send cold email from an inbox that is still warming, and respect LinkedIn's, Google's and WhatsApp's own limits: the first `provider_rate_limited` stops that channel for the day.
+- Start slow on fresh accounts (5 to 10 LinkedIn actions a day for the first week), never send cold email from an inbox that is still warming, and respect LinkedIn's, Google's and WhatsApp's own limits: the first `provider_rate_limited` stops that channel for the day. A `paced` error (429, `details.retry_after`) is RouterGrowth's own gate on connected-account sends: wait that long before the next send on that account.
 - Never present sandbox (`rg_test_`) output as real data. Every row carries the run IDs behind it. Report cost as the sum of every run's `billing.charged`, not a wallet difference.
 
 ## Output
