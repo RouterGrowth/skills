@@ -16,7 +16,7 @@ description: >-
 
 One day of a Sales Development loop. You do the mechanical work (read what came in, classify it, update the list, work out what is due, write the drafts), surface the few human decisions, and hand back a short briefing. The user approves every message before it goes. Approved emails you can send from the user's RouterGrowth inbox or Gmail; LinkedIn messages stay drafts the user sends themselves. You never connect an account or set up an inbox.
 
-The list comes from a campaign the user already built (for example with `cold-email-pipeline` or `multichannel-intent-outbound`): people who have a reason to hear from the user, with approved copy for each step. The user is the sender and stays responsible for anti-spam and privacy law; every draft carries a plain way to say no.
+The list comes from a campaign the user already built (for example with `email-list-pipeline` or `intent-messaging`): people who have a reason to hear from the user, with approved copy for each step. The user is the sender and stays responsible for anti-spam and privacy law; every draft carries a plain way to say no.
 
 ## Before you start
 
@@ -27,7 +27,7 @@ The list comes from a campaign the user already built (for example with `cold-em
   - `DAILY_CAP`: how many messages the user will send in a day, all steps together (default 30; 20 on LinkedIn). Drafting past what they will send is wasted work.
   - `CHANNELS`: which inboxes the user already connected to the workspace, from the free `email_inboxes`, `gmail_accounts`, `linkedin_accounts`. Email inboxes are read and, after approval, sent from; LinkedIn is only read. If none is connected, the user tells you what came in.
   - `LAST_RUN`: the time of the previous run (with tables on, the newest `last_touch_at` works; on the first run there is none).
-- Row statuses (the same ones `cold-email-pipeline` writes): `verified` or `found` (ready for a first touch, not yet drafted), `drafted` (a draft is waiting for the user), `sent` (the user confirmed the send; the `step` field says which: J+0, J+4, J+10), `replied`, `suppressed`. `next_at` holds when the next step is due.
+- Row statuses (the same ones `email-list-pipeline` writes): `verified` or `found` (ready for a first touch, not yet drafted), `drafted` (a draft is waiting for the user), `sent` (the user confirmed the send; the `step` field says which: J+0, J+4, J+10), `replied`, `suppressed`. `next_at` holds when the next step is due.
 
 ## 1. Read what came in
 
@@ -88,7 +88,7 @@ Save every draft on its row (`update_table_rows`: `status: "drafted"`, `step`, `
 
 When the user approves the day's emails (as shown: from, to, subject, full body), send them following "Sending email" in the core `routergrowth` skill: one at a time inside `DAILY_CAP`, `email_send` with `inbox_id` (or `gmail_send`), a follow-up answering in its thread (`in_reply_to` with the earlier message's id), an `idempotency_key` on each. A `suppressed`, `opted_out` or `repeat_touch` block is final for that person; `paced` means wait `retry_after`. Set each row to `sent` with its `step`, the run id and `next_at`. LinkedIn drafts stay with the user.
 
-When the queue is empty, say so and suggest building the next batch with `cold-email-pipeline` or `multichannel-intent-outbound`.
+When the queue is empty, say so and suggest building the next batch with `email-list-pipeline` or `intent-messaging`.
 
 ## 8. Briefing
 

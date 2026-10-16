@@ -4,7 +4,7 @@ labels: [bug]
 body:
   - type: input
     id: skill
-    attributes: {label: Skill, placeholder: cold-email-pipeline}
+    attributes: {label: Skill, placeholder: email-list-pipeline}
     validations: {required: true}
   - type: input
     id: agent

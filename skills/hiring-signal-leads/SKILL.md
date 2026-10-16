@@ -1,5 +1,5 @@
 ---
-name: hiring-signal-outbound
+name: hiring-signal-leads
 description: >-
   Build a lead list from hiring signals with RouterGrowth and write the first
   email for each contact, sent by email once the user approves it. Find companies that just posted the role that
@@ -86,7 +86,7 @@ One email per verified contact, plain text, 80 to 140 words: the posting is the 
 
 Good opening: "Saw Acme posted a Growth Engineer role last week, and the description leans hard on lifecycle email." Bad opening: "I noticed your company is growing fast!" (no posting, no detail, could be anyone).
 
-Save the drafts as rows with status `drafted` (`upsert_table_rows`), or in the CSV. For a longer list with grading and a directives folder, hand the verified rows to the `cold-email-pipeline` skill instead.
+Save the drafts as rows with status `drafted` (`upsert_table_rows`), or in the CSV. For a longer list with grading and a directives folder, hand the verified rows to the `email-list-pipeline` skill instead.
 
 ## Gate
 

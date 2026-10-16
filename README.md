@@ -26,12 +26,12 @@ You pay per call from a prepaid RouterGrowth balance, with no subscription. Clau
 | Skill | Job | Tools it calls |
 | --- | --- | --- |
 | [routergrowth](skills/routergrowth) | The core skill: the connector's tools, spending rules, privacy rules, when not to use RouterGrowth | all |
-| [hiring-signal-outbound](skills/hiring-signal-outbound) | Companies hiring for the role you sell to, the buyer at each, a verified email, a first email sent after your approval | company_jobs, people_search, contact_find, contact_verify |
+| [hiring-signal-leads](skills/hiring-signal-leads) | Companies hiring for the role you sell to, the buyer at each, a verified email, a first email sent after your approval | company_jobs, people_search, contact_find, contact_verify |
 | [social-lead-discovery](skills/social-lead-discovery) | Leads from X, Instagram, TikTok and YouTube: who posts about the topic, who asks under a competitor's post, the website and contact on each profile, a drafted opener | social_search, social_comments, social_profile, contact_find, contact_verify |
-| [cold-email-pipeline](skills/cold-email-pipeline) | Research, list, grade, verify, write, send by email after approval. A directives folder holds the ICP and the copy rules | people_search, contact_find, contact_verify, web_scrape, email_send, gmail_send |
+| [email-list-pipeline](skills/email-list-pipeline) | Research, list, grade, verify, write, send by email after approval. A directives folder holds the ICP and the copy rules | people_search, contact_find, contact_verify, web_scrape, email_send, gmail_send |
 | [sdr-daily](skills/sdr-daily) | One day of the loop: new replies, follow-ups due, suppressions, the day's approved emails and a briefing | list_workspace_events, email_messages, email_send, get_subjects_history, workspace tables |
-| [linkedin-outbound](skills/linkedin-outbound) | Find and read the profiles you pick, draft the connection note and first message, draft answers to replies | linkedin_search, linkedin_profile, linkedin_messages |
-| [multichannel-intent-outbound](skills/multichannel-intent-outbound) | From intent signal to a plan per person: LinkedIn drafts and an email follow-up sent after approval, three gates | people_search, social_search, contact_find, contact_verify, email_send, watches and workspace tables |
+| [linkedin-drafts](skills/linkedin-drafts) | Find and read the profiles you pick, draft the connection note and first message, draft answers to replies | linkedin_search, linkedin_profile, linkedin_messages |
+| [intent-messaging](skills/intent-messaging) | From intent signal to a plan per person: LinkedIn drafts and an email follow-up sent after approval, three gates | people_search, social_search, contact_find, contact_verify, email_send, watches and workspace tables |
 | [ai-visibility-audit](skills/ai-visibility-audit) | A frozen prompt panel across ChatGPT, Claude, Gemini and Perplexity: mentions, citations, share of voice | aeo_answer, aeo_mentions, aeo_keywords, seo_serp |
 | [reddit-surface-map](skills/reddit-surface-map) | The threads ranking for your money queries, the subreddits behind them, their rules | seo_serp, social_search, social_comments, web_scrape |
 | [brand-mention-sweep](skills/brand-mention-sweep) | Every mention of the brand, founder and competitors in 90 days, with sentiment and the threads worth a human reply | social_search, news_search, web_search, reviews_search |
@@ -75,7 +75,7 @@ Then run `/mcp` once to sign in with OAuth and approve a workspace.
 
 ## Long-running loops
 
-sdr-daily, linkedin-outbound, multichannel-intent-outbound and community-help-drafts run every day. They share one shape (read new replies before sourcing more, unknown is not "no reply", a reply stops the sequence), written up in [docs/daily-lifecycle.md](docs/daily-lifecycle.md).
+sdr-daily, linkedin-drafts, intent-messaging and community-help-drafts run every day. They share one shape (read new replies before sourcing more, unknown is not "no reply", a reply stops the sequence), written up in [docs/daily-lifecycle.md](docs/daily-lifecycle.md).
 
 ## Contributing
 

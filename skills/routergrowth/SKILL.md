@@ -32,12 +32,12 @@ When the request is a complete GTM job, a workflow skill in this plugin already 
 
 | Skill | Use it when the user wants |
 |---|---|
-| cold-email-pipeline | a researched email list from one targeting sentence: companies, people, verified emails, personalised emails sent after approval |
+| email-list-pipeline | a researched email list from one targeting sentence: companies, people, verified emails, personalised emails sent after approval |
 | sdr-daily | one day of a running campaign: triage replies, write answers and follow-ups, send the approved emails |
-| hiring-signal-outbound | leads at companies hiring for a role that implies the problem they solve, with a first email sent after approval |
+| hiring-signal-leads | leads at companies hiring for a role that implies the problem they solve, with a first email sent after approval |
 | social-lead-discovery | people who engaged with posts, hashtags or a competitor, enriched to a verified email |
-| linkedin-outbound | LinkedIn research and drafted notes or messages for people who expect to hear from them |
-| multichannel-intent-outbound | high-intent leads with LinkedIn drafts and an approved email follow-up |
+| linkedin-drafts | LinkedIn research and drafted notes or messages for people who expect to hear from them |
+| intent-messaging | high-intent leads with LinkedIn drafts and an approved email follow-up |
 | ai-visibility-audit | what ChatGPT, Claude, Gemini and Perplexity say about a brand and its category |
 | reddit-surface-map | the subreddits and threads that own a category |
 | brand-mention-sweep | every mention of a brand, founder and competitors in the last 90 days |

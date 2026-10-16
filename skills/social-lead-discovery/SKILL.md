@@ -118,13 +118,13 @@ Keep `valid`. Drop `invalid`. Hold `catch_all` and `unknown` in their own column
 One draft per kept row, for the user to read, edit and send or post from their own account:
 
 - **Public reply** (social-only rows, and anyone found under someone else's post): answers the question or comments on the project they posted, adds one useful thing, no pitch, under 280 characters on X. The user posts it by hand, or not.
-- **First message** (email or DM, only where the user has a reason the person would expect to hear from them): names the post or project that surfaced them, asks one question, no pitch, under 300 characters for a DM. The `cold-email-pipeline` skill can draft a fuller email sequence for the verified rows.
+- **First message** (email or DM, only where the user has a reason the person would expect to hear from them): names the post or project that surfaced them, asks one question, no pitch, under 300 characters for a DM. The `email-list-pipeline` skill can draft a fuller email sequence for the verified rows.
 
 Show every draft in the chat, or save the rows with `status: "drafted"` through `upsert_table_rows` when workspace tables are on (if they are not, the dashboard Settings page turns them on; a markdown table in the chat works meanwhile). Drafts that read as a complaint reply or a "who is this" answer need the user's own words, not a template.
 
 ## Rules
 
-- Never send, connect an account, follow, like, reply or comment. This skill only reads public data and drafts. The user sends DMs and replies from their own accounts; a first email to a verified address can go through RouterGrowth after approval by handing the rows to `cold-email-pipeline` (its Send stage).
+- Never send, connect an account, follow, like, reply or comment. This skill only reads public data and drafts. The user sends DMs and replies from their own accounts; a first email to a verified address can go through RouterGrowth after approval by handing the rows to `email-list-pipeline` (its Send stage).
 - Check the price once per tool, quote the whole run, then run. Do not re-ask between rows once the user approved the total.
 - `max_cost` on every paid call. Stop and ask before a run likely above about $1 unless the user asked for that volume.
 - Public business and creator profiles only. Respect the suppression list and RouterGrowth opt-outs (step 3). Collect only the columns the job needs.

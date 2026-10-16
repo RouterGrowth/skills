@@ -1,5 +1,5 @@
 ---
-name: cold-email-pipeline
+name: email-list-pipeline
 description: >-
   Build a qualified, verified contact list and draft personalised emails with
   RouterGrowth for people the user has a reason to contact: inbound leads,
@@ -58,7 +58,7 @@ To add people at companies that fit, translate the user's sentence through `dire
 
 `company_headcount` bands are `1-10`, `11-50`, `51-200`, `201-500`, `501-1000`, `1001-5000`, `5001-10000`, `10001+` and `seniority` is `entry`, `senior`, `manager`, `director`, `vp`, `cxo`, `partner`, `owner`; anything else is refused. Priced per person returned, so ask for the people you will use. Rows carry `first_name`, `last_name`, `name`, `headline`, `current_title`, `current_company`, `linkedin_url`, `location`, and sometimes a company domain or an email; most rows carry no email.
 
-Or start from accounts (the `hiring-signal-outbound` skill, or `company_search` with the query and a location) and search people inside them with `companies` or `company_domains`. `company_search` is also where the web domain and the headcount come from (`domain`, `employee_count`; the declared range often disagrees with the count, filter on the count). A domain is what `contact_find` needs.
+Or start from accounts (the `hiring-signal-leads` skill, or `company_search` with the query and a location) and search people inside them with `companies` or `company_domains`. `company_search` is also where the web domain and the headcount come from (`domain`, `employee_count`; the declared range often disagrees with the count, filter on the count). A domain is what `contact_find` needs.
 
 Drop rows with an empty `current_title` or `current_company` or a truncated last name. Apply `negative-keywords.md` at search time where a filter supports it. Save the cleaned rows with `upsert_table_rows` (status `raw`), or `out/leads-raw.csv`.
 

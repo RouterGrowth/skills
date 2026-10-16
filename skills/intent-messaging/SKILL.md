@@ -1,5 +1,5 @@
 ---
-name: multichannel-intent-outbound
+name: intent-messaging
 description: >-
   Plan a multichannel messaging sequence with RouterGrowth for people
   who show a dated, public intent signal (hiring for the role, posting about
@@ -23,7 +23,7 @@ Five steps. Nothing goes out without the user approving it: LinkedIn messages st
 4. **Enrich.** A verified work email for the people the email step will reach.
 5. **Write and send the follow-up.** An email on day 3 for whoever has not answered, sent after approval. Any reply on any channel ends the plan for that person.
 
-The agent finds, reads, qualifies and writes. The user sends LinkedIn and WhatsApp messages from their own accounts; the day-3 email the agent sends by email once the user approves it. This skill never sends an invitation or a LinkedIn, Instagram or WhatsApp message, and never connects an account or sets up an inbox, domain or warm-up. For depth on step 1, see the `hiring-signal-outbound` and `social-lead-discovery` skills; for the daily follow-through, `sdr-daily`.
+The agent finds, reads, qualifies and writes. The user sends LinkedIn and WhatsApp messages from their own accounts; the day-3 email the agent sends by email once the user approves it. This skill never sends an invitation or a LinkedIn, Instagram or WhatsApp message, and never connects an account or sets up an inbox, domain or warm-up. For depth on step 1, see the `hiring-signal-leads` and `social-lead-discovery` skills; for the daily follow-through, `sdr-daily`.
 
 ## Who this is for
 

@@ -26,5 +26,5 @@ These already carry the reason to write. The pipeline grades and verifies them l
 
 ## Other sources
 
-- Accounts first: run the `hiring-signal-outbound` skill or `company_search` (query, location) and search people inside those companies with `companies` or `company_domains`. `company_search` is also where the web domain and the headcount come from.
+- Accounts first: run the `hiring-signal-leads` skill or `company_search` (query, location) and search people inside those companies with `companies` or `company_domains`. `company_search` is also where the web domain and the headcount come from.
 - Public registers: for regulated professions with a public register, the register is often a better and free source. Say which register and how to read it here, then use `contact_find` to add the email.
