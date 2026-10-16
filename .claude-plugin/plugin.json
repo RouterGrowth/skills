@@ -1,14 +1,14 @@
 {
   "name": "routergrowth",
-  "version": "0.2.0",
-  "description": "GTM research workflows for Claude: lead lists from hiring signals, social lead discovery, verified work emails, AI search visibility, Reddit and brand monitoring, and outreach drafts you review and send yourself. Runs on the RouterGrowth connector, pay per call from one balance. Contact lookups use business data from LeadMagic, Apollo, Icypeas and Findymail on a legitimate-interest basis; anyone can opt out at routergrowth.com/privacy/opt-out (details: routergrowth.com/privacy).",
+  "displayName": "RouterGrowth",
+  "version": "0.2.1",
+  "description": "GTM research for Claude on one pay-per-call balance: lead lists from hiring signals, verified work emails, company and people enrichment, SEO and AI search visibility, social and Reddit research, and outreach drafts you review and send yourself.",
   "author": {
     "name": "RouterGrowth",
     "email": "hello@routergrowth.com",
     "url": "https://www.routergrowth.com"
   },
   "homepage": "https://www.routergrowth.com/skills",
-  "privacyPolicyUrl": "https://www.routergrowth.com/privacy",
   "repository": "https://github.com/RouterGrowth/skills",
   "license": "MIT",
   "keywords": [
@@ -29,5 +29,10 @@
     "aeo",
     "ai-visibility",
     "routergrowth"
-  ]
+  ],
+  "icon": "./.claude-plugin/icon.svg",
+  "documentationUrl": "https://www.routergrowth.com/docs/claude-connector",
+  "supportUrl": "https://www.routergrowth.com/docs/claude-connector#support",
+  "privacyPolicyUrl": "https://www.routergrowth.com/privacy",
+  "termsOfServiceUrl": "https://www.routergrowth.com/terms"
 }
