@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "routergrowth",
-      "description": "Eleven GTM workflows (lead lists from hiring signals, social lead discovery on X, Instagram, TikTok and YouTube, a cold email list and draft pipeline, a daily SDR drafting loop, LinkedIn and multichannel outreach drafts, AI visibility audit, Reddit surface map, brand mention sweep, community help drafts) plus the core RouterGrowth skill and the connector. Outreach workflows draft; you review and send.",
+      "description": "Eleven GTM workflows (lead lists from hiring signals, social lead discovery on X, Instagram, TikTok and YouTube, an email list and messaging pipeline, a daily SDR loop, LinkedIn drafts, multichannel messaging, AI visibility audit, Reddit surface map, brand mention sweep, community help drafts) plus the core RouterGrowth skill and the connector. Email goes out only after you approve it.",
       "source": "./",
       "category": "productivity",
       "homepage": "https://www.routergrowth.com/skills",
@@ -27,6 +27,6 @@
     }
   ],
   "metadata": {
-    "description": "GTM research and drafting workflows for Claude, open source, running on the RouterGrowth connector: pay per call, one balance."
+    "description": "GTM research and messaging workflows for Claude, open source, running on the RouterGrowth connector: pay per call, one balance."
   }
 }

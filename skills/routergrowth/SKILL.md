@@ -28,16 +28,16 @@ Some families appear only when the workspace has them: the table tools are liste
 
 ## Whole jobs: load a workflow skill
 
-When the request is a complete GTM job, a workflow skill in this plugin already holds the steps, order and checks. Load it and follow it; the rules in this file still apply. The workflow skills research and draft. They never send.
+When the request is a complete GTM job, a workflow skill in this plugin already holds the steps, order and checks. Load it and follow it; the rules in this file still apply. The workflow skills send email only after the user approves the exact messages, and keep LinkedIn, Instagram and WhatsApp as drafts.
 
 | Skill | Use it when the user wants |
 |---|---|
-| cold-email-pipeline | a researched email list from one targeting sentence: companies, people, verified emails, drafted messages |
-| sdr-daily | one day of a running campaign: triage replies, draft answers and follow-ups |
-| hiring-signal-outbound | leads at companies hiring for a role that implies the problem they solve, with drafts |
+| cold-email-pipeline | a researched email list from one targeting sentence: companies, people, verified emails, personalised emails sent after approval |
+| sdr-daily | one day of a running campaign: triage replies, write answers and follow-ups, send the approved emails |
+| hiring-signal-outbound | leads at companies hiring for a role that implies the problem they solve, with a first email sent after approval |
 | social-lead-discovery | people who engaged with posts, hashtags or a competitor, enriched to a verified email |
 | linkedin-outbound | LinkedIn research and drafted notes or messages for people who expect to hear from them |
-| multichannel-intent-outbound | high-intent leads with LinkedIn and email drafts side by side |
+| multichannel-intent-outbound | high-intent leads with LinkedIn drafts and an approved email follow-up |
 | ai-visibility-audit | what ChatGPT, Claude, Gemini and Perplexity say about a brand and its category |
 | reddit-surface-map | the subreddits and threads that own a category |
 | brand-mention-sweep | every mention of a brand, founder and competitors in the last 90 days |
@@ -164,15 +164,27 @@ A call your own client refuses before sending it (a permission prompt, no `run_i
 
 ## Messaging
 
-The connector can send email (`email_send` from a workspace inbox, `gmail_send` from the user's Gmail), LinkedIn messages to existing connections, Instagram DMs and WhatsApp messages, all from the user's own connected accounts. In this plugin sending is something the user explicitly asks for, message by message. The workflow skills only draft; this core skill can send a single message the user wrote or approved.
+The connector sends email (`email_send` from a workspace inbox, `gmail_send` from the user's Gmail) and LinkedIn, Instagram and WhatsApp messages, all from the user's own accounts. Nothing goes out unless the user approved it exactly as shown.
 
-- **One message at a time.** Never send in bulk, never loop over a list, never schedule follow-ups to send on their own.
-- **Only to people who expect it:** existing customers and contacts, people who wrote first, inbound leads, people the user met or was introduced to, or someone the user has a legitimate business reason to write and the law allows. Never to people who have not opted in or have no reason to expect the message.
-- **Show, then ask.** Before each send, show the exact recipient, the account it goes from, and the full text (subject included), and wait for a clear yes. A yes covers that one message only. Delivered messages cannot be recalled.
-- **Check first:** `get_subject_history` for earlier touches, the suppression list, and for email a `valid` verdict from `contact_verify`.
-- **Respect every guard.** An `opted_out` answer, a suppression, a `paced` refusal or a `repeat_touch` refusal is final for that send: tell the user, do not work around it. Never call `unsuppress_contacts` to get past a block; only the user removes someone from the list.
-- **Mechanics:** `email_send` needs `inbox_id` (from `email_inboxes`) and `to`; replies pass `in_reply_to` with the event's `message_id`. Include `unsubscribe_url` on business email when the user has one. Attachments are `[{filename, content_type, url | data_base64}]`, up to 10 files and 10 MB, a public https `url` for anything above 4 MB. `gmail_send` has no attachments. LinkedIn, Instagram and WhatsApp replies pass the event's `chat_id`. Pass an `idempotency_key` on every send.
-- **Replies:** read `list_workspace_events` first, then the thread. Drafting an answer is always fine; sending it follows the rules above.
+### Sending email
+
+The workflow skills in this plugin follow these rules when they send.
+
+- **Sender.** `email_inboxes` (free) lists the workspace's sending inboxes with their `inbox_id`; `gmail_accounts` (free) lists a connected Gmail. No inbox, no send: setting one up is a separate request (see Domains and email sending setup), never a side effect of a job.
+- **Recipients.** Only people with a reason to hear from the user: existing customers and contacts, people who wrote first, inbound leads, event attendees, people who engaged with the user's content, introductions, or a business contact where the user has a legitimate reason and the law where the recipient lives allows it. Every address is `valid` from `contact_verify`; `get_subject_history` or `get_subjects_history` and the suppression list are checked first.
+- **Approval.** Show every message exactly as it will go: from, to, subject, full body. The user's yes covers the messages shown; editing one voids its approval until they see it again. Delivered email cannot be recalled.
+- **Pace.** Send one at a time, never in parallel, inside the daily number the user sets (low for an inbox that started sending recently). Give each an `idempotency_key` so a retry never sends twice.
+- **Mechanics.** `email_send` needs `inbox_id` and `to`; a reply or follow-up passes `in_reply_to` with the earlier message's id. Include the user's `unsubscribe_url` on business email when they have one. Attachments are `[{filename, content_type, url | data_base64}]`, up to 10 files and 10 MB, a public https `url` for anything above 4 MB. `gmail_send` has no attachments.
+- **Every guard is final.** `opted_out`, `suppressed` and `repeat_touch` end it for that person; `paced` means wait `retry_after`. Never call `unsuppress_contacts` to get past a block: only the user removes someone from the list. Stop on a burst of bounces and tell the user.
+- **After.** Record each send (row `sent`, run id). A reply, bounce, complaint or unsubscribe stops anything further for that person; offer `suppress_contacts` for anyone who asks not to be contacted.
+
+### LinkedIn, Instagram and WhatsApp
+
+These go out from the user's personal logins, so they are single messages to people who already know the user: an existing connection, someone who wrote first, a conversation in progress. Show the recipient, the account and the full text, and send only on a yes for that one message (`linkedin_message`, `instagram_message`, `whatsapp_message`, replies with the event's `chat_id`). No connection requests, no lists, no sequences: the workflow skills keep these channels as drafts the user sends.
+
+### Replies
+
+Read `list_workspace_events` first, then the thread. Drafting an answer is always fine; sending it follows the rules above.
 
 ## Feedback
 
@@ -194,7 +206,7 @@ RouterGrowth fills gaps in the user's stack. Precedence: an explicit instruction
 3. `get_operation_pricing` before the first call of a kind; `max_cost` on every paid call; small first limits; ask before about $1; report the total.
 4. Check history and suppressions before enriching or contacting anyone; stop for good on an opt-out.
 5. Verify every address before it is used; never invent a name or an email.
-6. Send only a single message the user asked for, after showing it and getting a yes.
+6. Send nothing the user has not approved as shown: email one at a time, LinkedIn, Instagram and WhatsApp one message at a time to people who already know the user.
 7. A `blocked` call is final until the user changes the control; never call again within seconds after a failure.
 8. Never present sandbox output as real data.
 9. Report feedback only when the user asks or agrees.

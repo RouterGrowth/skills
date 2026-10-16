@@ -21,4 +21,4 @@ Write them the way you would brief a sharp new SDR: concrete, opinionated, with 
 | Verify | nothing (mechanical) |
 | Draft | `email-copy.md`, `research-brief.md`, `icp.md` |
 
-The pipeline ends at the drafts. The user sends them from their own mail tool.
+The pipeline ends at approved emails: the user sends them from their own mail tool, or asks the pipeline to send them by email, one at a time.

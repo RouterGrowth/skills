@@ -1,29 +1,29 @@
 ---
 name: multichannel-intent-outbound
 description: >-
-  Plan and draft a multichannel outreach sequence with RouterGrowth for people
+  Plan a multichannel messaging sequence with RouterGrowth for people
   who show a dated, public intent signal (hiring for the role, posting about
   the problem, engaging with the user's content or a competitor's): qualify
-  them, find their LinkedIn and a verified work email, and draft a LinkedIn
-  note, a LinkedIn message and an email follow-up on a day-by-day plan. The
-  user reviews every draft and sends it from their own accounts; this skill
-  never sends, connects or sets up inboxes. Use when the user wants intent-led
-  multichannel outreach, LinkedIn plus email drafts for a list, "find intent
-  leads and draft what to say", or a follow-up plan when one channel goes
-  quiet.
+  them, find their LinkedIn and a verified work email, and write a LinkedIn
+  note, a LinkedIn message and an email follow-up on a day-by-day plan.
+  LinkedIn messages are drafts the user sends; the email is sent from a
+  RouterGrowth inbox or the user's Gmail once the user approves it. Use when
+  the user wants intent-led multichannel messaging, LinkedIn plus email for a
+  list, "find intent leads and write what to say", or a follow-up plan when
+  one channel goes quiet.
 ---
 
-# Multichannel intent outbound
+# Multichannel intent messaging
 
-Five steps, all of them research and drafting. Nothing leaves the user's hands without them sending it.
+Five steps. Nothing goes out without the user approving it: LinkedIn messages stay drafts the user sends, and the email can go from their RouterGrowth inbox or Gmail once approved.
 
 1. **Find high-intent people.** Only people with a dated, public reason to care this week.
 2. **Get their LinkedIn.** The profile is the identity everything else hangs on.
 3. **Draft the LinkedIn touches.** A connection note written from the signal, a message for once they accept.
 4. **Enrich.** A verified work email for the people the email step will reach.
-5. **Draft the follow-up.** An email on day 3 for whoever has not answered. Any reply on any channel ends the plan for that person.
+5. **Write and send the follow-up.** An email on day 3 for whoever has not answered, sent after approval. Any reply on any channel ends the plan for that person.
 
-The agent finds, reads, qualifies and drafts. The user sends every message from their own LinkedIn, mailbox or phone, at their own pace. This skill never calls a send, invite, connect, inbox, domain or warm-up tool, and never offers to send on the user's behalf. For depth on step 1, see the `hiring-signal-outbound` and `social-lead-discovery` skills; for the daily follow-through, `sdr-daily`.
+The agent finds, reads, qualifies and writes. The user sends LinkedIn and WhatsApp messages from their own accounts; the day-3 email the agent sends by email once the user approves it. This skill never sends an invitation or a LinkedIn, Instagram or WhatsApp message, and never connects an account or sets up an inbox, domain or warm-up. For depth on step 1, see the `hiring-signal-outbound` and `social-lead-discovery` skills; for the daily follow-through, `sdr-daily`.
 
 ## Who this is for
 
@@ -89,7 +89,7 @@ Enrich in the order the plan needs it, and only for people still in it, so nobod
 - **Opt-outs.** A lookup that answers `no_match` because the person opted out with RouterGrowth ends the plan for that person entirely: no retry, no other tool, no other channel. Mark the row `suppressed`.
 - **No phone numbers up front.** See Phone and WhatsApp below.
 
-## 5. Draft the follow-up
+## 5. Write and send the follow-up
 
 Every run starts by finding out what happened since the last one, before any new draft.
 
@@ -107,7 +107,7 @@ An inbox that cannot be read means unknown, not silence: hold that person's next
 
 The email is short: a subject that names the signal, three sentences, one question, no attachment, and a plain sentence that lets them say no. One draft per person per day, never two channels on the same day.
 
-Show every follow-up draft (person, channel, the address it should go to, subject, text) and save it on the row as `drafted` with the day it is for. The user sends it from their own mailbox. Recommend they send from their normal address at a low daily volume, and never from a domain or inbox that has not been sending real mail.
+Show every follow-up (person, channel, the address it goes to, subject, text) and save it on the row as `drafted` with the day it is for. Once the user approves the emails as shown, send them following "Sending email" in the core `routergrowth` skill: from an inbox listed by `email_inboxes` or a Gmail from `gmail_accounts`, one at a time in a low daily number, an `idempotency_key` on each, every `suppressed`, `opted_out` or `repeat_touch` block final; the row goes to `sent` with the run id. Or the user sends from their own mailbox. Never send from a domain or inbox that has not been sending real mail.
 
 **Triage every reply**: interested, question, not now, wrong person, not interested, out of office. Draft an answer for interested and question. Wrong person: note who they named. Not now and out of office: set `next_at` to the date they gave. Not interested, a request to stop, a hard bounce or a spam complaint: `suppress_contacts` with the matching `reason` (`not_interested`, `unsubscribe`, `bounce`, `complaint`) and the row goes to `suppressed`, ending every channel for that person.
 
@@ -119,7 +119,7 @@ When it applies, `contact_phone` with their work `email` or `profile_url` (charg
 
 ## Rules
 
-- Never call a send, invite, connect, inbox, domain or warm-up tool. The output is drafts; the user sends.
+- Email is the only channel this skill sends on, and only after the user approved the exact message. LinkedIn, Instagram and WhatsApp stay drafts; no invitations, no account connections, no inbox, domain or warm-up setup.
 - `max_cost` on every paid call; price once per tool with `get_operation_pricing`, quote the batch, then run. Stop and ask before a batch over about $1 unless the user asked for that volume.
 - One active plan per person, one draft per channel per step, never two channels on the same day. A reply on any channel ends the plan.
 - Never invent a last name, a LinkedIn match, an email or a number. Never put an unverified address in a draft. Never look up a phone number for someone who has not replied.
@@ -130,7 +130,7 @@ When it applies, `contact_phone` with their work `email` or `profile_url` (charg
 
 One row per person, in the workspace table (tables on) or a markdown table: `name, title, company, domain, signal, signal_date, signal_url, linkedin_url, email, verify_status, stage, last_touch, next_touch, step, channel, subject, body, replied_on`. `stage` is one of `found, drafted, sent, replied, suppressed`; with tables on it is the row's status and `next_touch` its `next_at`, so `query_table_rows` with `due: true` lists who is up today.
 
-A short report each run: replies by channel with the answers drafted, acceptances, drafts ready for today by channel, people suppressed, what is due tomorrow, and the total charged (sum the charges from `list_runs` for this run).
+A short report each run: replies by channel with the answers drafted, acceptances, messages ready for today by channel, emails sent, people suppressed, what is due tomorrow, and the total charged (sum the charges from `list_runs` for this run).
 
 ## Cost
 

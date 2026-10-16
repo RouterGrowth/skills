@@ -1,10 +1,10 @@
 # Email copy
 
-The pipeline writes drafts from this file. The user sends them from their own mail tool.
+The pipeline writes the emails from this file. The user approves them, then sends them from their own mail tool or has the pipeline send them by email (stage 6).
 
 ## Sender
 
-- From: (the address the user sends from, a real person at the company)
+- From: (the address the emails go from, a real person at the company: their own mailbox, or a RouterGrowth inbox in their name)
 - Reply-to: (an address a human reads)
 - Signature: name, role, company, website. One phone number if the user wants calls.
 - Opt-out line: one sentence at the end telling the reader how to stop receiving these. Mandatory, and every opt-out is honored.
@@ -58,7 +58,7 @@ Hi {first_name},
 (opt-out line)
 ```
 
-### Optional follow-up (the user sends it only if there is no reply)
+### Optional follow-up (only if there is no reply, approved like the first email)
 
 ```
 Subject: Re: (original subject)

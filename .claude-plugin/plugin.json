@@ -1,8 +1,8 @@
 {
   "name": "routergrowth",
   "displayName": "RouterGrowth",
-  "version": "0.2.1",
-  "description": "GTM research for Claude on one pay-per-call balance: lead lists from hiring signals, verified work emails, company and people enrichment, SEO and AI search visibility, social and Reddit research, and outreach drafts you review and send yourself.",
+  "version": "0.2.2",
+  "description": "GTM research and messaging for Claude on one pay-per-call balance: lead lists from hiring signals, verified work emails, company and people enrichment, SEO and AI search visibility, social and Reddit research, and emails sent from your own inbox once you approve them.",
   "author": {
     "name": "RouterGrowth",
     "email": "hello@routergrowth.com",

@@ -10,9 +10,9 @@ Every run starts with what is not finished: drafts the user has not sent yet, me
 
 When an inbox, a thread or a provider cannot be checked, record the state as unknown, hold every action that depends on it, and report the blocker. Never infer silence from a failed check.
 
-## Drafts, not sends
+## Nothing goes out unapproved
 
-The workflows in this repo draft; the user reviews and sends from their own tools. A draft names one recipient, one channel, one subject, one body, one sequence step. Drafting never authorizes sending, and a skill here never sends.
+An approval covers the messages the user saw, exactly as shown: one recipient, one channel, one subject, one body, one sequence step each. Edit any of them and that approval is void. Email can then go out through RouterGrowth, one at a time; LinkedIn, Instagram and WhatsApp stay drafts the user sends. A scheduled run drafts and never sends.
 
 ## A reply stops the sequence
 
@@ -24,7 +24,7 @@ Dedupe on the identifiers you have (email, LinkedIn URL, domain, permalink) befo
 
 ## Caps are on new work, not on monitoring
 
-Daily caps limit new sourcing and new drafts. Monitoring, reconciliation and reply triage are always complete and never count against a cap.
+Daily caps limit new sourcing, new drafts and new sends. Monitoring, reconciliation and reply triage are always complete and never count against a cap.
 
 ## Every external call carries its receipt
 

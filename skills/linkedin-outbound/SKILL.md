@@ -1,7 +1,7 @@
 ---
 name: linkedin-outbound
 description: >-
-  Prepare LinkedIn outreach with RouterGrowth that the user sends themselves:
+  Prepare LinkedIn messages with RouterGrowth that the user sends themselves:
   find people who have a reason to hear from the user (people who engaged with
   their posts, event attendees, warm introductions, relevant business
   contacts), read the profiles the user picks (linkedin_profile), and draft a
@@ -12,9 +12,9 @@ description: >-
   replied on LinkedIn" and what to answer.
 ---
 
-# LinkedIn outreach drafts
+# LinkedIn messages: research and drafts
 
-The agent finds candidates, reads the profiles the user picks, and drafts a connection note and a first message per person. The user sends every invitation and message themselves, from LinkedIn. This skill never sends a connection request or a message, and never offers to.
+The agent finds candidates, reads the profiles the user picks, and drafts a connection note and a first message per person. The user sends every invitation and message themselves, from LinkedIn: these go out under their personal login, so they stay drafts. This skill never sends a connection request or a message. For people with a verified work email, the email can go through RouterGrowth after approval (see `cold-email-pipeline`).
 
 ## Who this is for
 

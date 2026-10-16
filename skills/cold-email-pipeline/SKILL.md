@@ -6,21 +6,22 @@ description: >-
   event attendees, existing customers, warm introductions, or business
   contacts where the user has a legitimate interest and the law allows it.
   Five stages over a directives folder (ICP, lead sources, negative keywords,
-  qualification rubric, copy rules): Research, List, Grade, Verify, Draft.
-  Drafts only: the user reviews and sends from their own mail tool. Use when
-  the user wants to build and qualify a lead list, verify emails before
-  outreach, or draft personalised emails for a list of people.
+  qualification rubric, copy rules): Research, List, Grade, Verify, Draft,
+  then Send by email once the user approves the exact messages, from a
+  RouterGrowth inbox or their own Gmail. Use when the user wants to build and
+  qualify a contact list, verify emails, or write and send personalised emails
+  to a list of people.
 ---
 
-# Email list and drafting pipeline
+# Email list and messaging pipeline
 
-Five stages over a directives folder the user configures once. The stages that touch data call RouterGrowth tools; the stages that judge (grading, writing) run on you. The output is a graded, verified list and one draft email per person. The skill never sends: the user reviews the drafts and sends them from their own mail tool, at their own pace.
+Five stages over a directives folder the user configures once. The stages that touch data call RouterGrowth tools; the stages that judge (grading, writing) run on you. The output is a graded, verified list and one email per person. The user approves the exact messages, then either sends them from their own mail tool or asks you to send them by email through RouterGrowth (stage 6).
 
 ```
-Research -> List -> Grade -> Verify -> Draft
-  brief     raw     keep     clean     one draft
-            rows    ICP      list      per person,
-                    only               user sends
+Research -> List -> Grade -> Verify -> Draft -> Send
+  brief     raw     keep     clean     one email  approved
+            rows    ICP      list      per person email only,
+                    only                          one at a time
 ```
 
 Raw lead lists are 30 to 50% wrong-ICP. Grade and Verify exist so the user does not write to agencies, dead sites and wrong-geo firms, or to addresses that bounce.
@@ -83,11 +84,23 @@ One email per person from `directives/email-copy.md` fused with the research bri
 
 Save the drafts as rows with status `drafted` and the columns `to, first_name, company, tier, reason, subject, body` (`upsert_table_rows`), or `out/drafts.csv`.
 
-**Gate: show the counts (raw, kept after grade, kept after verify), the category breakdown, the verification breakdown, three sample drafts, and the total spent. Wait for edits.** Then hand the drafts over: the user copies them into their own mail tool and sends them. When the user says a draft went out, set its status to `sent` with `update_table_rows` so the next session knows.
+**Gate: show the counts (raw, kept after grade, kept after verify), the category breakdown, the verification breakdown, three sample drafts, and the total spent. Wait for edits.** Then the user either sends them from their own mail tool (when they say a message went out, set its status to `sent` with `update_table_rows`) or asks you to send them (stage 6).
+
+### 6. Send (email, after approval)
+
+Only when the user asks you to send, and only by email:
+
+1. **Sender.** `email_inboxes` (free) lists the workspace's sending inboxes with their `inbox_id`; `gmail_accounts` (free) lists a connected Gmail. If neither exists, say so and stop: setting up a sending domain or inbox is a separate request (the core skill covers it), never part of this run.
+2. **Approval.** Show every message exactly as it will go: from, to, subject, full body. The user's yes covers that set as shown; editing a message voids its approval until they see it again. Check the price of `email_send` or `gmail_send` with `get_operation_pricing` and state the total.
+3. **Send one at a time,** in a daily number the user sets (low on an inbox that started sending recently): `email_send` with `inbox_id`, `to`, `subject`, `text` and the user's `unsubscribe_url` when they have one, or `gmail_send`. Give each an `idempotency_key` so a retry never sends twice.
+4. **Every block is final.** A `blocked` answer with `suppressed`, `opted_out` or `repeat_touch` ends it for that person; `paced` means wait `retry_after`, then continue. Stop the run on a burst of bounces and tell the user.
+5. **Record.** Set each row to `sent` with the run id. A reply, a bounce or an unsubscribe stops anything further for that person; `sdr-daily` reads the replies.
+
+The optional follow-up goes the same way: only if there is no reply, approved as shown, sent by email.
 
 ## Rules
 
-- Drafts only. This skill never calls a send, connect, inbox, domain or warm-up tool, and never offers to send on the user's behalf.
+- Email is the only channel this skill sends on, and only after the user approved the exact messages. It never connects an account, sets up a domain or inbox, starts warm-up, or sends a LinkedIn, Instagram or WhatsApp message.
 - `get_operation_pricing` once per tool before its first call; `max_cost` on every paid call; quote the whole job before stage 2 and stop before anything above about $1 unless the user asked for that volume.
 - Contact only people on the list for a reason the user stated. Never keep a person on the suppression list or one who opted out with RouterGrowth. If a recipient later asks to stop, the user can add them with `suppress_contacts` (free).
 - Be clear about sources: emails and profiles come from RouterGrowth's third-party data providers. If the user or a recipient asks, point to https://www.routergrowth.com/privacy (sources) and https://www.routergrowth.com/privacy/opt-out (anyone can opt out of lookups).
@@ -96,4 +109,4 @@ Save the drafts as rows with status `drafted` and the columns `to, first_name, c
 
 ## Output
 
-The list (table or CSVs) with every stage's status, the drafts, and a summary: rows raw, kept after grade, kept after verify, drafted, and the total spent as the sum of this job's charges from `list_runs` (not a wallet difference: the balance is shared by every session on the workspace). Misses are listed with the reason. To draft answers when replies come in, the `sdr-daily` skill reads the user's inbox; it does not send either.
+The list (table or CSVs) with every stage's status, the drafts, and a summary: rows raw, kept after grade, kept after verify, drafted, and the total spent as the sum of this job's charges from `list_runs` (not a wallet difference: the balance is shared by every session on the workspace). Misses are listed with the reason. When replies come in, the `sdr-daily` skill reads the inbox and drafts the answers.

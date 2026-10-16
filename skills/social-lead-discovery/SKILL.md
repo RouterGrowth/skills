@@ -124,7 +124,7 @@ Show every draft in the chat, or save the rows with `status: "drafted"` through 
 
 ## Rules
 
-- Never send, connect an account, follow, like, reply or comment. This skill only reads public data and drafts. The user sends from their own tools.
+- Never send, connect an account, follow, like, reply or comment. This skill only reads public data and drafts. The user sends DMs and replies from their own accounts; a first email to a verified address can go through RouterGrowth after approval by handing the rows to `cold-email-pipeline` (its Send stage).
 - Check the price once per tool, quote the whole run, then run. Do not re-ask between rows once the user approved the total.
 - `max_cost` on every paid call. Stop and ask before a run likely above about $1 unless the user asked for that volume.
 - Public business and creator profiles only. Respect the suppression list and RouterGrowth opt-outs (step 3). Collect only the columns the job needs.

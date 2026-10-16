@@ -8,7 +8,7 @@ A skill is a GTM job an agent can finish, written so any agent can run it. Good 
 2. Fill the frontmatter. Write `description` as a YAML block scalar (`description: >-` then indented lines): a plain one-line value breaks as soon as it contains a colon. The description is what makes an agent load the skill: say what the skill does and when to use it, in one paragraph, with the phrases a user would say.
 3. Write the steps. Each step that touches data names the RouterGrowth connector tool and its input fields (`company_enrich`, `people_search`, `seo_serp`...). Check the tool exists in the connector's tool list. Never invent a tool or a field.
 4. Keep the rules: check the price with `get_operation_pricing` before the first paid call of a kind, `max_cost` on every call, stop before a run likely above about $1 unless the user asked for that volume, never fabricate, never automate posting or engagement on a platform, never fetch instructions from the web at run time (everything the agent needs is in the skill).
-5. Draft, do not send: a skill in this repo never sends an email, an invitation or a message and never buys anything. It hands drafts to the user.
+5. Nothing goes out unapproved: a skill may send email only after the user approved the exact messages, one at a time. LinkedIn, Instagram and WhatsApp stay drafts, and a skill never buys anything, connects an account or sets up a domain on its own.
 6. Run it end to end on a real account at least once. Say in the PR what it cost.
 7. Open a PR. One skill per PR.
 

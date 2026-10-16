@@ -38,7 +38,7 @@ What to keep from the result, what to drop.
 ## Human gates
 
 - Before spending beyond the agreed budget: show the plan and the price, and wait.
-- Drafts go to the user; the user sends.
+- Messages go out only after the user approved them as shown: email one at a time, other channels as drafts the user sends.
 
 ## Output
 

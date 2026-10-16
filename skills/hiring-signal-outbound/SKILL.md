@@ -1,20 +1,21 @@
 ---
 name: hiring-signal-outbound
 description: >-
-  Build a lead list from hiring signals with RouterGrowth and draft the first
-  email for each contact. Find companies that just posted the role that
+  Build a lead list from hiring signals with RouterGrowth and write the first
+  email for each contact, sent by email once the user approves it. Find companies that just posted the role that
   implies the problem the user solves (company_jobs), size them
   (company_search), find the person who owns the budget (people_search), get a
   work email (contact_find), verify it (contact_verify), and draft a message
-  that cites the posting. Drafts only: the user reviews and sends. Use when the
+  that cites the posting; send it from a RouterGrowth inbox or the user's Gmail
+  after approval. Use when the
   user wants a lead list, asks who is hiring for a role, wants to turn job
   postings into accounts, asks for high-intent leads, or says "companies
   hiring X" or "who should we reach out to".
 ---
 
-# Hiring-signal list and drafts
+# Hiring-signal list and messages
 
-A job posting is a company saying in public that it has budget, a gap and a manager who admitted the gap in writing. This skill turns that into a verified contact list and one draft email per contact, and the lookups that find nothing are not billed. The user reviews the drafts and sends them from their own mail tool; this skill never sends.
+A job posting is a company saying in public that it has budget, a gap and a manager who admitted the gap in writing. This skill turns that into a verified contact list and one draft email per contact, and the lookups that find nothing are not billed. The user approves the emails, then sends them from their own mail tool or has you send them by email, one at a time.
 
 ## Before you start
 
@@ -89,11 +90,15 @@ Save the drafts as rows with status `drafted` (`upsert_table_rows`), or in the C
 
 ## Gate
 
-Before handing anything over, show the account count, the contact count by verification status, the total spent (the sum of this job's charges from `list_runs`, not a wallet difference: the balance is shared by every session on the workspace), five sample rows and three sample drafts. Wait for edits. The user sends from their own mail tool; when they say which went out, set those rows to `sent` with `update_table_rows`.
+Before handing anything over, show the account count, the contact count by verification status, the total spent (the sum of this job's charges from `list_runs`, not a wallet difference: the balance is shared by every session on the workspace), five sample rows and three sample drafts. Wait for edits. Then the user sends from their own mail tool (when they say which went out, set those rows to `sent` with `update_table_rows`), or asks you to send.
+
+## Send (email, after approval)
+
+Follow "Sending email" in the core `routergrowth` skill: the sender from `email_inboxes` or `gmail_accounts` (no inbox, no send: setting one up is a separate request), every message shown exactly as it goes and approved, `email_send` or `gmail_send` one at a time with an `idempotency_key` in the daily number the user sets, every `suppressed`, `opted_out` or `repeat_touch` block final, rows set to `sent` with the run id.
 
 ## Rules
 
-- Drafts only. Never call a send, connect, inbox, domain or warm-up tool, and never offer to send on the user's behalf.
+- Email is the only channel this skill sends on, and only after the user approved the exact messages. It never connects an account, sets up a domain or inbox, or starts warm-up.
 - `get_operation_pricing` once per tool, quote the whole list, then run. Do not re-ask between rows once the user approved the total. `max_cost` on every paid call.
 - Collect only the fields the list needs. Every row carries the run id that produced it.
 - Emails and profiles come from RouterGrowth's third-party data providers. If anyone asks where an address came from, point to https://www.routergrowth.com/privacy and https://www.routergrowth.com/privacy/opt-out.
@@ -105,4 +110,4 @@ Before handing anything over, show the account count, the contact count by verif
 
 ## Output
 
-A list with one row per contact: `company, domain, employee_count, posting_title, posted_at, first_name, last_name, current_title, linkedin_url, email, verify_status, run_ids, status, draft_subject, draft_body`. `run_ids` lists the jobs, company, people, find and verify runs behind the row. Plus the totals: accounts found, buyers found, emails found, emails valid, drafts written, total spent. Misses are listed at the bottom with the reason, so the user can see what was filtered and why.
+A list with one row per contact: `company, domain, employee_count, posting_title, posted_at, first_name, last_name, current_title, linkedin_url, email, verify_status, run_ids, status, draft_subject, draft_body`. `run_ids` lists the jobs, company, people, find and verify runs behind the row. Plus the totals: accounts found, buyers found, emails found, emails valid, emails written, emails sent, total spent. Misses are listed at the bottom with the reason, so the user can see what was filtered and why.
