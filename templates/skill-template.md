@@ -4,8 +4,8 @@
 name: your-skill-name
 description: >-
   One paragraph. What the skill does, in what order, and the phrases a user
-  would say that mean they want it ("build a list of", "audit our", "send the
-  batch"). This is the trigger, so be concrete.
+  would say that mean they want it ("build a list of", "audit our", "draft
+  the follow-ups"). This is the trigger, so be concrete.
 ---
 
 # Your skill name
@@ -14,20 +14,15 @@ One sentence on the job and the shape of the result.
 
 ## Before you start
 
-- Load the core `routergrowth` skill (https://www.routergrowth.com/SKILL.md) if it is not already loaded. It carries the CLI, HTTP and MCP contract and the spending rules.
-- Confirm access without printing credentials: the free `balance` tool, or `routergrowth balance`.
+- The core `routergrowth` skill in this plugin carries the connector's tools and the spending rules.
+- Confirm the connector works with the free `get_workspace_balance` tool. If the RouterGrowth tools are missing, ask the user to connect RouterGrowth and approve a workspace.
 - Ask for the inputs this skill needs (the ICP, the brand, the domain) if the user has not given them.
 
 ## Steps
 
 ### 1. Name the step
 
-What it does. The capability it calls and the input:
-
-```bash
-routergrowth inspect -c capability.name
-routergrowth run -c capability.name -i '{"field":"value"}' --max-cost 0.05
-```
+What it does. The tool it calls and the input, for example `company_enrich` with `{"input": {"domain": "example.com"}, "max_cost": "0.10"}`.
 
 What to keep from the result, what to drop.
 
@@ -35,14 +30,15 @@ What to keep from the result, what to drop.
 
 ## Rules
 
-- Inspect once per capability and show the price before the first billable run. For a homogeneous batch, quote the batch total, not each item.
-- `max_cost` on every run, `max_total_cost` on every batch. Stop and ask before a batch over about $1 unless the user asked for that volume.
-- Never present sandbox (`rg_test_`) output as real data. Never fabricate a number: every figure carries its source or an "estimate" label.
-- Never post, comment, like or automate engagement anywhere. Measure and draft; a human publishes.
+- Check the price with `get_operation_pricing` before the first paid call of a kind, and quote the total for a run of calls, not each item.
+- `max_cost` on every paid call. Stop and ask before a run likely above about $1 unless the user asked for that volume.
+- Never present simulated (sandbox) output as real data. Never fabricate a number: every figure carries its source or an "estimate" label.
+- Never post, comment, like, send or automate engagement anywhere. Measure and draft; a human publishes and sends.
 
 ## Human gates
 
-- Before anything leaves the workspace: show the list, the copy or the order, and wait.
+- Before spending beyond the agreed budget: show the plan and the price, and wait.
+- Drafts go to the user; the user sends.
 
 ## Output
 

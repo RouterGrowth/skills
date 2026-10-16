@@ -1,19 +1,22 @@
 # Email copy
 
+The pipeline writes drafts from this file. The user sends them from their own mail tool.
+
 ## Sender
 
-- From: (the campaign inbox on the owned domain, e.g. alex@get-example.com; rename the display name with email.inbox)
+- From: (the address the user sends from, a real person at the company)
 - Reply-to: (an address a human reads)
 - Signature: name, role, company, website. One phone number if the user wants calls.
-- Opt-out line: one sentence at the end telling the reader how to stop receiving these. Mandatory.
+- Opt-out line: one sentence at the end telling the reader how to stop receiving these. Mandatory, and every opt-out is honored.
 
 ## Voice and rules
 
-- Language: the prospect's.
+- Language: the recipient's.
 - Plain text. No HTML, no images, no tracking.
+- Make the reason to write plain in the first two lines (the event, the sign-up, the introduction, the role).
 - Lead with the pain from research-brief.md, then the relief. The product comes second.
 - Product facts match the live site. Never invent a plan name, a feature, a price or a trial term.
-- First line written from this lead: their role, their firm, one thing from their site.
+- First line written from this person: their role, their firm, one thing from their site.
 - One call to action.
 - 120 to 160 words.
 - Merge fields `{first_name}` and `{company}` only, and only clean ones.
@@ -32,14 +35,14 @@
 
 ## Templates
 
-### J+0
+### First email
 
 ```
 Subject: {first_name}, (the pain as a question)
 
 Hi {first_name},
 
-(one line from their site or role)
+(the reason you are writing, and one line from their site or role)
 
 (the pain as a question, from the research brief)
 
@@ -55,7 +58,7 @@ Hi {first_name},
 (opt-out line)
 ```
 
-### J+4
+### Optional follow-up (the user sends it only if there is no reply)
 
 ```
 Subject: Re: (original subject)
@@ -66,23 +69,10 @@ Short follow-up in case the first note got buried.
 
 (the product in two lines)
 
-(the offer, one line)
-
 (one question)
 
 (signature)
 (opt-out line)
 ```
 
-### J+10
-
-```
-Subject: Re: (original subject)
-
-Hi {first_name},
-
-Last note from me. If this is not a priority right now, no problem at all. One line back if you want to pick it up later, or if someone else at {company} owns this.
-
-(signature)
-(opt-out line)
-```
+One follow-up at most. No reply after that means no.

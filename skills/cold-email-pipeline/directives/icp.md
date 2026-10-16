@@ -4,6 +4,10 @@
 
 Who you sell to, in one sentence a stranger could use to recognise them. Example: independent mortgage brokers and small broker agencies in France who assemble the loan file themselves.
 
+## Why they expect to hear from you
+
+The reason the user may write to these people, in one or two lines. Examples: they signed up for the webinar; they asked for pricing on the site; we met them at the trade show; they are existing customers; a partner introduced us; they are businesses whose public role makes our offer relevant and the law in their country allows a first business email. If there is no reason, there is no list.
+
 ## Who they are
 
 - Firm type: (the legal or professional category, any register they appear in)
