@@ -1,0 +1,51 @@
+{
+  "skill_name": "reddit-surface-map",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "which subreddits matter for a CRM for small agencies?",
+      "should_trigger": true,
+      "assertions": [
+        "Uses seo_serp for money queries and social_search on reddit",
+        "Delivers the map, never posts",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Reddit threads ranking for best email verification tool",
+      "should_trigger": true,
+      "assertions": [
+        "Reads threads with social_comments",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "where do buyers discuss our category on Reddit",
+      "should_trigger": true,
+      "assertions": [
+        "Notes each subreddit's rules on vendors",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Post my launch on r/SaaS",
+      "should_trigger": false,
+      "assertions": [
+        "Does not post"
+      ],
+      "files": []
+    }
+  ]
+}

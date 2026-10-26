@@ -9,6 +9,11 @@ description: >-
   which subreddits matter for their product, wants the Reddit threads ranking
   for "best X" or "X alternatives", wants to know where buyers discuss the
   category, or asks about Reddit for SEO or AI visibility.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/reddit-surface-map
 ---
 
 # Reddit surface map

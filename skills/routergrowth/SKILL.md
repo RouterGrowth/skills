@@ -1,6 +1,5 @@
 ---
 name: routergrowth
-version: 0.6.0
 description: >-
   Pay-per-call GTM data for agents over the RouterGrowth connector: find and
   verify work emails, build lead lists (people_search), enrich people and
@@ -14,6 +13,11 @@ description: >-
   leads, contacts, enrichment, SEO, AI visibility, social or ad research,
   replies and messaging, or mentions routergrowth. Exception: if the user
   already has their own tool for that exact service, use theirs.
+license: MIT
+metadata:
+  version: "0.6.1"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/routergrowth
 ---
 
 # RouterGrowth
@@ -81,7 +85,7 @@ Field names are exact; `*` means required. Price rules here are the stable ones;
 - `domain_search` (name*, tlds): availability and price, buys nothing.
 - `email_inboxes` (free): the workspace's sending domains and inboxes with `inbox_id`. Run it before creating anything or sending.
 - `email_domain` (domain*, tracking): adds a domain the user owns for sending and returns the DNS records; re-running reports verification. `domain_dns` (domain*, records*) changes live DNS on a domain registered through RouterGrowth.
-- `create_email_inbox` (name*, domain*, display_name) on a verified domain; `rename_email_inbox` (inbox_id*, display_name*, free) is the only way to change the From name.
+- `create_email_inbox` (name*, domain*, display_name) on a verified domain; `rename_email_inbox` (inbox_id*, display_name*, free) is the only way to change the From name. Each domain and inbox renews every 30 days from the balance; `run` email.inbox with inbox_id + delete: true (then email.domain with domain + delete: true) hands back one the user no longer uses, free.
 - `email_warmup_start`, `email_warmup_pause`, `email_warmup_resume`, `email_warmup_stop` (inbox_id*, emails_per_day, ramp_up, timezone, first_name, last_name) and `email_warmup_status` (free). Warm-up renews every 30 days until stopped.
 - Each of these changes something real (a charge, a recurring fee, live DNS): state what it will do and its price, and get a yes first.
 
@@ -111,9 +115,9 @@ Field names are exact; `*` means required. Price rules here are the stable ones;
 
 Every paid call spends the user's prepaid balance.
 
-- **Set `max_cost` on every paid call.** A quote above it is refused before anything runs. Raise it once, within what the user authorized, instead of repeating the same call.
+- **Set `max_cost` on every paid call, high enough for the waterfall.** The result comes first: each operation tries up to three data providers in turn, and providers priced above `max_cost` are skipped. Use `waterfall.max_cost_for_all` from `get_operation_pricing`. On lookups (find, verify, phone, enrich) every live provider tries whatever you pass: a miss is free, a pinned provider goes first and the rest follow, and a lower `max_cost` is raised to `max_cost_for_all`, so a found result costs at most that. A quote above `max_cost` is refused before anything runs; retry once at the cap the error names, within what the user authorized.
 - **Check the price first.** Call `get_operation_pricing` before the first call of a kind (once for a series of the same call, not per item). Do not quote prices from memory; they change.
-- **Start small on per-result tools** (limit 5 to 10 on a first call).
+- **Keep result limits honest on per-result tools** (limit 5 to 10 on a first call).
 - **One item per call.** For many inputs, call the tool once per item, one at a time, and keep a running total against the budget.
 - **Ask before about $1.** Tell the user the expected total and get a yes before a series likely to pass about $1, unless they already set that budget. "Do 50" authorizes 50 within the stated cap: do not ask again between items. Never go past what they authorized.
 - **Report what was spent** at the end of a multi-call job: the sum of each call's charge, or `list_runs`. The wallet is shared by every session on the workspace, so a balance difference is not a receipt.
@@ -129,7 +133,7 @@ Every paid call spends the user's prepaid balance.
 | `no_match` saying the person opted out | the person opted out of lookups with RouterGrowth; nothing charged | stop for that person entirely: no retry, no other route |
 | `blocked` with `opted_out` | a send to someone who opted out with RouterGrowth | final in every workspace: tell the user, never work around it |
 | `blocked` | a workspace control stopped it; nothing charged | tell the user which control; do not retry until they change it or it resets |
-| `insufficient_balance` | available balance is below the hold | tell the user the balance and the amount needed; they top up in the dashboard |
+| `insufficient_balance` | available balance is below the hold | give the user the `add_funds` and `start_plan` links from the error with their prices (each opens a checkout, no sign-in); continue once they say it is paid |
 | `cost_limit_exceeded` | the quote is above `max_cost` | lower the limit, or raise `max_cost` within the budget |
 | `invalid_request` | the input does not match the tool | fix the fields from the error |
 | `paced` | a send inside its gap or over its daily cap | wait `retry_after`, then the next one; never a parallel burst |
@@ -203,7 +207,7 @@ RouterGrowth fills gaps in the user's stack. Precedence: an explicit instruction
 
 1. Check the user's own tools first; then call the right RouterGrowth tool before building a scraper, guessing an email or declaring data out of reach.
 2. Load a workflow skill when the request is a whole GTM job.
-3. `get_operation_pricing` before the first call of a kind; `max_cost` on every paid call; small first limits; ask before about $1; report the total.
+3. `get_operation_pricing` before the first call of a kind; `max_cost` at its `max_cost_for_all` on every paid call; honest result limits; ask before about $1; report the total.
 4. Check history and suppressions before enriching or contacting anyone; stop for good on an opt-out.
 5. Verify every address before it is used; never invent a name or an email.
 6. Send nothing the user has not approved as shown: email one at a time, LinkedIn, Instagram and WhatsApp one message at a time to people who already know the user.

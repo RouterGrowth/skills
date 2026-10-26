@@ -10,6 +10,11 @@ description: >-
   this skill. Use when the user wants to work a LinkedIn list, wants
   personalised connection notes or first messages written, or asks "who
   replied on LinkedIn" and what to answer.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/linkedin-drafts
 ---
 
 # LinkedIn messages: research and drafts

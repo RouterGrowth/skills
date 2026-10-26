@@ -1,0 +1,10 @@
+{
+  "name": "routergrowth",
+  "version": "0.3.0",
+  "description": "Seventeen GTM skills on live data for Claude and other agents: ICP and hiring-signal lead lists, local business leads, list enrichment with verified work emails, account research, competitor ads, SEO competitor gaps, AI visibility audits, social and Reddit research, and email sent only after you approve it. Pay per call, no subscription.",
+  "mcpServers": {
+    "routergrowth": {
+      "httpUrl": "https://api.routergrowth.com/mcp/claude"
+    }
+  }
+}

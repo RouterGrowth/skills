@@ -9,6 +9,11 @@ description: >-
   talking points; never posts. Use when the user asks "who is talking about
   us", wants brand monitoring, a mention report, competitor mention tracking,
   or wants to find threads where they should reply.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/brand-mention-sweep
 ---
 
 # Brand mention sweep

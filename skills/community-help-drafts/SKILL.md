@@ -9,6 +9,11 @@ description: >-
   sent by the agent. Use when the user wants to build presence on Reddit or X
   without spamming, asks "where should I be answering questions", wants a daily
   list of threads to reply to, or wants community marketing drafts.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/community-help-drafts
 ---
 
 # Community help drafts

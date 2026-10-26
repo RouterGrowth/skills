@@ -1,0 +1,54 @@
+{
+  "skill_name": "seo-competitor-gap",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "What keywords do my competitors rank for that we don't? We are routergrowth.com in the US",
+      "should_trigger": true,
+      "assertions": [
+        "Uses seo_competitors then seo_ranked_keywords on each side",
+        "Drops branded keywords",
+        "Outputs a page plan sorted by priority",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "content gap between us (acme.io) and competitor.com in the UK",
+      "should_trigger": true,
+      "assertions": [
+        "Passes location and language on every call",
+        "Uses seo_serp to read the winning page type",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "why does stripe.com outrank us for payment links",
+      "should_trigger": true,
+      "assertions": [
+        "Uses seo_ranked_keywords and seo_serp",
+        "Labels any traffic estimate as an estimate",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Fix the meta tags in my Next.js layout file",
+      "should_trigger": false,
+      "assertions": [
+        "Does not run a competitor gap analysis"
+      ],
+      "files": []
+    }
+  ]
+}

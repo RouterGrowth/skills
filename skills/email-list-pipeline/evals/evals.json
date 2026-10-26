@@ -1,0 +1,54 @@
+{
+  "skill_name": "email-list-pipeline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build a qualified list of event attendees, verify them and draft personalised emails",
+      "should_trigger": true,
+      "assertions": [
+        "Uses the directives folder for ICP and copy rules",
+        "Shows every message exactly before sending",
+        "Sends one at a time only after approval",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "write and send personalised emails to these 30 inbound leads from my Gmail",
+      "should_trigger": true,
+      "assertions": [
+        "Uses gmail_send only after approval",
+        "Honors suppressed and opted_out blocks",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "grade this list against my ICP and verify the emails",
+      "should_trigger": true,
+      "assertions": [
+        "Grades with the qualification rubric",
+        "Uses contact_verify",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Set up a new sending domain with warm-up",
+      "should_trigger": false,
+      "assertions": [
+        "Does not set up domains; that is a separate request"
+      ],
+      "files": []
+    }
+  ]
+}

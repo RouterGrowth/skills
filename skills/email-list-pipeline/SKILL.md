@@ -11,6 +11,11 @@ description: >-
   RouterGrowth inbox or their own Gmail. Use when the user wants to build and
   qualify a contact list, verify emails, or write and send personalised emails
   to a list of people.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/email-list-pipeline
 ---
 
 # Email list and messaging pipeline
@@ -36,7 +41,7 @@ Work only on people the user has a reason to contact and who would not be surpri
 - Check `directives/` exists in the working project. If not, copy the `directives/` folder next to this file into the project and ask the user to fill `icp.md`, `lead-source.md` and `email-copy.md`. Those three are mandatory; the others have sensible defaults. When no human is in the loop (a scheduled or delegated run), fill them from the brief you were given, say so in the files, and treat the caller's budget as the approval at the gate.
 - Call `list_tables` (free). If it is available, keep the list in a workspace table named after the job (for example `mortgage-brokers-lyon`): resume an existing one instead of starting over, and tell the user its name once. If table tools are missing, the workspace has not turned tables on (dashboard Settings): say so once and keep the list as CSV files in `out/` (Claude Code) or a markdown table in the chat.
 - Call `get_operation_pricing` (free) once for each paid tool you will use: `people_search`, `company_search`, `contact_find`, `contact_verify`, `web_scrape`, and `web_search` if you need it. Quote the job as a whole before stage 2 (N searches, N people, N lookups, N verifications) and ask before anything likely above about $1, unless the user already set that budget.
-- Every paid call takes `{input: {...}, max_cost: "<cap>"}`. Set the cap from the price you just read, covering the requested limit. There is no batch tool: call once per item, one at a time, and keep a running total against the budget.
+- Every paid call takes `{input: {...}, max_cost: "<cap>"}`. Set the cap from the price you just read, covering the requested limit. There is no batch tool: call once per item, one at a time, and keep a running total against the budget. Lookups (`contact_find`, `contact_verify`, `contact_phone`, `person_enrich`, `company_enrich`) take `max_cost` at the `waterfall.max_cost_for_all` that `get_operation_pricing` returns: each lookup tries several data providers in turn, a cap at the cheapest price skips the others and turns findable rows into misses, and you pay only for the provider that found it.
 
 ## Stages
 

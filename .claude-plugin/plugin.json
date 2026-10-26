@@ -1,8 +1,8 @@
 {
   "name": "routergrowth",
   "displayName": "RouterGrowth",
-  "version": "0.2.3",
-  "description": "GTM research and messaging for Claude on one pay-per-call balance: lead lists from hiring signals, verified work emails, company and people enrichment, SEO and AI search visibility, social and Reddit research, and emails sent from your own inbox once you approve them.",
+  "version": "0.3.0",
+  "description": "Seventeen GTM skills on live data for Claude and other agents: ICP and hiring-signal lead lists, local business leads, list enrichment with verified work emails, account research, competitor ads, SEO competitor gaps, AI visibility audits, social and Reddit research, and email sent only after you approve it. Pay per call, no subscription.",
   "author": {
     "name": "RouterGrowth",
     "email": "hello@routergrowth.com",
@@ -28,7 +28,16 @@
     "seo",
     "aeo",
     "ai-visibility",
-    "routergrowth"
+    "routergrowth",
+    "prospecting",
+    "lead-generation",
+    "list-enrichment",
+    "account-research",
+    "competitor-research",
+    "google-maps",
+    "ads-library",
+    "keyword-gap",
+    "waterfall-enrichment"
   ],
   "icon": "./.claude-plugin/icon.svg",
   "documentationUrl": "https://www.routergrowth.com/docs/claude-connector",

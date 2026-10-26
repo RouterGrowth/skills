@@ -1,41 +1,84 @@
-# RouterGrowth skills
+<p align="center">
+  <img src="assets/banner.png" alt="Open-source GTM skills for Claude: 17 skills, MIT license, one key for the data" width="100%">
+</p>
 
-[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 11](https://img.shields.io/badge/skills-11-0c7c59.svg)](#the-skills) [![routergrowth.com/skills](https://img.shields.io/badge/site-routergrowth.com%2Fskills-0c7c59.svg)](https://www.routergrowth.com/skills)
+# Open-source GTM skills for Claude, Codex, Cursor and any agent
 
-GTM research workflows for Claude, on one pay-per-call balance. RouterGrowth gives Claude the data a sales or marketing team usually buys from several vendors: companies and the people in them, verified work emails, hiring and funding signals, live search results and keyword data, what ChatGPT and Perplexity say about a brand, public social posts and comments, maps, reviews and ad libraries. This plugin adds the connector and eleven skills that turn those tools into finished jobs: a qualified lead list, an AI visibility audit, a map of the Reddit threads that own a category, a brand mention sweep, and messages to the people worth contacting, sent by email once you approve them.
+[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 17](https://img.shields.io/badge/skills-17-0c7c59.svg)](#the-skills) [![version](https://img.shields.io/badge/version-0.3.0-0c7c59.svg)](CHANGELOG.md)
 
-You pay per call from a prepaid RouterGrowth balance, with no subscription. Claude checks the price before the first call of a kind, caps every call, and asks before a job likely to cost more than about $1.
+**Your agent builds the lead list, finds and verifies the emails, researches the account, maps the competition and drafts the message, on live data.** Seventeen skills that turn the [RouterGrowth](https://www.routergrowth.com) connector (people and companies, work emails and phones across several data providers, hiring and funding signals, Google Maps, SEO, AI answers, social, ads) into finished GTM jobs. Pay per call from one balance, no subscription.
 
-## What you can ask
+```bash
+# Claude Code: skills + the connector in one plugin
+claude plugin marketplace add RouterGrowth/skills
+claude plugin install routergrowth@routergrowth
 
-- "Research linear.app: what the company does, its size, its tech stack and any open sales roles."
-- "Find 20 heads of sales at fintech companies in London that are hiring SDRs, with verified work emails."
-- "Ask ChatGPT and Perplexity what the best email verification tool is, and tell me which brands and sources they cite."
-- "Which Reddit threads rank on Google for 'best crm for startups', and what do those communities recommend?"
-- "Write a first email to each of these five accounts based on what they posted this month, and send them from my inbox once I approve."
+# Any other agent (Codex, Cursor, Gemini CLI, Copilot, OpenCode, Windsurf, Goose...)
+npx skills add RouterGrowth/skills
+```
 
-## How it works
+Then sign in once: in Claude Code run `/mcp` and approve a workspace. In other agents, add the remote MCP server `https://api.routergrowth.com/mcp/claude` (OAuth). Per-agent steps: [routergrowth.com/docs/quickstart-mcp](https://www.routergrowth.com/docs/quickstart-mcp). New workspaces start with free credit.
 
-1. **Connect.** The plugin registers the RouterGrowth connector at `https://api.routergrowth.com/mcp/claude`. The first time, Claude asks you to sign in to RouterGrowth (OAuth) and approve a workspace. A new workspace gets $1 of credit once its email is verified.
-2. **Ask.** A skill loads when your request matches it, and tells Claude which tools to call, in what order, with which checks and human gates.
-3. **Pay per result.** Each tool states its billing rule: lookups are charged only when they find something, lists are priced per row returned, and failed calls cost nothing. Every paid call returns a receipt (run id, provider, amount), and `list_runs` reads them back for free.
-4. **Keep the work.** With workspace tables turned on, lists persist between conversations, and the do-not-contact list applies to every session.
+<p align="center"><img src="assets/demo.gif" alt="Claude runs hiring-signal-leads: London fintechs hiring SDRs, their head of sales, each work email found across a provider waterfall and verified" width="90%"></p>
 
 ## The skills
 
-| Skill | Job | Tools it calls |
+**Find leads**
+
+| Skill | What you get | Say |
 | --- | --- | --- |
-| [routergrowth](skills/routergrowth) | The core skill: the connector's tools, spending rules, privacy rules, when not to use RouterGrowth | all |
-| [hiring-signal-leads](skills/hiring-signal-leads) | Companies hiring for the role you sell to, the buyer at each, a verified email, a first email sent after your approval | company_jobs, people_search, contact_find, contact_verify |
-| [social-lead-discovery](skills/social-lead-discovery) | Leads from X, Instagram, TikTok and YouTube: who posts about the topic, who asks under a competitor's post, the website and contact on each profile, a drafted opener | social_search, social_comments, social_profile, contact_find, contact_verify |
-| [email-list-pipeline](skills/email-list-pipeline) | Research, list, grade, verify, write, send by email after approval. A directives folder holds the ICP and the copy rules | people_search, contact_find, contact_verify, web_scrape, email_send, gmail_send |
-| [sdr-daily](skills/sdr-daily) | One day of the loop: new replies, follow-ups due, suppressions, the day's approved emails and a briefing | list_workspace_events, email_messages, email_send, get_subjects_history, workspace tables |
-| [linkedin-drafts](skills/linkedin-drafts) | Find and read the profiles you pick, draft the connection note and first message, draft answers to replies | linkedin_search, linkedin_profile, linkedin_messages |
-| [intent-messaging](skills/intent-messaging) | From intent signal to a plan per person: LinkedIn drafts and an email follow-up sent after approval, three gates | people_search, social_search, contact_find, contact_verify, email_send, watches and workspace tables |
-| [ai-visibility-audit](skills/ai-visibility-audit) | A frozen prompt panel across ChatGPT, Claude, Gemini and Perplexity: mentions, citations, share of voice | aeo_answer, aeo_mentions, aeo_keywords, seo_serp |
-| [reddit-surface-map](skills/reddit-surface-map) | The threads ranking for your money queries, the subreddits behind them, their rules | seo_serp, social_search, social_comments, web_scrape |
-| [brand-mention-sweep](skills/brand-mention-sweep) | Every mention of the brand, founder and competitors in 90 days, with sentiment and the threads worth a human reply | social_search, news_search, web_search, reviews_search |
-| [community-help-drafts](skills/community-help-drafts) | The Reddit and X threads where an honest answer is welcome, qualified against community rules, drafted for you to post | social_search, social_comments, seo_serp, web_scrape |
+| [icp-lead-list](skills/icp-lead-list) | Your buyer description turned into a scored list of people at matching companies, verified emails, one line on why each fits | "build me a lead list", "find heads of growth at Series A SaaS in Europe" |
+| [hiring-signal-leads](skills/hiring-signal-leads) | Companies hiring for the role you sell to, the buyer at each, a verified email, a first email sent after your approval | "who is hiring SDRs", "turn job postings into accounts" |
+| [local-business-leads](skills/local-business-leads) | Local businesses from Google Maps by category and city, the owner, a verified email, one pain point from their reviews | "dentists in Lisbon", "Google Maps leads", "gyms without a website" |
+| [social-lead-discovery](skills/social-lead-discovery) | Leads from X, Instagram, TikTok and YouTube: who posts about the topic, who asks under a competitor's post, their site and contact | "people complaining about X on Twitter", "who comments under this post" |
+
+**Enrich**
+
+| Skill | What you get | Say |
+| --- | --- | --- |
+| [list-enrichment](skills/list-enrichment) | Your CSV back with domains fixed, work emails found across several providers, every address verified, phones on request, misses explained | "enrich this list", "find emails for these people", "verify these emails" |
+
+**Research**
+
+| Skill | What you get | Say |
+| --- | --- | --- |
+| [account-research](skills/account-research) | A one-page brief before a call: what the company sells, what changed lately, who decides, three angles, every fact sourced | "prep me for a call with acme.com", "research this company" |
+| [competitor-ads-teardown](skills/competitor-ads-teardown) | Competitors' live Meta and Google ads, how long each has run, the angles and offers that repeat, the gaps, text briefs for yours | "what ads is X running", "competitor ad research" |
+| [seo-competitor-gap](skills/seo-competitor-gap) | The keywords competitors rank for and you do not, sized and sorted into a plan of pages to write or fix | "keyword gap", "why do they outrank us" |
+| [ai-visibility-audit](skills/ai-visibility-audit) | A frozen panel of buyer questions across ChatGPT, Claude, Gemini and Perplexity: mentions, citations, share of voice | "what does ChatGPT say about us", "AEO audit" |
+| [reddit-surface-map](skills/reddit-surface-map) | The Reddit threads ranking for your money queries, the subreddits behind them, their rules on vendors | "which subreddits matter for us" |
+| [brand-mention-sweep](skills/brand-mention-sweep) | Every mention of the brand, founder and competitors in 90 days, with sentiment and the threads worth a reply | "who is talking about us", "brand monitoring" |
+
+**Messaging** (email sent only after you approve each message; LinkedIn, Instagram and WhatsApp stay drafts)
+
+| Skill | What you get | Say |
+| --- | --- | --- |
+| [email-list-pipeline](skills/email-list-pipeline) | Research, list, grade, verify, write, then send by email after approval, from a directives folder with your ICP and copy rules | "build a list and write the emails" |
+| [intent-messaging](skills/intent-messaging) | From an intent signal to a plan per person: LinkedIn drafts and an approved email follow-up | "find intent leads and write what to say" |
+| [linkedin-drafts](skills/linkedin-drafts) | The profiles you pick read, a connection note and first message drafted for each, answers to replies drafted | "draft notes for these profiles", "who replied on LinkedIn" |
+| [sdr-daily](skills/sdr-daily) | One day of the loop: replies triaged, suppressions kept, follow-ups due written, approved emails sent, a briefing | "run the SDR", "what's due today" |
+| [community-help-drafts](skills/community-help-drafts) | The Reddit and X threads where an honest answer is welcome, drafted for you to post | "where should I be answering questions" |
+
+**Core**: [routergrowth](skills/routergrowth) carries the connector's tools, the spending rules and the privacy rules every skill builds on.
+
+Each skill has `evals/evals.json`: the prompts that should and should not trigger it, and what a good run must do.
+
+## How it works
+
+1. **Connect.** The plugin registers the RouterGrowth connector at `https://api.routergrowth.com/mcp/claude`. The first time, your agent asks you to sign in to RouterGrowth (OAuth) and approve a workspace.
+2. **Ask.** A skill loads when your request matches it and tells the agent which tools to call, in what order, with which checks and human gates.
+3. **Pay per result.** The agent reads each tool's price before its first call and asks before a job likely above about $1. Lookups (emails, phones, profiles, company data) try several data providers in turn and are charged only for the one that finds; failed calls cost nothing. Every paid call returns a receipt, and `list_runs` reads them back for free.
+4. **Keep the work.** With workspace tables on, lists persist between conversations and the do-not-contact list applies to every session.
+
+## Install anywhere
+
+| Where | How |
+| --- | --- |
+| Claude Code | `claude plugin marketplace add RouterGrowth/skills`, then `claude plugin install routergrowth@routergrowth`, then `/mcp` to sign in |
+| Claude apps and Cowork | Add RouterGrowth from the connector directory, or upload one skill's ZIP from the [latest release](https://github.com/RouterGrowth/skills/releases/latest) under Settings, Capabilities, Skills |
+| Codex, Cursor, Gemini CLI | Native manifests ship in this repo (`.codex-plugin`, `.cursor-plugin`, `gemini-extension.json`), each wiring the connector |
+| Any agent that reads skills | `npx skills add RouterGrowth/skills`, then add the MCP server `https://api.routergrowth.com/mcp/claude` |
+| By hand | Copy a folder from `skills/` into your agent's skills directory (for Claude Code, `~/.claude/skills/`) |
 
 Prices come from `get_operation_pricing` at run time, never from this repo.
 
@@ -59,19 +102,6 @@ The messaging skills write to people who have a reason to hear from you: custome
 - **Basis:** business-to-business research about people in their professional role, on legitimate interests. RouterGrowth keeps no shared database of people: a result stays in the workspace that asked for it.
 - **Opt-out:** anyone can opt out at https://www.routergrowth.com/privacy/opt-out. Lookups about them then return nothing and messages to them through RouterGrowth are blocked, in every workspace. The skills also check the workspace's suppression list and history before drafting for anyone.
 - Details: the [privacy policy](https://www.routergrowth.com/privacy#people-in-lookup-results).
-
-## Install
-
-**Claude apps and Cowork:** add RouterGrowth from the plugin directory, then sign in when Claude asks.
-
-**Claude Code:**
-
-```bash
-claude plugin marketplace add RouterGrowth/skills
-claude plugin install routergrowth@routergrowth
-```
-
-Then run `/mcp` once to sign in with OAuth and approve a workspace.
 
 ## Long-running loops
 

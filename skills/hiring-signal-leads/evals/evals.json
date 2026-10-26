@@ -1,0 +1,54 @@
+{
+  "skill_name": "hiring-signal-leads",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Which companies in the US are hiring SDRs this month? Get me the head of sales at each with an email",
+      "should_trigger": true,
+      "assertions": [
+        "Uses company_jobs with posted_within month",
+        "Drops postings whose title is not the role",
+        "Passes waterfall.max_cost_for_all as max_cost on contact_find and other lookups",
+        "Sends nothing before approval",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "turn job postings for growth engineers into accounts",
+      "should_trigger": true,
+      "assertions": [
+        "Dedupes on company_url",
+        "Sizes accounts with company_search before people_search",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "high-intent leads: companies hiring a RevOps manager in London",
+      "should_trigger": true,
+      "assertions": [
+        "Cites the posting in each draft",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Help me write a job posting for an SDR role",
+      "should_trigger": false,
+      "assertions": [
+        "Does not search postings or build leads"
+      ],
+      "files": []
+    }
+  ]
+}

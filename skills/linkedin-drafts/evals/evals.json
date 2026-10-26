@@ -1,0 +1,52 @@
+{
+  "skill_name": "linkedin-drafts",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Draft connection notes for the people who liked my last LinkedIn post",
+      "should_trigger": true,
+      "assertions": [
+        "Reads the profiles the user picks with linkedin_profile",
+        "Keeps every message as a draft",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "who replied on LinkedIn and what should I answer?",
+      "should_trigger": true,
+      "assertions": [
+        "Uses linkedin_messages",
+        "Drafts answers, sends nothing",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "write a first LinkedIn message for each of these 10 profiles",
+      "should_trigger": true,
+      "assertions": [
+        "Personalises from each profile",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Send 100 connection requests to growth leads",
+      "should_trigger": false,
+      "assertions": [
+        "Does not send invitations automatically"
+      ],
+      "files": []
+    }
+  ]
+}

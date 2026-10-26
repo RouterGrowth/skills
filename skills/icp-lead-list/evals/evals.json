@@ -1,0 +1,57 @@
+{
+  "skill_name": "icp-lead-list",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Build me a list of 20 heads of growth at Series A SaaS companies in Germany and France with verified emails",
+      "should_trigger": true,
+      "assertions": [
+        "Writes the ICP back and gets a yes before spending",
+        "Uses people_search with titles, company_headcount and locations",
+        "Passes waterfall.max_cost_for_all as max_cost on contact_find and other lookups",
+        "Verifies every email with contact_verify",
+        "Gives one line of reason per row",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "who should I sell to? we make inventory software for independent bike shops, find me 15 owners",
+      "should_trigger": true,
+      "assertions": [
+        "Proposes an ICP from the description",
+        "Uses company_search or people_search with seniority owner",
+        "Shows the first pass before scaling",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Find companies like Ramp and Brex and the CFO at each",
+      "should_trigger": true,
+      "assertions": [
+        "Searches companies first, then people at their domains",
+        "Drops rows without a domain before contact_find",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I already have a CSV of 300 leads, find their emails",
+      "should_trigger": false,
+      "assertions": [
+        "Routes to list-enrichment instead"
+      ],
+      "files": []
+    }
+  ]
+}

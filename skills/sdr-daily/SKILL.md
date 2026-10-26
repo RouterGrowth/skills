@@ -10,6 +10,11 @@ description: >-
   the user says "run the SDR", "daily briefing", "who replied", "what's due
   today", "check the campaign", or wants to advance an outreach list by one
   day.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/sdr-daily
 ---
 
 # SDR daily
@@ -76,7 +81,7 @@ Count hard bounces since `LAST_RUN` against what the user sent since then (the w
 
 Before drafting, check the people with the free `get_subjects_history` (drop anyone another campaign in this workspace contacted recently) and `list_suppressions` (drop everyone on it). An email lookup or verification that answers `no_match` because the person opted out with RouterGrowth ends that person: no retry, no other route, row to `suppressed`.
 
-If a first-touch row has no verified email yet, `contact_verify` it before it goes in a draft (unknown verdicts are free): keep `valid`, hold `catch_all` and `unknown` for the user's decision, drop `invalid`. Price it once with `get_operation_pricing`, every call carries `max_cost`, and ask before a run likely above about $1.
+If a first-touch row has no verified email yet, `contact_verify` it before it goes in a draft (unknown verdicts are free): keep `valid`, hold `catch_all` and `unknown` for the user's decision, drop `invalid`. Price it once with `get_operation_pricing`, every call carries `max_cost`, and ask before a run likely above about $1. Lookups (`contact_find`, `contact_verify`, `contact_phone`, `person_enrich`, `company_enrich`) take `max_cost` at the `waterfall.max_cost_for_all` that `get_operation_pricing` returns: each lookup tries several data providers in turn, a cap at the cheapest price skips the others and turns findable rows into misses, and you pay only for the provider that found it.
 
 ## 6. Draft the day
 

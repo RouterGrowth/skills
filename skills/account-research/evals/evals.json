@@ -1,0 +1,54 @@
+{
+  "skill_name": "account-research",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Prep me for a call with acme.com tomorrow, I sell sales analytics",
+      "should_trigger": true,
+      "assertions": [
+        "Uses company_enrich, company_jobs, news_search and people_search",
+        "Every fact carries a source and a date",
+        "Gives three angles tied to dated facts",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "research notion.so: size, stack, open roles, recent news",
+      "should_trigger": true,
+      "assertions": [
+        "Uses company_technologies and company_jobs",
+        "Says not found rather than guessing",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Who decides on data tooling at Datadog and what should I ask them?",
+      "should_trigger": true,
+      "assertions": [
+        "Uses people_search on the domain with buyer titles",
+        "Writes three account-specific questions",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Write a generic cold email template for SaaS founders",
+      "should_trigger": false,
+      "assertions": [
+        "Does not run account research"
+      ],
+      "files": []
+    }
+  ]
+}

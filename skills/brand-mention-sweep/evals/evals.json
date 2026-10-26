@@ -1,0 +1,51 @@
+{
+  "skill_name": "brand-mention-sweep",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "who is talking about us? brand is RouterGrowth",
+      "should_trigger": true,
+      "assertions": [
+        "Searches social, news, web and reviews",
+        "Records sentiment and whether a reply matters",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "competitor mention tracking for Clay and Apollo over 90 days",
+      "should_trigger": true,
+      "assertions": [
+        "Uses watches for repeat sweeps",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "find threads where I should reply about our product",
+      "should_trigger": true,
+      "assertions": [
+        "Drafts talking points, never posts",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Track our website uptime",
+      "should_trigger": false,
+      "assertions": [
+        "Does not run a mention sweep"
+      ],
+      "files": []
+    }
+  ]
+}

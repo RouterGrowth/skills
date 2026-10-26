@@ -1,0 +1,56 @@
+{
+  "skill_name": "list-enrichment",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Here is leads.csv with first name, last name and company. Find and verify their work emails.",
+      "should_trigger": true,
+      "assertions": [
+        "Maps the columns and dedupes before paying",
+        "Runs get_subjects_history and list_suppressions first",
+        "Passes waterfall.max_cost_for_all as max_cost on contact_find and other lookups",
+        "Verifies every address and separates catch_all",
+        "Lists misses with the reason",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "enrich this list with phone numbers too",
+      "should_trigger": true,
+      "assertions": [
+        "Adds contact_phone only because the user asked",
+        "Never dials or texts",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Verify these 50 emails before I send my newsletter",
+      "should_trigger": true,
+      "assertions": [
+        "Uses contact_verify on each",
+        "Explains catch_all as unproven",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Find me new prospects that look like my best customers",
+      "should_trigger": false,
+      "assertions": [
+        "Routes to icp-lead-list instead"
+      ],
+      "files": []
+    }
+  ]
+}

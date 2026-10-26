@@ -1,0 +1,53 @@
+{
+  "skill_name": "intent-messaging",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Find intent leads and write what to say on LinkedIn and email",
+      "should_trigger": true,
+      "assertions": [
+        "Picks one signal source and records it per row",
+        "LinkedIn stays drafts; email only after approval",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "multichannel plan for people who commented on a competitor's post",
+      "should_trigger": true,
+      "assertions": [
+        "Uses social_comments on the competitor's posts",
+        "Writes a day-by-day plan",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "follow-up plan when LinkedIn goes quiet",
+      "should_trigger": true,
+      "assertions": [
+        "Adds a verified email follow-up",
+        "Passes waterfall.max_cost_for_all as max_cost on contact_find and other lookups",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Audit what ChatGPT says about my brand",
+      "should_trigger": false,
+      "assertions": [
+        "Routes to ai-visibility-audit instead"
+      ],
+      "files": []
+    }
+  ]
+}

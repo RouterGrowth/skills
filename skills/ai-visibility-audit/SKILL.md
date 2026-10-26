@@ -10,6 +10,11 @@ description: >-
   user asks "what does ChatGPT say about us", wants an AI search or AEO or GEO
   audit, wants to track AI visibility monthly, or asks which sources the
   assistants cite for their category.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/ai-visibility-audit
 ---
 
 # AI visibility audit

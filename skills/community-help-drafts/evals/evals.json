@@ -1,0 +1,51 @@
+{
+  "skill_name": "community-help-drafts",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "where should I be answering questions about cold email on Reddit and X?",
+      "should_trigger": true,
+      "assertions": [
+        "Qualifies threads against community rules",
+        "Drafts helpful answers that disclose affiliation",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "daily list of threads to reply to about GTM data",
+      "should_trigger": true,
+      "assertions": [
+        "Product mention only when it improves the answer",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "community marketing drafts for our SEO tool",
+      "should_trigger": true,
+      "assertions": [
+        "Nothing is posted by the agent",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Reply to this customer support email",
+      "should_trigger": false,
+      "assertions": [
+        "Does not search communities"
+      ],
+      "files": []
+    }
+  ]
+}

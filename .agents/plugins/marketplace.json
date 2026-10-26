@@ -1,0 +1,20 @@
+{
+  "name": "routergrowth",
+  "interface": {
+    "displayName": "RouterGrowth"
+  },
+  "plugins": [
+    {
+      "name": "routergrowth",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Sales and Marketing"
+    }
+  ]
+}

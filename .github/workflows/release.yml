@@ -1,0 +1,33 @@
+name: release
+# Push a tag like v0.3.0: validates the skills, builds one ZIP per skill and attaches them to the GitHub release,
+# with the CHANGELOG section of that version as the notes.
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - run: python3 scripts/check_skills.py
+      - run: python3 scripts/package_skills.py --output dist
+      - name: Release notes from CHANGELOG.md
+        run: |
+          python3 - <<'PY'
+          import os, re
+          v = os.environ["GITHUB_REF_NAME"].lstrip("v")
+          text = open("CHANGELOG.md").read()
+          m = re.search(rf"^## {re.escape(v)}\b.*?(?=^## |\Z)", text, re.S | re.M)
+          open("notes.md", "w").write((m.group(0) if m else f"## {v}\n") + "\n\nOne ZIP per skill below: upload it in claude.ai under Settings, Capabilities, Skills.\n")
+          PY
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
+          gh release upload "$GITHUB_REF_NAME" dist/*.zip --clobber

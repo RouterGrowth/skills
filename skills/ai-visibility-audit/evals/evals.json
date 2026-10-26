@@ -1,0 +1,52 @@
+{
+  "skill_name": "ai-visibility-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "what does ChatGPT say about us? we are acme.com",
+      "should_trigger": true,
+      "assertions": [
+        "Freezes a prompt panel",
+        "Runs aeo_answer across assistants",
+        "Reports mentions, citations and share of voice",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "AEO audit for our category, monthly",
+      "should_trigger": true,
+      "assertions": [
+        "Keeps the same panel for repeat runs",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "which sources do Perplexity and Gemini cite for best CRM for startups",
+      "should_trigger": true,
+      "assertions": [
+        "Lists source domains per assistant",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Write a blog post about AI search",
+      "should_trigger": false,
+      "assertions": [
+        "Does not run an audit"
+      ],
+      "files": []
+    }
+  ]
+}

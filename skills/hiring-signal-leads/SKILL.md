@@ -11,6 +11,11 @@ description: >-
   user wants a lead list, asks who is hiring for a role, wants to turn job
   postings into accounts, asks for high-intent leads, or says "companies
   hiring X" or "who should we reach out to".
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/hiring-signal-leads
 ---
 
 # Hiring-signal list and messages
@@ -24,7 +29,7 @@ A job posting is a company saying in public that it has budget, a gap and a mana
 - Remind the user once that a first business email is legal in some countries and needs prior consent in others (much of the EU for some recipients): they decide who they may write to, use an identifiable sender, include an opt-out, and honor every opt-out.
 - Call `list_tables` (free). When tables are on, keep the list in a table named after the job (for example `growth-eng-hiring-us`), resume it if it exists, and tell the user its name once. Otherwise keep a CSV in `out/` (Claude Code) or a markdown table in the chat.
 - Call `get_operation_pricing` (free) once for each of `company_jobs`, `company_search`, `people_search`, `contact_find`, `contact_verify` before the first call of each. Quote the list as a whole (N accounts, roughly N buyers, roughly N lookups) and get a yes on the total before anything likely above about $1. When no human is in the loop (a scheduled or delegated run), the budget the caller set is the approval: stop at it and report.
-- Every paid call takes `{input: {...}, max_cost: "<cap>"}`, with the cap covering the price at the requested limit. There is no batch tool: call once per item and keep a running total.
+- Every paid call takes `{input: {...}, max_cost: "<cap>"}`, with the cap covering the price at the requested limit. There is no batch tool: call once per item and keep a running total. Lookups (`contact_find`, `contact_verify`, `contact_phone`, `person_enrich`, `company_enrich`) take `max_cost` at the `waterfall.max_cost_for_all` that `get_operation_pricing` returns: each lookup tries several data providers in turn, a cap at the cheapest price skips the others and turns findable rows into misses, and you pay only for the provider that found it.
 
 ## Steps
 
@@ -71,7 +76,7 @@ Free checks first: `get_subjects_history` on the LinkedIn URLs says who this wor
 Then, for rows without an email:
 
 ```json
-{"input": {"first_name": "Alex", "last_name": "Rivera", "company_domain": "acme.com"}, "max_cost": "<cap>"}
+{"input": {"first_name": "Alex", "last_name": "Rivera", "company_domain": "acme.com"}, "max_cost": "<max_cost_for_all>"}
 ```
 
 `contact_find` is charged only when an email is found, so a list with a 60% hit rate costs 60% of a list. A `no_match` that says the person opted out with RouterGrowth ends it for that person: no retry, no other tool, remove the row.

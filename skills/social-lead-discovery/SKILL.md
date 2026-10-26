@@ -13,6 +13,11 @@ description: >-
   about X", "who is complaining about Y on Twitter", "who is commenting under
   Z", or has an ICP that lives on social rather than LinkedIn (founders and GTM
   people on X; architects, designers, shops, coaches, restaurants on Instagram).
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/social-lead-discovery
 ---
 
 # Social lead discovery
@@ -29,7 +34,7 @@ The skill researches and drafts. It never sends a message, never connects an acc
 - Check prices once per tool with the free `get_operation_pricing` (`{"operation": "social_search"}`, then `social_comments`, `social_profile`, `contact_find`, `contact_verify`, `people_search` if you will need it). Quote the run as a whole and get a yes on the total before the first paid call; ask again before anything likely above about $1 unless the user already set that budget.
 - Know the platform rules before you search. Instagram search is by hashtag only: no keyword, bio, location or follower search exists. X, TikTok and YouTube take free-text keywords. On X the phrase has to be the words a buyer types, not the category: "enrichment credits" found people burning credits, "clay credits" found tennis and pottery, "apollo credits" found a film. None of the four exposes a follower export, so "everyone who follows an account" is not a list you can build; commenters under that account's posts is, except on X, where `social_comments` is not available (search the thread's subject instead).
 
-Every paid tool takes `{"input": {...}, "max_cost": "<cap>"}`. Set the cap from the `get_operation_pricing` quote for that limit, rounded up a little: a cap below the quote is refused before anything runs. When a receipt says the run is still running, wait on it with `get_run` (`run_id`, `wait`).
+Every paid tool takes `{"input": {...}, "max_cost": "<cap>"}`. Set the cap from the `get_operation_pricing` quote for that limit, rounded up a little: a cap below the quote is refused before anything runs. When a receipt says the run is still running, wait on it with `get_run` (`run_id`, `wait`). Lookups (`contact_find`, `contact_verify`, `contact_phone`, `person_enrich`, `company_enrich`) take `max_cost` at the `waterfall.max_cost_for_all` that `get_operation_pricing` returns: each lookup tries several data providers in turn, a cap at the cheapest price skips the others and turns findable rows into misses, and you pay only for the provider that found it.
 
 ## Steps
 
@@ -100,7 +105,7 @@ Keep only the fields the job needs. The evidence column is a post excerpt, not t
 `contact_find` needs `first_name`, `last_name` and `company_domain`. Split `name` when it is a person, and strip the decoration first: "Ivan Escobar | GTM Engineer" is Ivan Escobar. When `name` is a single word ("Parth", "Atishay"), there is no last name to pass: do not invent one, the lookup will happily return a pattern-guessed address for a person who does not exist. Ask the user, or find the person with `people_search` on the company. When the account is a studio or a shop ("Atelier Nord"), you need the owner's name first: ask the user if they know it, or look for it in the bio and pinned posts you already paid for. Only when the account is worth it, `people_search` with `companies` and `titles` such as founder, owner, gérant finds the person; it costs more per row than anything else here, so quote it separately.
 
 ```
-contact_find {"input": {"first_name": "Claire", "last_name": "Nord", "company_domain": "atelier-nord.fr"}, "max_cost": "<cap>"}
+contact_find {"input": {"first_name": "Claire", "last_name": "Nord", "company_domain": "atelier-nord.fr"}, "max_cost": "<max_cost_for_all>"}
 ```
 
 Charged only when an email is found; a miss costs nothing. Small studios miss more often than SaaS companies; that is expected. Call it once per row, one at a time, and keep a running total against the approved budget.
@@ -108,7 +113,7 @@ Charged only when an email is found; a miss costs nothing. Small studios miss mo
 ### 6. Verify
 
 ```
-contact_verify {"input": {"email": "hello@atelier-nord.fr"}, "max_cost": "<cap>"}
+contact_verify {"input": {"email": "hello@atelier-nord.fr"}, "max_cost": "<max_cost_for_all>"}
 ```
 
 Keep `valid`. Drop `invalid`. Hold `catch_all` and `unknown` in their own column and say so: a catch-all domain accepts everything, so the address is unproven, not clean. Unknown verdicts are free. Verify the emails that came from a bio too; a bio email is often the oldest address the person owns.

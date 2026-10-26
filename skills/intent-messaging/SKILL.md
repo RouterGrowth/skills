@@ -11,6 +11,11 @@ description: >-
   the user wants intent-led multichannel messaging, LinkedIn plus email for a
   list, "find intent leads and write what to say", or a follow-up plan when
   one channel goes quiet.
+license: MIT
+metadata:
+  version: "0.3.0"
+  author: RouterGrowth
+  homepage: https://www.routergrowth.com/skills/intent-messaging
 ---
 
 # Multichannel intent messaging
@@ -55,8 +60,10 @@ A paid call looks like this (every one carries `max_cost`):
 ```json
 {"input": {"company_domains": ["acme.com"], "titles": ["Founder", "CEO", "Head of Growth"],
            "seniority": ["cxo", "owner", "vp", "director"], "limit": 2},
- "max_cost": "0.30"}
+ "max_cost": "<cap>"}
 ```
+
+Lookups (`contact_find`, `contact_verify`, `contact_phone`, `person_enrich`, `company_enrich`) take `max_cost` at the `waterfall.max_cost_for_all` that `get_operation_pricing` returns: each lookup tries several data providers in turn, a cap at the cheapest price skips the others and turns findable rows into misses, and you pay only for the provider that found it.
 
 `people_search` is priced per person returned and carries the LinkedIn URL. Keep `limit` to the people the user will write to.
 

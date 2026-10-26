@@ -7,7 +7,7 @@
   "plugins": [
     {
       "name": "routergrowth",
-      "description": "Eleven GTM workflows (lead lists from hiring signals, social lead discovery on X, Instagram, TikTok and YouTube, an email list and messaging pipeline, a daily SDR loop, LinkedIn drafts, multichannel messaging, AI visibility audit, Reddit surface map, brand mention sweep, community help drafts) plus the core RouterGrowth skill and the connector. Email goes out only after you approve it.",
+      "description": "Seventeen GTM skills on live data for Claude and other agents: ICP and hiring-signal lead lists, local business leads, list enrichment with verified work emails, account research, competitor ads, SEO competitor gaps, AI visibility audits, social and Reddit research, and email sent only after you approve it. Pay per call, no subscription.",
       "source": "./",
       "category": "productivity",
       "homepage": "https://www.routergrowth.com/skills",
@@ -23,7 +23,8 @@
         "youtube",
         "seo",
         "aeo"
-      ]
+      ],
+      "version": "0.3.0"
     }
   ],
   "metadata": {

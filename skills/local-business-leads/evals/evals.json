@@ -1,0 +1,55 @@
+{
+  "skill_name": "local-business-leads",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Find dentists in Lisbon with more than 50 reviews and their owner's email",
+      "should_trigger": true,
+      "assertions": [
+        "Uses local_places with location Lisbon, Portugal",
+        "Filters on reviews before paying for emails",
+        "Passes waterfall.max_cost_for_all as max_cost on contact_find and other lookups",
+        "Quotes no reviewer by name",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "google maps leads: gyms in Austin without a website",
+      "should_trigger": true,
+      "assertions": [
+        "Keeps places with no website and says the phone is the contact",
+        "Dedupes on place id",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "list of mortgage brokers in Toronto with what their reviews complain about",
+      "should_trigger": true,
+      "assertions": [
+        "Uses reviews_search on the places kept",
+        "Notes one pattern per business",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Find VPs of sales at enterprise software companies",
+      "should_trigger": false,
+      "assertions": [
+        "Routes to icp-lead-list instead"
+      ],
+      "files": []
+    }
+  ]
+}

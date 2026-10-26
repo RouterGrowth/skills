@@ -1,0 +1,52 @@
+{
+  "skill_name": "sdr-daily",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run the SDR: who replied and what's due today?",
+      "should_trigger": true,
+      "assertions": [
+        "Reads list_workspace_events and the inboxes",
+        "Triages replies and updates suppressions",
+        "Sends only approved emails",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "daily briefing on the campaign",
+      "should_trigger": true,
+      "assertions": [
+        "Writes a briefing with counts and next actions",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "check the campaign and draft answers to new replies",
+      "should_trigger": true,
+      "assertions": [
+        "Drafts replies for approval",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Find me 50 new leads",
+      "should_trigger": false,
+      "assertions": [
+        "Routes to a lead skill instead"
+      ],
+      "files": []
+    }
+  ]
+}

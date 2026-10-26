@@ -1,0 +1,49 @@
+{
+  "name": "routergrowth",
+  "version": "0.3.0",
+  "description": "Seventeen GTM skills on live data for Claude and other agents: ICP and hiring-signal lead lists, local business leads, list enrichment with verified work emails, account research, competitor ads, SEO competitor gaps, AI visibility audits, social and Reddit research, and email sent only after you approve it. Pay per call, no subscription.",
+  "author": {
+    "name": "RouterGrowth",
+    "email": "hello@routergrowth.com",
+    "url": "https://www.routergrowth.com"
+  },
+  "homepage": "https://www.routergrowth.com/skills",
+  "repository": "https://github.com/RouterGrowth/skills",
+  "license": "MIT",
+  "keywords": [
+    "gtm",
+    "growth",
+    "sales",
+    "research",
+    "leads",
+    "enrichment",
+    "email-verification",
+    "linkedin",
+    "x",
+    "instagram",
+    "tiktok",
+    "youtube",
+    "reddit",
+    "seo",
+    "aeo",
+    "ai-visibility",
+    "routergrowth",
+    "prospecting",
+    "lead-generation",
+    "list-enrichment",
+    "account-research",
+    "competitor-research",
+    "google-maps",
+    "ads-library",
+    "keyword-gap",
+    "waterfall-enrichment"
+  ],
+  "skills": "./skills/",
+  "displayName": "RouterGrowth",
+  "mcpServers": {
+    "routergrowth": {
+      "type": "http",
+      "url": "https://api.routergrowth.com/mcp/claude"
+    }
+  }
+}

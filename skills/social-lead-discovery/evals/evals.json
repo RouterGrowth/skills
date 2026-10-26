@@ -1,0 +1,52 @@
+{
+  "skill_name": "social-lead-discovery",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Find people on X complaining about Clay credits",
+      "should_trigger": true,
+      "assertions": [
+        "Uses social_search on platform x",
+        "Qualifies from the post before paying for profiles",
+        "Never sends, follows, likes or comments",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "who is commenting under this TikTok from my competitor? https://www.tiktok.com/@comp/video/1",
+      "should_trigger": true,
+      "assertions": [
+        "Uses social_comments on the URL",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "find interior designers in Lyon on Instagram with their website",
+      "should_trigger": true,
+      "assertions": [
+        "Uses social_profile for the bio link and domain",
+        "Calls get_operation_pricing before the first paid call of each tool",
+        "Sets max_cost on every paid call",
+        "Reports the total spent from list_runs"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Post this announcement to my X account",
+      "should_trigger": false,
+      "assertions": [
+        "Does not post; RouterGrowth does not publish"
+      ],
+      "files": []
+    }
+  ]
+}
