@@ -14,7 +14,7 @@ description: >-
   of gyms in Austin with their owner", or wants an SMB prospect list by city.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
   author: RouterGrowth
   homepage: https://www.routergrowth.com/skills/local-business-leads
 ---
@@ -40,7 +40,7 @@ One search per category and city:
 {"input": {"query": "dentist", "location": "Lisbon, Portugal", "limit": 40}, "max_cost": "<cap>"}
 ```
 
-Keep `name`, `category`, `address`, `phone`, `website`, `domain`, `rating`, `reviews_count`, `place_id` and `claimed` (whether the owner claimed the listing: an unclaimed listing often means nobody manages the online presence). Large cities need several searches by neighbourhood ("dentist Alvalade, Lisbon") because one search returns a limited number of places. Dedupe on place ID, then on phone.
+Keep `name`, `category`, `address`, `phone`, `website`, `domain`, `rating`, `reviews_count`, `place_id` and `claimed` (whether the owner claimed the listing: an unclaimed listing often means nobody manages the online presence). The provider may return more places than the limit; dedupe and filter anyway. Drop rows whose phone country code or address does not match the city searched (a street named after the city in another country comes back too). Large cities need several searches by neighbourhood ("dentist Alvalade, Lisbon") because one search returns a limited number of places. Dedupe on place ID, then on phone.
 
 ### 2. Filter on the user's fit (free)
 
@@ -61,6 +61,8 @@ Note one pattern per business that relates to the user's offer (waiting times, b
 - `web_scrape` the business website (home, about, team or contact page): owner or manager name, a contact email published by the business, booking system. `web_extract` with `{"url": ..., "template": "leadership_page"}` returns names and roles as records when the site has a team page.
 - With a person's name and the website's domain, `contact_find` `{"first_name": ..., "last_name": ..., "company_domain": ...}` at `max_cost_for_all`, then `contact_verify`. Keep `valid`, flag `catch_all` (common on small business domains).
 - A generic address the business publishes (info@, contact@) is acceptable for a business enquiry; label it `published, generic`.
+- Small businesses rarely have a findable personal email: a miss on every provider is normal and costs nothing. Use what the business publishes: a generic address, a booking link or a WhatsApp number on the site (label it `published`).
+- The site often lists the team but not the owner. Name the clinical or managing lead the page shows and say the owner is not stated; never guess ownership.
 - No website: the phone from Maps is the contact. Say so.
 
 ## Gate

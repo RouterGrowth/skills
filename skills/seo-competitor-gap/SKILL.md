@@ -13,7 +13,7 @@ description: >-
   an SEO plan built on data.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
   author: RouterGrowth
   homepage: https://www.routergrowth.com/skills/seo-competitor-gap
 ---
@@ -36,7 +36,7 @@ The keywords that already send buyers to competitors, minus the ones the user al
 {"input": {"domain": "acme.com", "location": "United States", "language": "en", "limit": 10}, "max_cost": "<cap>"}
 ```
 
-`seo_competitors` returns the domains that share the most keywords with the user's. Drop marketplaces, media sites and directories (they rank for everything) unless the user competes with them. Confirm the final two to four with the user.
+`seo_competitors` returns the domains that share the most keywords with the user's. Drop marketplaces, media sites and directories (they rank for everything) unless the user competes with them. When the user's domain ranks for very few keywords (step 2 shows fewer than about 50), this list is built on almost nothing and is mostly noise: use the competitors the user names instead. Confirm the final two to four with the user.
 
 ### 2. Size each side
 
@@ -50,7 +50,7 @@ The keywords that already send buyers to competitors, minus the ones the user al
 {"input": {"domain": "competitor.com", "location": "United States", "language": "en", "limit": 200}, "max_cost": "<cap>"}
 ```
 
-Keep keyword, position, search volume, the ranking URL. Run it on the user's domain too. Then compute, without paying:
+Rows come back sorted by search volume, not by position, so a small limit returns big keywords where the competitor ranks on page 5. Ask for 200 or more and keep the rows at position 20 or better before comparing. Keep keyword, position, search volume, the ranking URL. Run it on the user's domain too. Then compute, without paying:
 
 - **Gap**: keywords where a competitor ranks in the top 10 and the user is absent or below 20.
 - **Weak**: keywords where the user ranks 11 to 30 and a competitor is in the top 5.
@@ -64,7 +64,7 @@ For the 10 to 20 gap keywords with the most volume and the clearest intent, `seo
 
 ### 5. Read the results page for the top targets
 
-`seo_serp` on the five best targets: who ranks, what kind of page wins (a guide, a comparison, a tool, a list), whether an AI overview sits on top, and the forums or videos in the results. A page type mismatch is the most common reason a good page does not rank.
+`seo_serp` on the five best targets: who ranks, what kind of page wins (a guide, a comparison, a tool, a list), whether an AI overview sits on top and which pages it cites (`ai_overview_sources`), and the forums or videos in the results. A page type mismatch is the most common reason a good page does not rank.
 
 ### 6. Links (optional)
 

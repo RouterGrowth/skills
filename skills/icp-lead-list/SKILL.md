@@ -13,7 +13,7 @@ description: >-
   prospects", or describes their buyer and asks for names.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
   author: RouterGrowth
   homepage: https://www.routergrowth.com/skills/icp-lead-list
 ---
@@ -73,7 +73,7 @@ These are charged only when data is found. Lookups take `max_cost` at their `max
 
 ### 4. Emails for the rows kept
 
-Free first: `get_subjects_history` on the LinkedIn URLs (reuse what the workspace already found, drop people it already contacted if the user says so) and `list_suppressions` when tables are on. Then `contact_find` per row:
+Use the root domain: rows sometimes carry a subdomain (`app.acme.com`); strip it before looking up emails. Free first: `get_subjects_history` on the LinkedIn URLs (reuse what the workspace already found, drop people it already contacted if the user says so) and `list_suppressions` when tables are on. Then `contact_find` per row:
 
 ```json
 {"input": {"first_name": "Lena", "last_name": "Vogel", "company_domain": "acme.com"}, "max_cost": "<max_cost_for_all>"}

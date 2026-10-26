@@ -4,7 +4,7 @@
 
 # Open-source GTM skills for Claude, Codex, Cursor and any agent
 
-[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 17](https://img.shields.io/badge/skills-17-0c7c59.svg)](#the-skills) [![version](https://img.shields.io/badge/version-0.3.0-0c7c59.svg)](CHANGELOG.md)
+[![validate](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml/badge.svg)](https://github.com/RouterGrowth/skills/actions/workflows/validate.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-0c7c59.svg)](LICENSE) [![skills: 17](https://img.shields.io/badge/skills-17-0c7c59.svg)](#the-skills) [![version](https://img.shields.io/badge/version-0.3.1-0c7c59.svg)](CHANGELOG.md)
 
 **Your agent builds the lead list, finds and verifies the emails, researches the account, maps the competition and drafts the message, on live data.** Seventeen skills that turn the [RouterGrowth](https://www.routergrowth.com) connector (people and companies, work emails and phones across several data providers, hiring and funding signals, Google Maps, SEO, AI answers, social, ads) into finished GTM jobs. Pay per call from one balance, no subscription.
 

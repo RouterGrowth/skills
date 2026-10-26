@@ -13,7 +13,7 @@ description: >-
   domain or a LinkedIn URL before a meeting.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
   author: RouterGrowth
   homepage: https://www.routergrowth.com/skills/account-research
 ---
@@ -41,7 +41,7 @@ Run the calls in this order and stop early when the user only wants part of it.
 ### 2. What changed lately
 
 - `company_funding` `{"domain": ...}`: last round, date, investors. Charged only when data exists.
-- `company_jobs` `{"company": "acme.com", "posted_within": "month", "limit": 20}`: what they are hiring for says where the money goes. Group the roles by team.
+- `company_jobs` `{"company": "acme.com", "posted_within": "month", "limit": 20}`: what they are hiring for says where the money goes. Group the roles by team, and read the descriptions: they often state the budget, the targets and the team's next move in the company's own words, which makes the best angles.
 - `news_search` `{"query": "\"Acme\"", "limit": 10}`: launches, partnerships, leadership changes in the last 90 days. Quote the company name to avoid noise; drop articles about another company of the same name.
 - `company_technologies` `{"domain": ...}`: the stack, and whether it includes the tool the user replaces or plugs into.
 
@@ -54,7 +54,7 @@ Run the calls in this order and stop early when the user only wants part of it.
  "max_cost": "<cap>"}
 ```
 
-Keep name, title, LinkedIn URL. For the person the user is meeting, `person_enrich` with `{"profile_url": ...}`: current role, how long, previous companies, education, a skill or project worth mentioning. Read the profile; do not repeat it.
+Keep name, title, LinkedIn URL. If a row's domain is a subdomain (`app.acme.com`), use the root domain for any email lookup. For the person the user is meeting, `person_enrich` with `{"profile_url": ...}`: current role, how long, previous companies, education, a skill or project worth mentioning. Read the profile; do not repeat it.
 
 ### 4. Write the brief
 
@@ -69,7 +69,7 @@ Keep name, title, LinkedIn URL. For the person the user is meeting, `person_enri
 ## Rules
 
 - `max_cost` on every paid call; lookups at their `waterfall.max_cost_for_all`.
-- Every fact has a source and a date. "Not found" is an answer; never fill a gap with a guess about revenue, headcount or a person's priorities.
+- Every fact has a source and a date. When two sources disagree (a funding database lists a round, the company's own posts say it never raised), show both with their sources; do not pick one silently. "Not found" is an answer; never fill a gap with a guess about revenue, headcount or a person's priorities.
 - Research is about the company and the person's professional role only. Nothing personal (family, home, health, politics), even when public.
 - This skill sends nothing. To write to the people found, hand them to `email-list-pipeline` or `linkedin-drafts`.
 - People data comes from RouterGrowth's third-party data providers; if anyone asks, point to https://www.routergrowth.com/privacy and https://www.routergrowth.com/privacy/opt-out.

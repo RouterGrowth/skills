@@ -13,7 +13,7 @@ description: >-
   contacts, or wants a Clay-style enrichment run without a subscription.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
   author: RouterGrowth
   homepage: https://www.routergrowth.com/skills/list-enrichment
 ---
@@ -36,7 +36,7 @@ The user brings the people; this skill brings back a verified work email for as 
 ### 1. Clean (free)
 
 - Split full names into first and last name. Strip titles, emojis and suffixes ("PhD", "MBA") from names.
-- Normalise domains: lowercase, no `https://`, no `www.`, no path. A personal domain (gmail.com, outlook.com, yahoo.com, icloud.com) is not a company domain: clear it.
+- Normalise domains: lowercase, no `https://`, no path, and no subdomain: `app.acme.com` and `www.acme.com` become `acme.com` (emails live on the root domain; a subdomain turns a findable row into a miss). A personal domain (gmail.com, outlook.com, yahoo.com, icloud.com) is not a company domain: clear it.
 - Dedupe on LinkedIn URL, then on first name + last name + domain. Say how many duplicates you removed.
 - Rows that already carry an email skip step 3 and go straight to step 4.
 
@@ -53,7 +53,7 @@ The user brings the people; this skill brings back a verified work email for as 
 {"input": {"query": "Acme Robotics", "location": "Germany", "limit": 5}, "max_cost": "<cap>"}
 ```
 
-Pass a location when the list has one: a bare name matches homonyms worldwide. Take `domain` from the row whose name and country match; when two rows fit, keep the one whose `linkedin_url` matches the person's company page, else leave the domain empty and say so. Country variants are a common cause of misses (`acme.de` for a German team at `acme.com`): when a find misses on one, try the other once.
+Pass a location when the list has one: a bare name matches homonyms worldwide. Take `domain` only from a row whose `name` matches the company and whose country fits; the database also matches words in company descriptions, so a short common name ("Sides", "Clay") returns unrelated companies, and then the domain stays empty and you say so. When two rows fit, keep the one whose `linkedin_url` matches the person's company page or whose description fits what the person does. Country variants and second domains are a common cause of misses (`acme.de` for a German team at `acme.com`, a short brand domain beside the main one): when a find misses on one, try the other once. The company's description or website often names it.
 
 ### 4. Find the emails
 
@@ -76,7 +76,7 @@ Each call tries the data providers in turn, cheapest first, until one finds the 
 
 ### 6. Phones and profiles (only when asked)
 
-- `contact_phone` with `{"email": ...}` or `{"profile_url": ...}` per row, `max_cost` at its `max_cost_for_all`. Charged only when a number is found. Results carry `phone`, `type` (mobile or landline) and `confidence`. Never dial or text from this skill.
+- `contact_phone` with `{"email": ...}` or `{"profile_url": ...}` per row, `max_cost` at its `max_cost_for_all`. Charged only when a number is found, at the price of the provider that found it, which can be several times an email: quote the high end. Results carry `phone`, `type` (mobile or landline) and `confidence`. Flag a number whose country code matches neither the person's location nor the company's country as `check`. Never dial or text from this skill.
 - `person_enrich` with `{"profile_url": ...}` for the current role, role history, education and skills, when the user needs more than an email.
 
 ## Gate

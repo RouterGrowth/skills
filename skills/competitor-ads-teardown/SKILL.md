@@ -13,7 +13,7 @@ description: >-
   rivals already spend on.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
   author: RouterGrowth
   homepage: https://www.routergrowth.com/skills/competitor-ads-teardown
 ---
@@ -43,7 +43,7 @@ Per competitor and platform:
 {"input": {"query": "acme.com", "platform": "google", "limit": 30}, "max_cost": "<cap>"}
 ```
 
-Meta takes the advertiser name or a keyword; Google takes the advertiser domain. A keyword search on Meta (for example the category, "crm for agencies") shows advertisers the user did not name: run one when the user wants the whole market. Each ad carries `advertiser`, `headline`, `text`, `started_at`, `format` and `url` (its page in the ad library) when the library has them. Read the call to action and the offer from the text. Drop ads from a different company with a similar name.
+Meta takes the advertiser name, its Facebook page URL or a keyword; Google takes the advertiser domain. A Google search can take more than a minute: when the receipt says the run is not done, wait on it with `get_run` instead of starting it again. A keyword search on Meta (for example the category, "crm for agencies") shows advertisers the user did not name: run one when the user wants the whole market. Each ad carries `advertiser`, `headline`, `text`, `started_at`, `format` and `url` (its page in the ad library) when the library has them. Read the call to action and the offer from the text. Check `advertiser` on every row: a name shared by another business returns that business's ads (a search for "Clay" can return a skincare brand called ClayCo). For a certain match on Meta, pass the advertiser's Facebook page URL as `query`; on Google the domain is already precise. Drop ads from any other advertiser.
 
 ### 2. Read where the ads send people
 
