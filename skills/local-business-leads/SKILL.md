@@ -3,7 +3,8 @@ name: local-business-leads
 description: >-
   Build a lead list of local businesses from Google Maps with RouterGrowth:
   search places by category and city (local_places), keep the ones that fit
-  (rating, review count, open, has a website), read their reviews for pain
+  (rating, review count, website or
+  not, claimed listing), read their reviews for pain
   points (reviews_search), pull the owner or manager and a contact from the
   website (web_scrape, web_extract), then find and verify a work email
   (contact_find, contact_verify). Use when the user sells to local or small
