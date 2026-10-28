@@ -47,6 +47,7 @@ Then sign in once: in Claude Code run `/mcp` and approve a workspace. In other a
 | [seo-competitor-gap](skills/seo-competitor-gap) | The keywords competitors rank for and you do not, sized and sorted into a plan of pages to write or fix | "keyword gap", "why do they outrank us" |
 | [ai-visibility-audit](skills/ai-visibility-audit) | A frozen panel of buyer questions across ChatGPT, Claude, Gemini and Perplexity: mentions, citations, share of voice | "what does ChatGPT say about us", "AEO audit" |
 | [reddit-surface-map](skills/reddit-surface-map) | The Reddit threads ranking for your money queries, the subreddits behind them, their rules on vendors | "which subreddits matter for us" |
+| [ai-search-growth](https://github.com/RouterGrowth/ai-search-growth) (own repo) | A template repo that tracks your buyers' questions on ChatGPT, Perplexity, Claude, Gemini and Google AI Overviews every day on GitHub Actions, plus the skill that gets you into those answers: pages, threads, press, listings, Product Hunt | "get us recommended by ChatGPT", "track our AI visibility daily" |
 | [brand-mention-sweep](skills/brand-mention-sweep) | Every mention of the brand, founder and competitors in 90 days, with sentiment and the threads worth a reply | "who is talking about us", "brand monitoring" |
 
 **Messaging** (email sent only after you approve each message; LinkedIn, Instagram and WhatsApp stay drafts)
